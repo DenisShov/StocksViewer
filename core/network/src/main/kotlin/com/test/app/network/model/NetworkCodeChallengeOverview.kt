@@ -7,5 +7,5 @@ data class NetworkCodeChallengeOverview(
     @SerializedName("name") var name: String = "",
     @SerializedName("slug") var slug: String = "",
     @SerializedName("completedAt") var completedAt: String = "",
-    @SerializedName("completedLanguages") var completedLanguages: ArrayList<String> = arrayListOf()
+    @SerializedName("completedLanguages") var completedLanguages: List<String> = listOf()
 )

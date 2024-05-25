@@ -5,5 +5,5 @@ data class CodeChallengeOverview(
     var name: String = "",
     var slug: String = "",
     var completedAt: String = "",
-    var completedLanguages: ArrayList<String> = arrayListOf()
+    var completedLanguages: List<String> = arrayListOf()
 )

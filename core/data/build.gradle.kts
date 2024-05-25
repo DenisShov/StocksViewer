@@ -13,6 +13,10 @@ android {
 }
 
 dependencies {
+    api(project(":core:model"))
+    api(project(":core:network"))
+
+    implementation(libs.androidx.paging.compose)
 
     implementation(libs.androidx.core.ktx)
     testImplementation(libs.junit)
