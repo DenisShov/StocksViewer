@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.codewars.android.application)
+    id("kotlin-parcelize")
 }
 
 android {

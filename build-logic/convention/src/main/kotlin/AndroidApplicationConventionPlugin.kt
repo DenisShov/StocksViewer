@@ -10,7 +10,6 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("com.android.application")
                 apply("org.jetbrains.kotlin.android")
-                apply("kotlin-parcelize")
 //                apply("codewars.android.application.ktlint")
                 apply("codewars.android.application.detekt")
             }
