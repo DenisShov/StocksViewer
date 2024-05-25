@@ -22,6 +22,8 @@ secrets {
 }
 
 dependencies {
+    api(project(":core:common"))
+
     implementation(libs.okhttp.logging)
     implementation(libs.retrofit.core)
     implementation(libs.converter.gson)

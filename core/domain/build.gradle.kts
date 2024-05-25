@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.codewars.android.library)
+    alias(libs.plugins.codewars.android.hilt)
     alias(libs.plugins.codewars.android.library.jacoco)
 }
 
@@ -12,6 +13,9 @@ android {
 }
 
 dependencies {
+    api(project(":core:data"))
+    api(project(":core:model"))
+    api(project(":core:common"))
 
     implementation(libs.androidx.core.ktx)
     testImplementation(libs.junit)
