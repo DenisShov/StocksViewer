@@ -1,5 +1,7 @@
 package com.test.app.data.model
 
+import com.test.app.data.utils.DATE_TIME_PATTERN
+import com.test.app.data.utils.formatDateToPattern
 import com.test.app.model.data.CodeChallengeDetail
 import com.test.app.network.model.NetworkCodeChallengeDetail
 
@@ -19,6 +21,6 @@ fun NetworkCodeChallengeDetail.asExternalModel() = CodeChallengeDetail(
     totalCompleted = totalCompleted,
     totalStars = totalStars,
     voteScore = voteScore,
-    publishedAt = publishedAt,
-    approvedAt = approvedAt,
+    publishedAt = publishedAt?.formatDateToPattern(DATE_TIME_PATTERN),
+    approvedAt = approvedAt?.formatDateToPattern(DATE_TIME_PATTERN),
 )

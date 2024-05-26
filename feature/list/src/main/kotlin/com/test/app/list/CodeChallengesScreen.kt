@@ -3,20 +3,25 @@
 package com.test.app.list
 
 import android.content.Context
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
@@ -27,22 +32,27 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.test.app.common.navigation.Screen
+import com.test.app.designsystem.component.BackgroundPreview
 import com.test.app.designsystem.component.CodeWarsTitleLarge
+import com.test.app.designsystem.theme.AppTheme
 import com.test.app.model.data.CodeChallengeOverview
+import com.test.app.ui.ErrorRetryItem
+import com.test.app.ui.TagsRow
+import com.test.app.ui.showSnackBar
 import dev.olshevski.navigation.reimagined.NavController
 import dev.olshevski.navigation.reimagined.hilt.hiltViewModel
 import dev.olshevski.navigation.reimagined.navigate
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CodeChallengesScreen(
+fun CodeChallengesRoute(
     navController: NavController<Screen>,
     viewModel: CodeChallengesViewModel = hiltViewModel()
 ) {
@@ -60,7 +70,7 @@ fun CodeChallengesScreen(
     val scope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
 
-    CodeChallengesView(
+    CodeChallengesScreen(
         context,
         navController,
         codeChallenges,
@@ -72,7 +82,7 @@ fun CodeChallengesScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CodeChallengesView(
+fun CodeChallengesScreen(
     context: Context,
     navController: NavController<Screen>,
     codeChallenges: LazyPagingItems<CodeChallengeOverview>,
@@ -86,7 +96,7 @@ fun CodeChallengesView(
             .nestedScroll(pullToRefreshState.nestedScrollConnection),
         snackbarHost = { SnackbarHost(snackBarHostState) },
         topBar = {
-            TopAppBar(title = {
+            CenterAlignedTopAppBar(title = {
                 CodeWarsTitleLarge()
             })
         },
@@ -110,7 +120,7 @@ fun CodeChallengesView(
                     ) {
                         items(count = codeChallenges.itemCount) { index ->
                             codeChallenges[index]?.let {
-                                com.test.app.ui.ChallengeOverviewItem(
+                                ChallengeOverviewItem(
                                     challengeOverview = it,
                                     onChallengeOverviewClick = { challengeOverview ->
                                         navController.navigate(
@@ -133,7 +143,7 @@ fun CodeChallengesView(
 
                             codeChallenges.loadState.append is LoadState.Error -> {
                                 item {
-                                    com.test.app.ui.ErrorListItem(
+                                    ErrorRetryItem(
                                         error = (codeChallenges.loadState.append as LoadState.Error).error.message,
                                         onTryClicked = {
                                             codeChallenges.retry()
@@ -145,7 +155,7 @@ fun CodeChallengesView(
                             codeChallenges.loadState.refresh is LoadState.Error -> {
                                 showSnackBar(
                                     scope = scope,
-                                    snackbarHostState = snackBarHostState,
+                                    snackBarHostState = snackBarHostState,
                                     message = (codeChallenges.loadState.refresh as LoadState.Error).error.message
                                         ?: context.resources.getString(R.string.some_error_happened),
                                     actionLabel = context.resources.getString(R.string.try_again),
@@ -156,10 +166,16 @@ fun CodeChallengesView(
                         }
                     }
                     if (pullToRefreshState.isRefreshing) {
-                        LinearProgressIndicator(modifier = Modifier.align(Alignment.TopCenter))
+                        LinearProgressIndicator(
+                            modifier = Modifier
+                                .align(Alignment.TopCenter)
+                                .fillMaxWidth()
+                        )
                     } else {
                         LinearProgressIndicator(
-                            modifier = Modifier.align(Alignment.TopCenter),
+                            modifier = Modifier
+                                .align(Alignment.TopCenter)
+                                .fillMaxWidth(),
                             progress = { pullToRefreshState.progress })
                     }
                 }
@@ -168,23 +184,63 @@ fun CodeChallengesView(
     )
 }
 
-fun showSnackBar(
-    scope: CoroutineScope,
-    snackbarHostState: SnackbarHostState,
-    message: String,
-    actionLabel: String,
-    actionPerformed: () -> Unit,
-    dismissed: () -> Unit
+@Composable
+fun ChallengeOverviewItem(
+    challengeOverview: CodeChallengeOverview,
+    onChallengeOverviewClick: (CodeChallengeOverview) -> Unit = {}
 ) {
-    scope.launch {
-        val snackBarResult = snackbarHostState.showSnackbar(
-            message = message,
-            actionLabel = actionLabel,
-            duration = SnackbarDuration.Long
-        )
-        when (snackBarResult) {
-            SnackbarResult.ActionPerformed -> actionPerformed.invoke()
-            SnackbarResult.Dismissed -> dismissed.invoke()
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .clickable { onChallengeOverviewClick(challengeOverview) },
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Text(
+                text = challengeOverview.name,
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp)
+            )
+            TagsRow(
+                Modifier.align(Alignment.CenterHorizontally),
+                challengeOverview.completedLanguages
+            )
+            Text(
+                text = challengeOverview.completedAt,
+                style = MaterialTheme.typography.labelSmall,
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(8.dp)
+            )
         }
+    }
+}
+
+@BackgroundPreview
+@Composable
+fun ChallengeOverviewItemPreview() {
+    AppTheme {
+        ChallengeOverviewItem(
+            CodeChallengeOverview(
+                name = "Multiples of 3 and 5",
+                completedAt = "2017-04-06",
+                completedLanguages = listOf(
+                    "javascript",
+                    "coffeescript",
+                    "ruby",
+                    "javascript",
+                    "ruby",
+                    "javascript",
+                    "ruby",
+                    "coffeescript",
+                    "javascript",
+                    "ruby",
+                    "coffeescript"
+                )
+            )
+        )
     }
 }

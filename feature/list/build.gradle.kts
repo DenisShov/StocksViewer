@@ -14,7 +14,6 @@ dependencies {
     implementation(project(":core:ui"))
 
     implementation(libs.androidx.paging.compose)
-    implementation(libs.navigation.hilt)
 
     implementation(libs.androidx.core.ktx)
     testImplementation(libs.junit)

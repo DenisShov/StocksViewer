@@ -1,5 +1,7 @@
 package com.test.app.common.result
 
+import android.content.Context
+import com.test.app.common.R
 import com.test.app.common.error.AppError
 import com.test.app.common.network.exceptions.ApiException
 import kotlinx.coroutines.flow.Flow
@@ -46,3 +48,11 @@ val Throwable.toError: AppError
             is ApiException -> AppError.ApiError(this)
             else -> AppError.GeneralError(this)
         }
+
+fun AppError.toErrorMessage(context: Context): String {
+    return when (this) {
+        is AppError.MissingNetworkConnection -> context.resources.getString(R.string.no_network_connection)
+        is AppError.ApiError -> context.resources.getString(R.string.some_server_problem)
+        else -> context.resources.getString(R.string.something_went_wrong)
+    }
+}

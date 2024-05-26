@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ui_return_to_previous_screen">Return to previous screen</string>
+    <string name="some_error_happened">Some error happened</string>
+    <string name="category">Category:</string>
+    <string name="description">Description</string>
+    <string name="tags">Tags:</string>
+    <string name="languages">Languages:</string>
+    <string name="rank">Rank:</string>
+    <string name="total_attempts">Total attempts:</string>
+    <string name="total_completed">Total completed:</string>
+    <string name="total_stars">Total stars:</string>
+    <string name="total_score">Total score:</string>
+    <string name="created_by">Created by:</string>
+    <string name="approved_by">Approved by:</string>
+    <string name="published_at">Published at:</string>
+    <string name="approved_at">Approved at:</string>
+</resources>

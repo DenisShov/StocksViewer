@@ -5,7 +5,7 @@ ksp = "1.9.22-1.0.18"
 coreKtx = "1.13.1"
 
 androidxActivity = "1.9.0"
-androidxLifecycle = "2.8.0"
+androidxLifecycle = "2.7.0"
 androidxComposeBom = "2024.05.00"
 androidxComposeCompiler = "1.5.8"
 androidxComposeUiManifest = "1.6.7"

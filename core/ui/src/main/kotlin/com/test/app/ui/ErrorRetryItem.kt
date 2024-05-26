@@ -18,7 +18,7 @@ import com.test.app.designsystem.component.ThemePreviews
 import com.test.app.designsystem.theme.AppTheme
 
 @Composable
-fun ErrorListItem(error: String?, onTryClicked: () -> Unit) {
+fun ErrorRetryItem(error: String?, onTryClicked: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -50,8 +50,8 @@ fun ErrorListItem(error: String?, onTryClicked: () -> Unit) {
 
 @ThemePreviews
 @Composable
-fun ErrorListItemPreview() {
+fun ErrorRetryItemPreview() {
     AppTheme {
-        ErrorListItem(error = null) {}
+        ErrorRetryItem(error = null) {}
     }
 }
