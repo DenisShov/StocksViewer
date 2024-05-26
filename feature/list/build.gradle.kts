@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.codewars.android.feature)
     alias(libs.plugins.codewars.android.library.compose)
+    alias(libs.plugins.codewars.android.hilt)
     alias(libs.plugins.codewars.android.library.jacoco)
 }
 
@@ -9,6 +10,11 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:domain"))
+    implementation(project(":core:ui"))
+
+    implementation(libs.androidx.paging.compose)
+    implementation(libs.navigation.hilt)
 
     implementation(libs.androidx.core.ktx)
     testImplementation(libs.junit)

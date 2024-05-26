@@ -9,7 +9,7 @@ import retrofit2.http.Query
 
 interface CodeWarsApi {
 
-    @GET("users/" + BuildConfig.USER_NAME + "/code-challenges/completed?page={page}")
+    @GET("users/" + BuildConfig.USER_NAME + "/code-challenges/completed")
     suspend fun getCompletedCodeChallenges(
         @Query("page") page: Int
     ): NetworkCodeChallenges

@@ -1,10 +1,16 @@
 plugins {
     alias(libs.plugins.codewars.android.application)
-    id("kotlin-parcelize")
+    alias(libs.plugins.codewars.android.application.compose)
+    alias(libs.plugins.codewars.android.hilt)
+    alias(libs.plugins.codewars.android.application.jacoco)
 }
 
 android {
     namespace = "com.test.app.codewars"
+
+    buildFeatures {
+        buildConfig = true
+    }
 
     defaultConfig {
         applicationId = "com.test.app.codewars"
@@ -40,6 +46,7 @@ dependencies {
     implementation(project(":feature:details"))
 
     implementation(project(":core:designsystem"))
+    implementation(project(":core:common"))
 
     implementation(libs.navigation.hilt)
     implementation(libs.androidx.activity.compose)
@@ -47,6 +54,7 @@ dependencies {
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtimeCompose)
+    implementation(libs.timber)
 
     debugImplementation(libs.androidx.compose.ui.testManifest)
 

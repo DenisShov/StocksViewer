@@ -8,7 +8,7 @@ import com.test.app.network.retrofit.CodeWarsApi
 import javax.inject.Inject
 
 class CodeChallengesPagingSource @Inject constructor(
-    val codeWarsApi: CodeWarsApi
+    private val codeWarsApi: CodeWarsApi
 ) : PagingSource<Int, CodeChallengeOverview>() {
 
     private var currentKey: Int = 0
@@ -19,11 +19,11 @@ class CodeChallengesPagingSource @Inject constructor(
         try {
             val nextPageNumber = params.key ?: 0
             val response = codeWarsApi.getCompletedCodeChallenges(nextPageNumber)
-            val nextKey = if (currentKey < response.totalPages) currentKey else null
+            val nextKey = if (currentKey < response.totalPages) currentKey++ else null
 
             return LoadResult.Page(
                 data = response.data.map { it.asExternalModel() },
-                prevKey = null, // Only paging forward.
+                prevKey = null,
                 nextKey = nextKey
             )
         } catch (e: Exception) {

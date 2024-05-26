@@ -14,7 +14,7 @@ class GetCodeChallengeByIdUseCase @Inject constructor(
     private val dispatcherProvider: DispatcherProvider,
     private val codeChallengesRepository: CodeChallengesRepository,
 ) {
-    suspend fun launch(challengeId: String): Flow<DataResult<CodeChallengeDetail>> {
+    fun launch(challengeId: String): Flow<DataResult<CodeChallengeDetail>> {
         return flow {
             emit(codeChallengesRepository.getCodeChallengeById(challengeId))
         }

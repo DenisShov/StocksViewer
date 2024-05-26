@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.codewars.android.library)
     alias(libs.plugins.codewars.android.hilt)
     alias(libs.plugins.codewars.android.library.jacoco)
+    id("kotlin-parcelize")
 }
 
 android {
