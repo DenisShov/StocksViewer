@@ -28,9 +28,4 @@ dependencies {
     implementation(libs.retrofit.core)
     implementation(libs.converter.gson)
     implementation(libs.timber)
-
-    implementation(libs.androidx.core.ktx)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
 }

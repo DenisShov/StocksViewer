@@ -1,21 +1,14 @@
 package com.test.app.data.repository
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import com.test.app.data.model.asExternalModel
-import com.test.app.data.paging.CodeChallengesPagingSource
-import com.test.app.network.retrofit.CodeWarsApi
-import javax.inject.Inject
+import androidx.paging.PagingData
+import com.test.app.model.data.CodeChallengeDetail
+import com.test.app.model.data.CodeChallengeOverview
+import kotlinx.coroutines.flow.Flow
 
-class CodeChallengesRepository @Inject constructor(private val codeWarsApi: CodeWarsApi) {
+interface CodeChallengesRepository {
 
-    fun getCodeChallengesFlow() = Pager(
-        PagingConfig(pageSize = 2)
-    ) {
-        CodeChallengesPagingSource(codeWarsApi)
-    }.flow
+    fun getCodeChallengesFlow(): Flow<PagingData<CodeChallengeOverview>>
 
-    suspend fun getCodeChallengeById(challengeId: String) =
-        codeWarsApi.getCodeChallenge(challengeId).asExternalModel()
+    suspend fun getCodeChallengeById(challengeId: String): CodeChallengeDetail
 
 }

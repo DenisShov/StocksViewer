@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.codewars.android.library)
     alias(libs.plugins.codewars.android.hilt)
     alias(libs.plugins.codewars.android.library.jacoco)
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -17,8 +18,5 @@ dependencies {
     api(project(":core:model"))
     api(project(":core:common"))
 
-    implementation(libs.androidx.core.ktx)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    testImplementation(project(":core:testing"))
 }

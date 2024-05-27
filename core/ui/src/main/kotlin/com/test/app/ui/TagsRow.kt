@@ -1,7 +1,6 @@
 package com.test.app.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
@@ -11,6 +10,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.test.app.designsystem.component.ThemePreviews
+import com.test.app.designsystem.theme.AppTheme
 
 @Composable
 fun TagsRow(modifier: Modifier, values: List<String> = listOf()) {
@@ -28,5 +29,13 @@ fun TagsRow(modifier: Modifier, values: List<String> = listOf()) {
                 style = MaterialTheme.typography.labelSmall
             )
         }
+    }
+}
+
+@ThemePreviews
+@Composable
+fun TagsRowPreview() {
+    AppTheme {
+        TagsRow(modifier = Modifier, listOf("kotlin", "javascript", "python"))
     }
 }

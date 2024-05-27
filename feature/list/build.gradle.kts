@@ -7,6 +7,11 @@ plugins {
 
 android {
     namespace = "com.test.app.list"
+    testOptions {
+        unitTests {
+            isReturnDefaultValues = true
+        }
+    }
 }
 
 dependencies {
@@ -15,8 +20,5 @@ dependencies {
 
     implementation(libs.androidx.paging.compose)
 
-    implementation(libs.androidx.core.ktx)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    testImplementation(project(":core:testing"))
 }

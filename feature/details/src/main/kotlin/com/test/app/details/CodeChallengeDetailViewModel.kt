@@ -87,10 +87,6 @@ class CodeChallengeDetailViewModel @Inject constructor(
 //        }
 //    }
 
-    init {
-        getCodeChallengeById()
-    }
-
     companion object {
         const val CODE_CHALLENGE_ID_ARG = "code_challenge_id_arg"
     }

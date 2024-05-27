@@ -1,0 +1,17 @@
+package com.test.app.testing.utils
+
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.TestDispatcher
+import org.junit.Rule
+
+abstract class BaseCoroutineTestWithTestDispatcherProvider(
+    dispatcher: TestDispatcher = StandardTestDispatcher(),
+) {
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule(dispatcher = dispatcher)
+
+    /**
+     * DispatcherProvider to be provided as dependency to mocked classes.
+     */
+    protected val testDispatcherProvider = TestDispatcherProvider(testDispatcher = dispatcher)
+}

@@ -14,7 +14,6 @@ dependencies {
     compileOnly(libs.kotlin.gradlePlugin)
     compileOnly(libs.ksp.gradlePlugin)
     compileOnly(libs.detekt.gradlePlugin)
-//    compileOnly(libs.ktlint.gradlePlugin)
 }
 
 tasks {
@@ -46,11 +45,6 @@ gradlePlugin {
             id = "codewars.android.application.jacoco"
             implementationClass = "AndroidApplicationJacocoConventionPlugin"
         }
-
-//        register("androidApplicationKtlint") {
-//            id = "codewars.android.application.ktlint"
-//            implementationClass = "AndroidApplicationKtLintConventionPlugin"
-//        }
 
         register("androidApplicationDetekt") {
             id = "codewars.android.application.detekt"

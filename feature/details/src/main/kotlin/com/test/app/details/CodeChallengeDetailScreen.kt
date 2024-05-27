@@ -65,6 +65,10 @@ fun CodeChallengeDetailRoute(
         defaultArguments = bundleOf(CODE_CHALLENGE_ID_ARG to codeChallengeId)
     )
 ) {
+    LaunchedEffect(Unit) {
+        viewModel.getCodeChallengeById()
+    }
+
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val snackBarHostState = remember { SnackbarHostState() }

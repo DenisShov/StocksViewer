@@ -19,8 +19,5 @@ dependencies {
     implementation(libs.androidx.paging.compose)
     implementation(libs.joda.time)
 
-    implementation(libs.androidx.core.ktx)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    testImplementation(project(":core:testing"))
 }
