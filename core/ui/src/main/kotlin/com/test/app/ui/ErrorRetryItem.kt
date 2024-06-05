@@ -30,7 +30,8 @@ fun ErrorRetryItem(error: String?, onTryClicked: () -> Unit) {
             modifier = Modifier
                 .wrapContentHeight()
                 .padding(vertical = 8.dp),
-            text = error ?: stringResource(id = R.string.some_error_happened),
+            text = error
+                ?: stringResource(id = com.test.app.commonresources.R.string.some_error_happened),
             color = MaterialTheme.colorScheme.error,
             style = MaterialTheme.typography.titleMedium
         )
@@ -40,7 +41,7 @@ fun ErrorRetryItem(error: String?, onTryClicked: () -> Unit) {
             onClick = onTryClicked
         ) {
             Text(
-                text = stringResource(id = R.string.retry),
+                text = stringResource(id = com.test.app.commonresources.R.string.retry),
                 color = Color.White,
                 style = MaterialTheme.typography.labelLarge
             )

@@ -18,8 +18,21 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
             extensions.configure<LibraryExtension> {
                 configureKotlinAndroid(this)
                 defaultConfig.targetSdk = 34
+                packaging {
+                    resources {
+                        excludes.addAll(
+                            listOf(
+                                "/META-INF/{AL2.0,LGPL2.1}",
+                                "META-INF/LICENSE.md",
+                                "META-INF/LICENSE-notice.md",
+                            )
+                        )
+                    }
+                }
             }
             dependencies {
+                add("implementation", project(":core:commonresources"))
+                add("androidTestImplementation", project(":core:commonresources"))
                 add("testImplementation", kotlin("test"))
             }
         }

@@ -16,9 +16,10 @@ android {
 
 dependencies {
     implementation(project(":core:domain"))
-    implementation(project(":core:ui"))
+    api(project(":core:ui"))
 
     implementation(libs.androidx.paging.compose)
 
     testImplementation(project(":core:testing"))
+    androidTestImplementation(project(":core:testing"))
 }

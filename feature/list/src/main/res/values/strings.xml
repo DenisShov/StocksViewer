@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- Error strings -->
-    <string name="no_network">No network</string>
-    <string name="some_api_error">Some API error</string>
-    <string name="faced_an_error">Faced an error: </string>
-    <string name="some_error_happened">Some error happened</string>
-    <string name="try_again">Try again</string>
-</resources>

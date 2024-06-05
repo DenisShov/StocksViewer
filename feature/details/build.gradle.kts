@@ -12,6 +12,8 @@ android {
 dependencies {
     implementation(project(":core:domain"))
     implementation(project(":core:ui"))
+    implementation(libs.timber)
 
     testImplementation(project(":core:testing"))
+    androidTestImplementation(project(":core:testing"))
 }

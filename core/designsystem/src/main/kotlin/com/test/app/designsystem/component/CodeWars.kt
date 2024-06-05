@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import com.test.app.designsystem.R
 import com.test.app.designsystem.theme.AppTheme
 
 @Composable
@@ -16,7 +15,7 @@ fun CodeWarsTitleLarge(
 ) {
     Text(
         modifier = modifier,
-        text = stringResource(id = R.string.app_name),
+        text = stringResource(id = com.test.app.commonresources.R.string.app_name),
         style = MaterialTheme.typography.titleLarge,
         color = color
     )

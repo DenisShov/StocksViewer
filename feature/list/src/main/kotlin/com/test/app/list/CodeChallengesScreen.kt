@@ -2,7 +2,6 @@
 
 package com.test.app.list
 
-import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,13 +30,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.test.app.common.navigation.Screen
 import com.test.app.designsystem.component.BackgroundPreview
 import com.test.app.designsystem.component.CodeWarsTitleLarge
 import com.test.app.designsystem.theme.AppTheme
@@ -45,18 +43,14 @@ import com.test.app.model.data.CodeChallengeOverview
 import com.test.app.ui.ErrorRetryItem
 import com.test.app.ui.TagsRow
 import com.test.app.ui.showSnackBar
-import dev.olshevski.navigation.reimagined.NavController
 import dev.olshevski.navigation.reimagined.hilt.hiltViewModel
-import dev.olshevski.navigation.reimagined.navigate
-import kotlinx.coroutines.CoroutineScope
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CodeChallengesRoute(
-    navController: NavController<Screen>,
-    viewModel: CodeChallengesViewModel = hiltViewModel()
+    viewModel: CodeChallengesViewModel = hiltViewModel(),
+    onChallengeClick: (String) -> Unit = {}
 ) {
-    val context = LocalContext.current
     val codeChallenges = viewModel.codeChallenges.collectAsLazyPagingItems()
 
     val pullToRefreshState = rememberPullToRefreshState()
@@ -70,25 +64,37 @@ fun CodeChallengesRoute(
     val scope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
 
+    val someErrorHappened =
+        stringResource(id = com.test.app.commonresources.R.string.some_error_happened)
+    val tryAgain = stringResource(id = com.test.app.commonresources.R.string.try_again)
+
     CodeChallengesScreen(
-        context,
-        navController,
         codeChallenges,
         snackBarHostState,
         pullToRefreshState,
-        scope
+        onChallengeClick = onChallengeClick,
+        onRefreshError = {
+            showSnackBar(
+                scope = scope,
+                snackBarHostState = snackBarHostState,
+                message = (codeChallenges.loadState.refresh as LoadState.Error).error.message
+                    ?: someErrorHappened,
+                actionLabel = tryAgain,
+                actionPerformed = { codeChallenges.refresh() },
+                dismissed = {}
+            )
+        }
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CodeChallengesScreen(
-    context: Context,
-    navController: NavController<Screen>,
     codeChallenges: LazyPagingItems<CodeChallengeOverview>,
     snackBarHostState: SnackbarHostState,
     pullToRefreshState: PullToRefreshState,
-    scope: CoroutineScope
+    onChallengeClick: (String) -> Unit = {},
+    onRefreshError: () -> Unit = {}
 ) {
     Scaffold(
         modifier = Modifier
@@ -111,6 +117,7 @@ fun CodeChallengesScreen(
                         modifier = Modifier
                             .align(Alignment.Center)
                             .padding(vertical = 6.dp)
+                            .testTag("CircularProgressIndicator"),
                     )
                 } else {
                     LazyColumn(
@@ -122,13 +129,8 @@ fun CodeChallengesScreen(
                             codeChallenges[index]?.let {
                                 ChallengeOverviewItem(
                                     challengeOverview = it,
-                                    onChallengeOverviewClick = { challengeOverview ->
-                                        navController.navigate(
-                                            Screen.CompletedChallengesDetail(
-                                                challengeOverview.id
-                                            )
-                                        )
-                                    })
+                                    onChallengeClick = onChallengeClick
+                                )
                             }
                         }
 
@@ -136,7 +138,9 @@ fun CodeChallengesScreen(
                             codeChallenges.loadState.append is LoadState.Loading -> {
                                 item {
                                     CircularProgressIndicator(
-                                        modifier = Modifier.padding(vertical = 6.dp)
+                                        modifier = Modifier
+                                            .padding(vertical = 6.dp)
+                                            .testTag("AppendLoading")
                                     )
                                 }
                             }
@@ -153,15 +157,7 @@ fun CodeChallengesScreen(
                             }
 
                             codeChallenges.loadState.refresh is LoadState.Error -> {
-                                showSnackBar(
-                                    scope = scope,
-                                    snackBarHostState = snackBarHostState,
-                                    message = (codeChallenges.loadState.refresh as LoadState.Error).error.message
-                                        ?: context.resources.getString(R.string.some_error_happened),
-                                    actionLabel = context.resources.getString(R.string.try_again),
-                                    actionPerformed = { codeChallenges.refresh() },
-                                    dismissed = {}
-                                )
+                                onRefreshError.invoke()
                             }
                         }
                     }
@@ -187,13 +183,13 @@ fun CodeChallengesScreen(
 @Composable
 fun ChallengeOverviewItem(
     challengeOverview: CodeChallengeOverview,
-    onChallengeOverviewClick: (CodeChallengeOverview) -> Unit = {}
+    onChallengeClick: (String) -> Unit = {}
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .clickable { onChallengeOverviewClick(challengeOverview) },
+            .clickable { onChallengeClick(challengeOverview.id) },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
