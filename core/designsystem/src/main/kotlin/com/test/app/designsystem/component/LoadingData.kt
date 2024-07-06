@@ -9,15 +9,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.test.app.designsystem.R
 import com.test.app.designsystem.theme.AppTheme
 
 @Composable
 fun LoadingData(
     modifier: Modifier,
-    text: String = stringResource(id = R.string.loading_data),
+    text: String = stringResource(id = com.test.app.commonresources.R.string.loading_data),
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -25,7 +25,9 @@ fun LoadingData(
         modifier = modifier,
     ) {
         CircularProgressIndicator(
-            modifier = modifier.width(40.dp),
+            modifier = modifier
+                .width(40.dp)
+                .testTag("CircularProgressIndicator"),
             color = MaterialTheme.colorScheme.secondary,
             trackColor = MaterialTheme.colorScheme.surfaceVariant
         )

@@ -1,7 +1,6 @@
 package com.test.app.common.result
 
 import android.content.Context
-import com.test.app.common.R
 import com.test.app.common.error.AppError
 import com.test.app.common.network.exceptions.ApiException
 import kotlinx.coroutines.flow.Flow
@@ -51,8 +50,8 @@ val Throwable.toError: AppError
 
 fun AppError.toErrorMessage(context: Context): String {
     return when (this) {
-        is AppError.MissingNetworkConnection -> context.resources.getString(R.string.no_network_connection)
-        is AppError.ApiError -> context.resources.getString(R.string.some_server_problem)
-        else -> context.resources.getString(R.string.something_went_wrong)
+        is AppError.MissingNetworkConnection -> context.resources.getString(com.test.app.commonresources.R.string.no_network_connection)
+        is AppError.ApiError -> context.resources.getString(com.test.app.commonresources.R.string.some_server_problem)
+        else -> context.resources.getString(com.test.app.commonresources.R.string.something_went_wrong)
     }
 }

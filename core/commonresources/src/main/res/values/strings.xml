@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="ui_return_to_previous_screen">Return to previous screen</string>
+    <string name="app_name">CodeWars</string>
     <string name="some_error_happened">Some error happened</string>
+    <string name="retry">Retry</string>
+    <string name="no_network_connection">No network connection</string>
+    <string name="some_server_problem">Server problem has occurred</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="loading_data">Loading data…</string>
+    <string name="ui_return_to_previous_screen">Return to previous screen</string>
     <string name="category">Category:</string>
     <string name="description">Description</string>
     <string name="tags">Tags:</string>
@@ -15,4 +21,8 @@
     <string name="approved_by">Approved by:</string>
     <string name="published_at">Published at:</string>
     <string name="approved_at">Approved at:</string>
+    <string name="no_network">No network</string>
+    <string name="some_api_error">Some API error</string>
+    <string name="faced_an_error">Faced an error: </string>
+    <string name="try_again">Try again</string>
 </resources>

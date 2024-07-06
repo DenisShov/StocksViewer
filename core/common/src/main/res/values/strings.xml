@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="no_network_connection">No network connection</string>
-    <string name="some_server_problem">Server problem has occurred</string>
-    <string name="something_went_wrong">Something went wrong</string>
-</resources>

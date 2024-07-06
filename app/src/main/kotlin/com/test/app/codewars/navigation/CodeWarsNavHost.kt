@@ -6,6 +6,8 @@ import com.test.app.details.CodeChallengeDetailRoute
 import com.test.app.list.CodeChallengesRoute
 import dev.olshevski.navigation.reimagined.NavController
 import dev.olshevski.navigation.reimagined.NavHost
+import dev.olshevski.navigation.reimagined.navigate
+import dev.olshevski.navigation.reimagined.pop
 
 @Composable
 fun CodeWarsNavHost(navController: NavController<Screen>) {
@@ -14,15 +16,21 @@ fun CodeWarsNavHost(navController: NavController<Screen>) {
     ) { route ->
         when (route) {
             is Screen.CompletedChallengesList -> {
-                CodeChallengesRoute(
-                    navController = navController,
-                )
+                CodeChallengesRoute(onChallengeClick = { challengeOverviewId ->
+                    navController.navigate(
+                        Screen.CompletedChallengesDetail(
+                            challengeOverviewId
+                        )
+                    )
+                })
             }
 
             is Screen.CompletedChallengesDetail -> {
                 CodeChallengeDetailRoute(
                     codeChallengeId = route.challengeId,
-                    navController = navController
+                    onBackButtonClick = {
+                        navController.pop()
+                    }
                 )
             }
         }

@@ -11,15 +11,18 @@ class CodeChallengesPagingSource @Inject constructor(
     private val codeWarsApi: CodeWarsApi
 ) : PagingSource<Int, CodeChallengeOverview>() {
 
-    private var currentKey: Int = 0
-
     override suspend fun load(
         params: LoadParams<Int>
     ): LoadResult<Int, CodeChallengeOverview> {
         try {
-            val nextPageNumber = params.key ?: 0
+            var nextPageNumber = params.key ?: 0
             val response = codeWarsApi.getCompletedCodeChallenges(nextPageNumber)
-            val nextKey = if (currentKey < response.totalPages) currentKey++ else null
+            val nextKey = if (nextPageNumber < response.totalPages) {
+                nextPageNumber++
+                nextPageNumber
+            } else {
+                null
+            }
 
             return LoadResult.Page(
                 data = response.data.map { it.asExternalModel() },

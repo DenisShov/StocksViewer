@@ -12,8 +12,10 @@ dependencies {
     api(project(":core:network"))
     api(project(":core:data"))
 
-    api(libs.androidx.paging.compose)
+    debugApi(libs.androidx.compose.ui.testManifest)
 
+    api(libs.androidx.paging.compose)
+    api(libs.androidx.compose.ui.test)
     api(libs.androidx.test.rules)
     api(libs.androidx.core.ktx)
     api(libs.core.testing)

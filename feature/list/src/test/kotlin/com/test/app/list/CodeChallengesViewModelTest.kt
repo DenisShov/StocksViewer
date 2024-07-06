@@ -8,9 +8,9 @@ import com.test.app.testing.utils.BaseCoroutineTestWithInstantTaskExecutorRule
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Before
 import org.junit.Test
+import kotlin.test.assertEquals
 
 class CodeChallengesViewModelTest : BaseCoroutineTestWithInstantTaskExecutorRule() {
 
@@ -22,17 +22,16 @@ class CodeChallengesViewModelTest : BaseCoroutineTestWithInstantTaskExecutorRule
 
     @Before
     fun setUp() {
-        viewModel = CodeChallengesViewModel(
-            getCodeChallengesUseCase = getCodeChallengesUseCase,
-        )
+        viewModel = CodeChallengesViewModel(getCodeChallengesUseCase = getCodeChallengesUseCase)
     }
 
     @Test
     fun `test codeChallenges`() = runTest {
-        val collectJob =
-            launch(UnconfinedTestDispatcher()) {
-                viewModel.codeChallenges.asSnapshot().shouldBeEqualTo(testCodeChallengeOverviewList)
-            }
+        val collectJob = launch(UnconfinedTestDispatcher()) {
+            viewModel.codeChallenges.asSnapshot()
+        }
+
+        assertEquals(testCodeChallengeOverviewList, viewModel.codeChallenges.asSnapshot())
 
         collectJob.cancel()
     }

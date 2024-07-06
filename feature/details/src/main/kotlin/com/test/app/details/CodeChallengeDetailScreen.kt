@@ -38,7 +38,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.os.bundleOf
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.test.app.common.navigation.Screen
+import com.test.app.common.error.AppError
 import com.test.app.common.result.toErrorMessage
 import com.test.app.designsystem.component.BackgroundPreview
 import com.test.app.designsystem.component.LoadingData
@@ -52,18 +52,15 @@ import com.test.app.model.data.Rank
 import com.test.app.ui.DevicePreviews
 import com.test.app.ui.TagsRow
 import com.test.app.ui.showSnackBar
-import dev.olshevski.navigation.reimagined.NavController
 import dev.olshevski.navigation.reimagined.hilt.hiltViewModel
-import dev.olshevski.navigation.reimagined.pop
-import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun CodeChallengeDetailRoute(
     codeChallengeId: String,
-    navController: NavController<Screen>,
     viewModel: CodeChallengeDetailViewModel = hiltViewModel(
         defaultArguments = bundleOf(CODE_CHALLENGE_ID_ARG to codeChallengeId)
-    )
+    ),
+    onBackButtonClick: () -> Unit = {}
 ) {
     LaunchedEffect(Unit) {
         viewModel.getCodeChallengeById()
@@ -75,26 +72,38 @@ fun CodeChallengeDetailRoute(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
-    CodeChallengeDetailScreen(uiState, snackBarHostState, navController, viewModel, context, scope)
+    CodeChallengeDetailScreen(
+        uiState,
+        snackBarHostState,
+        onBackButtonClick = onBackButtonClick,
+        onShowErrorSnackbar = { appError ->
+            showSnackBar(scope = scope,
+                snackBarHostState = snackBarHostState,
+                message = appError.toErrorMessage(context),
+                actionLabel = context.resources.getString(com.test.app.commonresources.R.string.retry),
+                actionPerformed = { viewModel.getCodeChallengeById() },
+                dismissed = {})
+        }
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun CodeChallengeDetailScreen(
-    uiState: CodeChallengeDetailViewModel.State,
+fun CodeChallengeDetailScreen(
+    uiState: CodeChallengeDetailViewModel.State = CodeChallengeDetailViewModel.State(
+        codeChallengeState = CodeChallengeDetailViewModel.CodeChallengeState.Loading
+    ),
     snackBarHostState: SnackbarHostState,
-    navController: NavController<Screen>,
-    viewModel: CodeChallengeDetailViewModel,
-    context: Context,
-    scope: CoroutineScope
+    onBackButtonClick: () -> Unit = {},
+    onShowErrorSnackbar: (AppError) -> Unit = {},
 ) {
     Scaffold(
         topBar = {
             TopAppBar(title = {}, navigationIcon = {
-                IconButton(onClick = { navController.pop() }) {
+                IconButton(onClick = { onBackButtonClick.invoke() }) {
                     Icon(
                         imageVector = ArrowBack,
-                        contentDescription = stringResource(id = R.string.ui_return_to_previous_screen),
+                        contentDescription = stringResource(id = com.test.app.commonresources.R.string.ui_return_to_previous_screen),
                         modifier = Modifier.padding(start = 12.dp),
                     )
                 }
@@ -115,12 +124,12 @@ private fun CodeChallengeDetailScreen(
                 }
 
                 is CodeChallengeDetailViewModel.CodeChallengeState.Success -> {
-                    CodeChallengeContent(codeChallengeUiState.codeChallengeDetail, context)
+                    CodeChallengeContent(codeChallengeUiState.codeChallengeDetail)
                 }
 
                 is CodeChallengeDetailViewModel.CodeChallengeState.Error -> {
                     Text(
-                        text = stringResource(id = R.string.some_error_happened),
+                        text = stringResource(id = com.test.app.commonresources.R.string.some_error_happened),
                         modifier = Modifier
                             .fillMaxWidth()
                             .wrapContentHeight(align = Alignment.CenterVertically)
@@ -128,15 +137,7 @@ private fun CodeChallengeDetailScreen(
                         color = MaterialTheme.colorScheme.error,
                         textAlign = TextAlign.Center,
                     )
-
-                    LaunchedEffect(snackBarHostState) {
-                        showSnackBar(scope = scope,
-                            snackBarHostState = snackBarHostState,
-                            message = codeChallengeUiState.error.toErrorMessage(context),
-                            actionLabel = context.resources.getString(com.test.app.ui.R.string.retry),
-                            actionPerformed = { viewModel.getCodeChallengeById() },
-                            dismissed = {})
-                    }
+                    onShowErrorSnackbar.invoke(codeChallengeUiState.error)
                 }
             }
         }
@@ -144,7 +145,9 @@ private fun CodeChallengeDetailScreen(
 }
 
 @Composable
-private fun CodeChallengeContent(codeChallengeDetail: CodeChallengeDetail, context: Context) {
+private fun CodeChallengeContent(codeChallengeDetail: CodeChallengeDetail) {
+    val context = LocalContext.current
+
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -179,13 +182,13 @@ private fun CodeChallengeContent(codeChallengeDetail: CodeChallengeDetail, conte
         item {
             codeChallengeDetail.tags?.let {
                 CodeChallengeTagsItem(
-                    name = stringResource(id = R.string.tags),
+                    name = stringResource(id = com.test.app.commonresources.R.string.tags),
                     it
                 )
             }
             codeChallengeDetail.languages?.let {
                 CodeChallengeTagsItem(
-                    name = stringResource(id = R.string.languages),
+                    name = stringResource(id = com.test.app.commonresources.R.string.languages),
                     it,
                     showDivider = false
                 )
@@ -228,7 +231,7 @@ private fun Description(description: String) {
     ) {
         Text(
             modifier = Modifier.padding(8.dp),
-            text = stringResource(id = R.string.description),
+            text = stringResource(id = com.test.app.commonresources.R.string.description),
             style = MaterialTheme.typography.titleMedium,
         )
 
@@ -318,16 +321,37 @@ fun getCodeChallengeTablePairs(
 ): List<Pair<String, String?>> {
     return with(codeChallengeDetail) {
         listOf(
-            Pair(context.getString(R.string.category), category),
-            Pair(context.getString(R.string.rank), rank?.name),
-            Pair(context.getString(R.string.total_attempts), totalAttempts.toString()),
-            Pair(context.getString(R.string.total_completed), totalCompleted.toString()),
-            Pair(context.getString(R.string.total_stars), totalStars.toString()),
-            Pair(context.getString(R.string.total_score), voteScore.toString()),
-            Pair(context.getString(R.string.created_by), createdBy?.username),
-            Pair(context.getString(R.string.approved_by), approvedBy?.username),
-            Pair(context.getString(R.string.published_at), publishedAt),
-            Pair(context.getString(R.string.approved_at), approvedAt)
+            Pair(context.getString(com.test.app.commonresources.R.string.category), category),
+            Pair(context.getString(com.test.app.commonresources.R.string.rank), rank?.name),
+            Pair(
+                context.getString(com.test.app.commonresources.R.string.total_attempts),
+                totalAttempts.toString()
+            ),
+            Pair(
+                context.getString(com.test.app.commonresources.R.string.total_completed),
+                totalCompleted.toString()
+            ),
+            Pair(
+                context.getString(com.test.app.commonresources.R.string.total_stars),
+                totalStars.toString()
+            ),
+            Pair(
+                context.getString(com.test.app.commonresources.R.string.total_score),
+                voteScore.toString()
+            ),
+            Pair(
+                context.getString(com.test.app.commonresources.R.string.created_by),
+                createdBy?.username
+            ),
+            Pair(
+                context.getString(com.test.app.commonresources.R.string.approved_by),
+                approvedBy?.username
+            ),
+            Pair(
+                context.getString(com.test.app.commonresources.R.string.published_at),
+                publishedAt
+            ),
+            Pair(context.getString(com.test.app.commonresources.R.string.approved_at), approvedAt)
         )
     }
 }
@@ -350,12 +374,12 @@ fun CodeChallengeContentPreview() {
                 CreatedBy(username = "username"),
                 ApprovedBy(username = "username"),
                 100,
-                100,
+                50,
                 50,
                 50,
                 "2013-11-05",
                 "2013-11-05"
-            ), context = LocalContext.current
+            )
         )
     }
 }
@@ -383,7 +407,7 @@ fun DescriptionPreview() {
 fun CodeChallengeRowItemPreview() {
     AppTheme {
         CodeChallengeRowItem(
-            stringResource(id = R.string.category),
+            stringResource(id = com.test.app.commonresources.R.string.category),
             "some category"
         )
     }
@@ -394,7 +418,7 @@ fun CodeChallengeRowItemPreview() {
 fun CodeChallengeTagsItemPreview() {
     AppTheme {
         CodeChallengeTagsItem(
-            stringResource(id = R.string.languages),
+            stringResource(id = com.test.app.commonresources.R.string.languages),
             listOf("kotlin", "javascript", "python")
         )
     }

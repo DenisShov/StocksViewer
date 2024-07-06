@@ -1,4 +1,4 @@
-package com.test.app.data
+package com.test.app.data.repository
 
 import androidx.paging.Pager
 import com.test.app.data.repository.CodeChallengesRepository
