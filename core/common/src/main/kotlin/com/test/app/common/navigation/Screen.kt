@@ -5,8 +5,8 @@ import kotlinx.parcelize.Parcelize
 
 sealed class Screen : Parcelable {
     @Parcelize
-    data object CompletedChallengesList : Screen()
+    data object StocksList : Screen()
 
     @Parcelize
-    data class CompletedChallengesDetail(val challengeId: String) : Screen()
+    data class StocksDetail(val stockTicker: String) : Screen()
 }

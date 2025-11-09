@@ -1,6 +1,6 @@
 package com.test.app.model.data
 
-data class CodeChallengeDetail(
+data class StockDetails(
     var id: String? = "",
     var name: String? = "",
     var slug: String? = "",

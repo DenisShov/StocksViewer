@@ -14,7 +14,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "CodeWars"
+rootProject.name = "StocksViewer"
 
 include(":app")
 include(":core:network")

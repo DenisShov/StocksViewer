@@ -1,16 +1,11 @@
 package com.test.app.details
 
-import android.content.Context
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -24,7 +19,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -33,7 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.os.bundleOf
@@ -44,54 +37,48 @@ import com.test.app.designsystem.component.BackgroundPreview
 import com.test.app.designsystem.component.LoadingData
 import com.test.app.designsystem.icon.CodeWarsIcon.ArrowBack
 import com.test.app.designsystem.theme.AppTheme
-import com.test.app.details.CodeChallengeDetailViewModel.Companion.CODE_CHALLENGE_ID_ARG
-import com.test.app.model.data.ApprovedBy
-import com.test.app.model.data.CodeChallengeDetail
-import com.test.app.model.data.CreatedBy
-import com.test.app.model.data.Rank
-import com.test.app.ui.DevicePreviews
-import com.test.app.ui.TagsRow
+import com.test.app.details.StockDetailsViewModel.Companion.STOCK_TICKER_ARG
+import com.test.app.model.data.StockChart
+import com.test.app.model.data.StockOverview
 import com.test.app.ui.showSnackBar
 import dev.olshevski.navigation.reimagined.hilt.hiltViewModel
 
 @Composable
-fun CodeChallengeDetailRoute(
-    codeChallengeId: String,
-    viewModel: CodeChallengeDetailViewModel = hiltViewModel(
-        defaultArguments = bundleOf(CODE_CHALLENGE_ID_ARG to codeChallengeId)
+fun StockDetailsRoute(
+    stockTicker: String,
+    viewModel: StockDetailsViewModel = hiltViewModel(
+        defaultArguments = bundleOf(STOCK_TICKER_ARG to stockTicker)
     ),
     onBackButtonClick: () -> Unit = {}
 ) {
-    LaunchedEffect(Unit) {
-        viewModel.getCodeChallengeById()
-    }
-
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val snackBarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
-    CodeChallengeDetailScreen(
-        uiState,
-        snackBarHostState,
+    StockDetailsScreen(
+        uiState = uiState,
+        snackBarHostState = snackBarHostState,
         onBackButtonClick = onBackButtonClick,
         onShowErrorSnackbar = { appError ->
-            showSnackBar(scope = scope,
+            showSnackBar(
+                scope = scope,
                 snackBarHostState = snackBarHostState,
                 message = appError.toErrorMessage(context),
                 actionLabel = context.resources.getString(com.test.app.commonresources.R.string.retry),
-                actionPerformed = { viewModel.getCodeChallengeById() },
-                dismissed = {})
+                actionPerformed = { viewModel.getStockOverviewByTicker() },
+                dismissed = {}
+            )
         }
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CodeChallengeDetailScreen(
-    uiState: CodeChallengeDetailViewModel.State = CodeChallengeDetailViewModel.State(
-        codeChallengeState = CodeChallengeDetailViewModel.CodeChallengeState.Loading
+fun StockDetailsScreen(
+    uiState: StockDetailsViewModel.State = StockDetailsViewModel.State(
+        stockDetailsState = StockDetailsViewModel.StockDetailsState.Loading
     ),
     snackBarHostState: SnackbarHostState,
     onBackButtonClick: () -> Unit = {},
@@ -116,18 +103,21 @@ fun CodeChallengeDetailScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            when (val codeChallengeUiState = uiState.codeChallengeState) {
-                is CodeChallengeDetailViewModel.CodeChallengeState.Loading -> {
+            when (val stockDetailsUiState = uiState.stockDetailsState) {
+                is StockDetailsViewModel.StockDetailsState.Loading -> {
                     LoadingData(
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
 
-                is CodeChallengeDetailViewModel.CodeChallengeState.Success -> {
-                    CodeChallengeContent(codeChallengeUiState.codeChallengeDetail)
+                is StockDetailsViewModel.StockDetailsState.Success -> {
+                    StockDetailsContent(
+                        stockOverview = stockDetailsUiState.stockOverview,
+                        stockChart = stockDetailsUiState.stockChart,
+                    )
                 }
 
-                is CodeChallengeDetailViewModel.CodeChallengeState.Error -> {
+                is StockDetailsViewModel.StockDetailsState.Error -> {
                     Text(
                         text = stringResource(id = com.test.app.commonresources.R.string.some_error_happened),
                         modifier = Modifier
@@ -137,7 +127,7 @@ fun CodeChallengeDetailScreen(
                         color = MaterialTheme.colorScheme.error,
                         textAlign = TextAlign.Center,
                     )
-                    onShowErrorSnackbar.invoke(codeChallengeUiState.error)
+                    onShowErrorSnackbar.invoke(stockDetailsUiState.error)
                 }
             }
         }
@@ -145,9 +135,7 @@ fun CodeChallengeDetailScreen(
 }
 
 @Composable
-private fun CodeChallengeContent(codeChallengeDetail: CodeChallengeDetail) {
-    val context = LocalContext.current
-
+private fun StockDetailsContent(stockOverview: StockOverview, stockChart: StockChart) {
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -157,48 +145,48 @@ private fun CodeChallengeContent(codeChallengeDetail: CodeChallengeDetail) {
                 shape = MaterialTheme.shapes.large,
             ),
     ) {
-
         item {
-            codeChallengeDetail.name?.let {
+            stockOverview.results.name.let {
                 Title(it)
             }
-            codeChallengeDetail.description?.let {
+            stockOverview.results.description?.let {
                 Description(it)
             }
-        }
 
-        val list = getCodeChallengeTablePairs(codeChallengeDetail, context)
-        items(list.size) { index ->
-            val name = list[index].first
-            val value = list[index].second
-            value?.let {
-                CodeChallengeRowItem(
-                    name = name,
-                    value = it
-                )
-            }
-        }
-
-        item {
-            codeChallengeDetail.tags?.let {
-                CodeChallengeTagsItem(
-                    name = stringResource(id = com.test.app.commonresources.R.string.tags),
-                    it
-                )
-            }
-            codeChallengeDetail.languages?.let {
-                CodeChallengeTagsItem(
-                    name = stringResource(id = com.test.app.commonresources.R.string.languages),
-                    it,
-                    showDivider = false
-                )
-            }
+//            StockChartGraph(
+//                modifier = Modifier,
+//                opening = getOpening(stockChart),
+//                closing = getClosing(stockChart),
+//                low = getLow(stockChart),
+//                high = getHigh(stockChart),
+//            )
         }
     }
 }
 
+//opening: Collection<Number>,
+//               closing: Collection<Number>,
+//               low: Collection<Number>,
+//               high: Collection<Number>,
+
+private fun getOpening(stockChart: StockChart): Collection<Number> {
+    return stockChart.results.map { it.open }.toList()
+}
+
+private fun getClosing(stockChart: StockChart): Collection<Number> {
+    return stockChart.results.map { it.close }.toList()
+}
+
+private fun getLow(stockChart: StockChart): Collection<Number> {
+    return stockChart.results.map { it.low }.toList()
+}
+
+private fun getHigh(stockChart: StockChart): Collection<Number> {
+    return stockChart.results.map { it.high }.toList()
+}
+
 @Composable
-private fun Title(it: String) {
+private fun Title(title: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -206,7 +194,7 @@ private fun Title(it: String) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = it,
+            text = title,
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.headlineLarge,
         )
@@ -250,139 +238,33 @@ private fun Description(description: String) {
     }
 }
 
-@Composable
-fun CodeChallengeRowItem(
-    name: String,
-    value: String
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
-    ) {
-        Text(
-            text = name,
-            style = MaterialTheme.typography.bodyMedium,
-        )
-
-        Spacer(modifier = Modifier.size(8.dp))
-
-        Text(
-            text = value,
-            fontWeight = FontWeight.SemiBold,
-            style = MaterialTheme.typography.bodyMedium,
-        )
-    }
-
-    HorizontalDivider(
-        modifier = Modifier
-            .padding(horizontal = 8.dp)
-            .alpha(0.2f),
-        color = MaterialTheme.colorScheme.secondary,
-    )
-}
-
-@Composable
-fun CodeChallengeTagsItem(
-    name: String,
-    values: List<String>,
-    showDivider: Boolean = true
-) {
-    Row(
-        modifier = Modifier
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = name,
-            style = MaterialTheme.typography.bodyMedium,
-        )
-
-        Spacer(modifier = Modifier.size(8.dp))
-
-        TagsRow(Modifier, values)
-    }
-
-    if (showDivider) {
-        HorizontalDivider(
-            modifier = Modifier
-                .padding(horizontal = 8.dp)
-                .alpha(0.2f),
-            color = MaterialTheme.colorScheme.secondary,
-        )
-    }
-}
-
-
-fun getCodeChallengeTablePairs(
-    codeChallengeDetail: CodeChallengeDetail, context: Context
-): List<Pair<String, String?>> {
-    return with(codeChallengeDetail) {
-        listOf(
-            Pair(context.getString(com.test.app.commonresources.R.string.category), category),
-            Pair(context.getString(com.test.app.commonresources.R.string.rank), rank?.name),
-            Pair(
-                context.getString(com.test.app.commonresources.R.string.total_attempts),
-                totalAttempts.toString()
-            ),
-            Pair(
-                context.getString(com.test.app.commonresources.R.string.total_completed),
-                totalCompleted.toString()
-            ),
-            Pair(
-                context.getString(com.test.app.commonresources.R.string.total_stars),
-                totalStars.toString()
-            ),
-            Pair(
-                context.getString(com.test.app.commonresources.R.string.total_score),
-                voteScore.toString()
-            ),
-            Pair(
-                context.getString(com.test.app.commonresources.R.string.created_by),
-                createdBy?.username
-            ),
-            Pair(
-                context.getString(com.test.app.commonresources.R.string.approved_by),
-                approvedBy?.username
-            ),
-            Pair(
-                context.getString(com.test.app.commonresources.R.string.published_at),
-                publishedAt
-            ),
-            Pair(context.getString(com.test.app.commonresources.R.string.approved_at), approvedAt)
-        )
-    }
-}
-
-@DevicePreviews
-@Composable
-fun CodeChallengeContentPreview() {
-    AppTheme {
-        CodeChallengeContent(
-            codeChallengeDetail = CodeChallengeDetail(
-                "",
-                "Range Extraction",
-                "",
-                "",
-                "algorithms",
-                "Write a function called `validBraces` that takes a string ...",
-                listOf("Algorithms", "Validation", "Logic", "Utilities"),
-                listOf("javascript", "coffeescript"),
-                Rank(name = "4 kyu"),
-                CreatedBy(username = "username"),
-                ApprovedBy(username = "username"),
-                100,
-                50,
-                50,
-                50,
-                "2013-11-05",
-                "2013-11-05"
-            )
-        )
-    }
-}
+//@DevicePreviews
+//@Composable
+//fun CodeChallengeContentPreview() {
+//    AppTheme {
+//        StockDetailsContent(
+//            stockDetails = StockDetails(
+//                "",
+//                "Range Extraction",
+//                "",
+//                "",
+//                "algorithms",
+//                "Write a function called `validBraces` that takes a string ...",
+//                listOf("Algorithms", "Validation", "Logic", "Utilities"),
+//                listOf("javascript", "coffeescript"),
+//                Rank(name = "4 kyu"),
+//                CreatedBy(username = "username"),
+//                ApprovedBy(username = "username"),
+//                100,
+//                50,
+//                50,
+//                50,
+//                "2013-11-05",
+//                "2013-11-05"
+//            )
+//        )
+//    }
+//}
 
 @BackgroundPreview
 @Composable
@@ -402,24 +284,24 @@ fun DescriptionPreview() {
     }
 }
 
-@BackgroundPreview
-@Composable
-fun CodeChallengeRowItemPreview() {
-    AppTheme {
-        CodeChallengeRowItem(
-            stringResource(id = com.test.app.commonresources.R.string.category),
-            "some category"
-        )
-    }
-}
-
-@BackgroundPreview
-@Composable
-fun CodeChallengeTagsItemPreview() {
-    AppTheme {
-        CodeChallengeTagsItem(
-            stringResource(id = com.test.app.commonresources.R.string.languages),
-            listOf("kotlin", "javascript", "python")
-        )
-    }
-}
+//@BackgroundPreview
+//@Composable
+//fun CodeChallengeRowItemPreview() {
+//    AppTheme {
+//        CodeChallengeRowItem(
+//            stringResource(id = com.test.app.commonresources.R.string.category),
+//            "some category"
+//        )
+//    }
+//}
+//
+//@BackgroundPreview
+//@Composable
+//fun CodeChallengeTagsItemPreview() {
+//    AppTheme {
+//        CodeChallengeTagsItem(
+//            stringResource(id = com.test.app.commonresources.R.string.languages),
+//            listOf("kotlin", "javascript", "python")
+//        )
+//    }
+//}

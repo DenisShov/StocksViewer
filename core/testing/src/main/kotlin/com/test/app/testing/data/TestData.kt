@@ -2,11 +2,10 @@ package com.test.app.testing.data
 
 import androidx.paging.LoadState
 import androidx.paging.LoadStates
-import androidx.paging.LoadType
 import androidx.paging.PagingData
 import com.test.app.model.data.ApprovedBy
-import com.test.app.model.data.CodeChallengeDetail
-import com.test.app.model.data.CodeChallengeOverview
+import com.test.app.model.data.StockDetails
+import com.test.app.model.data.StockOverview
 import com.test.app.model.data.CreatedBy
 import com.test.app.model.data.Rank
 import com.test.app.network.model.NetworkApprovedBy
@@ -43,57 +42,57 @@ val testNetworkCodeChallenges = NetworkCodeChallenges(
     data = testNetworkCodeChallengeOverviewList
 )
 
-val testCodeChallengeOverviewList = listOf(
-    CodeChallengeOverview(
+val testStockOverviewLists = listOf(
+    StockOverview(
         name = "Task 1 \n Some description",
         completedAt = "2017-04-06",
         completedLanguages = listOf(
             "kotlin"
         )
     ),
-    CodeChallengeOverview(
+    StockOverview(
         name = "Task 2 \n Some description",
         completedAt = "2017-04-06",
         completedLanguages = listOf(
             "kotlin"
         )
     ),
-    CodeChallengeOverview(
+    StockOverview(
         name = "Task 3 \n Some description",
         completedAt = "2017-04-06",
         completedLanguages = listOf(
             "kotlin"
         )
     ),
-    CodeChallengeOverview(
+    StockOverview(
         name = "Task 4 \n Some description",
         completedAt = "2017-04-06",
         completedLanguages = listOf(
             "kotlin"
         )
     ),
-    CodeChallengeOverview(
+    StockOverview(
         name = "Task 5 \n Some description",
         completedAt = "2017-04-06",
         completedLanguages = listOf(
             "kotlin"
         )
     ),
-    CodeChallengeOverview(
+    StockOverview(
         name = "Task 6 \n Some description",
         completedAt = "2017-04-06",
         completedLanguages = listOf(
             "kotlin"
         )
     ),
-    CodeChallengeOverview(
+    StockOverview(
         name = "Task 7 \n Some description",
         completedAt = "2017-04-06",
         completedLanguages = listOf(
             "kotlin"
         )
     ),
-    CodeChallengeOverview(
+    StockOverview(
         name = "Task 8 \n Some description",
         completedAt = "2017-04-06",
         completedLanguages = listOf(
@@ -102,14 +101,14 @@ val testCodeChallengeOverviewList = listOf(
     ),
 )
 
-val testPagingData = PagingData.from(testCodeChallengeOverviewList)
+val testPagingData = PagingData.from(testStockOverviewLists)
 
 val testFlowPagingData = flow {
     emit(testPagingData)
 }
 
 val testPagingDataNotLoading = PagingData.from(
-    data = testCodeChallengeOverviewList,
+    data = testStockOverviewLists,
     sourceLoadStates = LoadStates(
         refresh = LoadState.NotLoading(false),
         append = LoadState.NotLoading(false),
@@ -122,7 +121,7 @@ val testFlowPagingDataNotLoading = flow {
 }
 
 val testPagingDataAppendLoading = PagingData.from(
-    data = testCodeChallengeOverviewList,
+    data = testStockOverviewLists,
     sourceLoadStates = LoadStates(
         refresh = LoadState.NotLoading(false),
         append = LoadState.Loading,
@@ -137,7 +136,7 @@ val testFlowPagingDataAppendLoading = flow {
 const val testErrorMessage = "Test error"
 
 val testPagingDataAppendError = PagingData.from(
-    data = testCodeChallengeOverviewList,
+    data = testStockOverviewLists,
     sourceLoadStates = LoadStates(
         refresh = LoadState.NotLoading(false),
         append = LoadState.Error(RuntimeException(testErrorMessage)),
@@ -169,7 +168,7 @@ val testNetworkCodeChallengeDetail = NetworkCodeChallengeDetail(
     "2013-12-05"
 )
 
-val testCodeChallengeDetail = CodeChallengeDetail(
+val testStockDetails = StockDetails(
     "id",
     "Range Extraction",
     "",

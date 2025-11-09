@@ -32,11 +32,10 @@ android {
 }
 
 dependencies {
-    implementation(project(":feature:list"))
-    implementation(project(":feature:details"))
-
     implementation(project(":core:designsystem"))
     implementation(project(":core:common"))
+    implementation(project(":feature:list"))
+    implementation(project(":feature:details"))
 
     implementation(libs.navigation.hilt)
     implementation(libs.androidx.activity.compose)

@@ -2,9 +2,9 @@ package com.test.app.data.paging
 
 import androidx.paging.PagingSource
 import com.test.app.data.utils.DATE_TIME_PATTERN
-import com.test.app.model.data.CodeChallengeOverview
-import com.test.app.network.retrofit.CodeWarsApi
-import com.test.app.testing.data.testCodeChallengeOverviewList
+import com.test.app.model.data.StockOverview
+import com.test.app.network.retrofit.StocksApi
+import com.test.app.testing.data.testStockOverviewLists
 import com.test.app.testing.data.testNetworkCodeChallengeOverviewList
 import com.test.app.testing.data.testNetworkCodeChallenges
 import com.test.app.testing.utils.BaseCoroutineTestWithTestDispatcherProvider
@@ -21,10 +21,10 @@ import org.junit.Test
 
 class CodeChallengesPagingSourceTest : BaseCoroutineTestWithTestDispatcherProvider() {
 
-    private lateinit var codeChallengesPagingSource: CodeChallengesPagingSource
+    private lateinit var stocksPagingSource: StocksPagingSource
 
     @MockK
-    private lateinit var getCodeWarsApi: CodeWarsApi
+    private lateinit var getStocksApi: StocksApi
 
     @MockK
     private lateinit var dateTime: DateTime
@@ -33,7 +33,7 @@ class CodeChallengesPagingSourceTest : BaseCoroutineTestWithTestDispatcherProvid
     fun setUp() {
         MockKAnnotations.init(this)
 
-        codeChallengesPagingSource = CodeChallengesPagingSource(codeWarsApi = getCodeWarsApi)
+        stocksPagingSource = StocksPagingSource(stocksApi = getStocksApi)
     }
 
     @Test
@@ -42,7 +42,7 @@ class CodeChallengesPagingSourceTest : BaseCoroutineTestWithTestDispatcherProvid
 
         val key = 0
 
-        coEvery { getCodeWarsApi.getCompletedCodeChallenges(key) } returns testNetworkCodeChallenges
+        coEvery { getStocksApi.getCompletedCodeChallenges(key) } returns testNetworkCodeChallenges
 
         val params = PagingSource.LoadParams.Refresh(
             key = key,
@@ -51,12 +51,12 @@ class CodeChallengesPagingSourceTest : BaseCoroutineTestWithTestDispatcherProvid
         )
 
         val expected = PagingSource.LoadResult.Page(
-            data = testCodeChallengeOverviewList,
+            data = testStockOverviewLists,
             prevKey = null,
             nextKey = 1
         )
 
-        val actual = codeChallengesPagingSource.load(params = params)
+        val actual = stocksPagingSource.load(params = params)
 
         assertEquals(expected, actual)
     }
@@ -67,7 +67,7 @@ class CodeChallengesPagingSourceTest : BaseCoroutineTestWithTestDispatcherProvid
 
         val error = RuntimeException("some error")
 
-        coEvery { getCodeWarsApi.getCompletedCodeChallenges(key) } throws error
+        coEvery { getStocksApi.getCompletedCodeChallenges(key) } throws error
 
         val params = PagingSource.LoadParams.Refresh(
             key = key,
@@ -75,11 +75,11 @@ class CodeChallengesPagingSourceTest : BaseCoroutineTestWithTestDispatcherProvid
             placeholdersEnabled = false
         )
 
-        val expected = PagingSource.LoadResult.Error<Int, CodeChallengeOverview>(
+        val expected = PagingSource.LoadResult.Error<Int, StockOverview>(
             throwable = error
         )
 
-        val actual = codeChallengesPagingSource.load(params = params)
+        val actual = stocksPagingSource.load(params = params)
 
         assertEquals(expected, actual)
     }
@@ -90,7 +90,7 @@ class CodeChallengesPagingSourceTest : BaseCoroutineTestWithTestDispatcherProvid
 
         val key = 10
 
-        coEvery { getCodeWarsApi.getCompletedCodeChallenges(key) } returns testNetworkCodeChallenges
+        coEvery { getStocksApi.getCompletedCodeChallenges(key) } returns testNetworkCodeChallenges
 
         val params = PagingSource.LoadParams.Append(
             key = key,
@@ -99,12 +99,12 @@ class CodeChallengesPagingSourceTest : BaseCoroutineTestWithTestDispatcherProvid
         )
 
         val expected = PagingSource.LoadResult.Page(
-            data = testCodeChallengeOverviewList,
+            data = testStockOverviewLists,
             prevKey = null,
             nextKey = null
         )
 
-        val actual = codeChallengesPagingSource.load(params = params)
+        val actual = stocksPagingSource.load(params = params)
 
         assertEquals(expected, actual)
     }

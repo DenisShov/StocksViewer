@@ -13,6 +13,7 @@ dependencies {
     implementation(project(":core:domain"))
     implementation(project(":core:ui"))
     implementation(libs.timber)
+//    implementation(libs.vico.compose.m3)
 
     testImplementation(project(":core:testing"))
     androidTestImplementation(project(":core:testing"))

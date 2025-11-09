@@ -18,7 +18,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performScrollToIndex
 import androidx.compose.ui.test.performScrollToNode
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.test.app.testing.data.testCodeChallengeOverviewList
+import com.test.app.testing.data.testStockOverviewLists
 import com.test.app.testing.data.testErrorMessage
 import com.test.app.testing.data.testFlowPagingData
 import com.test.app.testing.data.testFlowPagingDataAppendError
@@ -51,8 +51,8 @@ class CodeChallengesScreenTest {
             val snackBarHostState = remember { SnackbarHostState() }
             val pullToRefreshState = rememberPullToRefreshState()
 
-            CodeChallengesScreen(
-                codeChallenges = codeChallenges,
+            StocksListScreen(
+                stocksPaging = codeChallenges,
                 snackBarHostState = snackBarHostState,
                 pullToRefreshState = pullToRefreshState,
             )
@@ -70,8 +70,8 @@ class CodeChallengesScreenTest {
             val snackBarHostState = remember { SnackbarHostState() }
             val pullToRefreshState = rememberPullToRefreshState()
 
-            CodeChallengesScreen(
-                codeChallenges = codeChallenges,
+            StocksListScreen(
+                stocksPaging = codeChallenges,
                 snackBarHostState = snackBarHostState,
                 pullToRefreshState = pullToRefreshState,
             )
@@ -89,8 +89,8 @@ class CodeChallengesScreenTest {
             val snackBarHostState = remember { SnackbarHostState() }
             val pullToRefreshState = rememberPullToRefreshState()
 
-            CodeChallengesScreen(
-                codeChallenges = codeChallenges,
+            StocksListScreen(
+                stocksPaging = codeChallenges,
                 snackBarHostState = snackBarHostState,
                 pullToRefreshState = pullToRefreshState,
             )
@@ -100,7 +100,7 @@ class CodeChallengesScreenTest {
             .onAllNodes(hasScrollToNodeAction())
             .onFirst()
 
-        testCodeChallengeOverviewList.forEachIndexed { index, codeChallenge ->
+        testStockOverviewLists.forEachIndexed { index, codeChallenge ->
             scrollableNode.performScrollToIndex(index)
 
             composeTestRule
@@ -116,8 +116,8 @@ class CodeChallengesScreenTest {
             val snackBarHostState = remember { SnackbarHostState() }
             val pullToRefreshState = rememberPullToRefreshState()
 
-            CodeChallengesScreen(
-                codeChallenges = codeChallenges,
+            StocksListScreen(
+                stocksPaging = codeChallenges,
                 snackBarHostState = snackBarHostState,
                 pullToRefreshState = pullToRefreshState,
             )
@@ -136,8 +136,8 @@ class CodeChallengesScreenTest {
             val snackBarHostState = remember { SnackbarHostState() }
             val pullToRefreshState = rememberPullToRefreshState()
 
-            CodeChallengesScreen(
-                codeChallenges = codeChallenges,
+            StocksListScreen(
+                stocksPaging = codeChallenges,
                 snackBarHostState = snackBarHostState,
                 pullToRefreshState = pullToRefreshState,
             )

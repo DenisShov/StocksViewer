@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">CodeWars</string>
+    <string name="app_name">StocksViewer</string>
     <string name="some_error_happened">Some error happened</string>
     <string name="retry">Retry</string>
     <string name="no_network_connection">No network connection</string>

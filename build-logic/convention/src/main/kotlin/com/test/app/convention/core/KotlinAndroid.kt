@@ -36,13 +36,13 @@ internal fun Project.configureKotlinAndroid(
  */
 private fun Project.configureKotlin() {
     tasks.withType<KotlinCompile>().configureEach {
-        kotlinOptions {
-            jvmTarget = JavaVersion.VERSION_17.toString()
+        kotlinOptions { // compilerOptions
+            jvmTarget = JavaVersion.VERSION_17.toString() //  jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
             // Treat all Kotlin warnings as errors (disabled by default)
             // Override by setting warningsAsErrors=true in your ~/.gradle/gradle.properties
             val warningsAsErrors: String? by project
-            allWarningsAsErrors = warningsAsErrors.toBoolean()
-            freeCompilerArgs = freeCompilerArgs + listOf(
+            allWarningsAsErrors = warningsAsErrors.toBoolean() //             allWarningsAsErrors.set(warningsAsErrors.toBoolean())
+            freeCompilerArgs = freeCompilerArgs + listOf( // freeCompilerArgs.addAll(
                 // Enable experimental coroutines APIs, including Flow
                 "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
             )

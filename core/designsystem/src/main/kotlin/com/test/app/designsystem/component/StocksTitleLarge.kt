@@ -9,7 +9,7 @@ import androidx.compose.ui.res.stringResource
 import com.test.app.designsystem.theme.AppTheme
 
 @Composable
-fun CodeWarsTitleLarge(
+fun StocksTitleLarge(
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.onBackground
 ) {
@@ -23,8 +23,8 @@ fun CodeWarsTitleLarge(
 
 @ThemePreviews
 @Composable
-fun CodeWarsTitleLargePreview() {
+fun StocksTitleLargePreview() {
     AppTheme {
-        CodeWarsTitleLarge(modifier = Modifier)
+        StocksTitleLarge(modifier = Modifier)
     }
 }

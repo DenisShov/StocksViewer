@@ -19,6 +19,7 @@ dependencies {
     api(project(":core:ui"))
 
     implementation(libs.androidx.paging.compose)
+    implementation(libs.coil)
 
     testImplementation(project(":core:testing"))
     androidTestImplementation(project(":core:testing"))

@@ -7,7 +7,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.test.app.codewars.navigation.CodeWarsNavHost
+import com.test.app.codewars.navigation.StocksNavHost
 import com.test.app.common.navigation.Screen
 import dev.olshevski.navigation.reimagined.NavBackHandler
 import dev.olshevski.navigation.reimagined.rememberNavController
@@ -16,7 +16,7 @@ import dev.olshevski.navigation.reimagined.rememberNavController
 fun CodeWarsApp(modifier: Modifier = Modifier) {
     val navController =
         rememberNavController<Screen>(
-            startDestination = Screen.CompletedChallengesList,
+            startDestination = Screen.StocksList,
         )
 
     NavBackHandler(navController)
@@ -30,7 +30,7 @@ fun CodeWarsApp(modifier: Modifier = Modifier) {
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            CodeWarsNavHost(navController)
+            StocksNavHost(navController)
         }
     }
 

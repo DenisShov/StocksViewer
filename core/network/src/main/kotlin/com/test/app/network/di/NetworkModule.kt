@@ -4,7 +4,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.test.app.network.BuildConfig
 import com.test.app.network.retrofit.ApiErrorInterceptor
-import com.test.app.network.retrofit.CodeWarsApi
+import com.test.app.network.retrofit.StocksApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -52,15 +52,15 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideCodeWarsApi(
+    fun provideStocksApi(
     okHttpClient: OkHttpClient,
     gson: Gson,
-    ): CodeWarsApi {
+    ): StocksApi {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BACKEND_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
-            .create(CodeWarsApi::class.java)
+            .create(StocksApi::class.java)
     }
 }

@@ -4,9 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.test.app.common.error.AppError
 import com.test.app.common.result.DataResult
-import com.test.app.details.CodeChallengeDetailViewModel.Companion.CODE_CHALLENGE_ID_ARG
-import com.test.app.domain.GetCodeChallengeByIdUseCase
-import com.test.app.testing.data.testCodeChallengeDetail
+import com.test.app.details.StockDetailsViewModel.Companion.STOCK_TICKER_ARG
+import com.test.app.domain.GetStockOverviewByTickerUseCase
+import com.test.app.testing.data.testStockDetails
 import com.test.app.testing.utils.BaseCoroutineTestWithInstantTaskExecutorRule
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -22,46 +22,46 @@ import kotlin.test.assertEquals
 
 class CodeChallengeDetailViewModelTest : BaseCoroutineTestWithInstantTaskExecutorRule() {
 
-    private lateinit var viewModel: CodeChallengeDetailViewModel
+    private lateinit var viewModel: StockDetailsViewModel
 
     @MockK
-    private lateinit var getCodeChallengeByIdUseCase: GetCodeChallengeByIdUseCase
+    private lateinit var getStockOverviewByTickerUseCase: GetStockOverviewByTickerUseCase
 
     private val savedStateHandle =
-        SavedStateHandle(mapOf(CODE_CHALLENGE_ID_ARG to testCodeChallengeDetail.id))
+        SavedStateHandle(mapOf(STOCK_TICKER_ARG to testStockDetails.id))
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
 
-        viewModel = CodeChallengeDetailViewModel(
+        viewModel = StockDetailsViewModel(
             savedStateHandle = savedStateHandle,
-            getCodeChallengeByIdUseCase = getCodeChallengeByIdUseCase,
+            getStockOverviewByTickerUseCase = getStockOverviewByTickerUseCase,
         )
     }
 
     @Test
     fun codeChallengeId_matchesCodeChallengeIdFromSavedStateHandle() =
-        assertEquals(testCodeChallengeDetail.id, viewModel.codeChallengeId)
+        assertEquals(testStockDetails.id, viewModel.ticker)
 
     @Test
     fun `test getCodeChallengeById`() = runTest {
-        coEvery { getCodeChallengeByIdUseCase.launch(viewModel.codeChallengeId) } returns flow {
-            emit(DataResult.Success(testCodeChallengeDetail))
+        coEvery { getStockOverviewByTickerUseCase.launch(viewModel.ticker) } returns flow {
+            emit(DataResult.Success(testStockDetails))
         }
 
-        viewModel.getCodeChallengeById()
+        viewModel.getStockOverviewByTicker()
 
         viewModel.uiState.test {
             awaitItem().shouldBeEqualTo(
-                CodeChallengeDetailViewModel.State(
-                    CodeChallengeDetailViewModel.CodeChallengeState.Loading
+                StockDetailsViewModel.State(
+                    StockDetailsViewModel.StockDetailsState.Loading
                 )
             )
             awaitItem().shouldBeEqualTo(
-                CodeChallengeDetailViewModel.State(
-                    CodeChallengeDetailViewModel.CodeChallengeState.Success(
-                        testCodeChallengeDetail
+                StockDetailsViewModel.State(
+                    StockDetailsViewModel.StockDetailsState.Success(
+                        testStockDetails
                     )
                 )
             )
@@ -69,7 +69,7 @@ class CodeChallengeDetailViewModelTest : BaseCoroutineTestWithInstantTaskExecuto
         }
 
         coVerify(exactly = 1) {
-            getCodeChallengeByIdUseCase.launch(viewModel.codeChallengeId)
+            getStockOverviewByTickerUseCase.launch(viewModel.ticker)
         }
     }
 
@@ -77,22 +77,22 @@ class CodeChallengeDetailViewModelTest : BaseCoroutineTestWithInstantTaskExecuto
     fun `test getCodeChallengeById handles error`() = runTest {
 
         val exception = mockk<IllegalStateException>()
-        coEvery { getCodeChallengeByIdUseCase.launch(viewModel.codeChallengeId) } returns
+        coEvery { getStockOverviewByTickerUseCase.launch(viewModel.ticker) } returns
                 flow {
                     emit(DataResult.Failure(AppError.GeneralError(exception)))
                 }
 
-        viewModel.getCodeChallengeById()
+        viewModel.getStockOverviewByTicker()
 
         viewModel.uiState.test {
             awaitItem().shouldBeEqualTo(
-                CodeChallengeDetailViewModel.State(
-                    CodeChallengeDetailViewModel.CodeChallengeState.Loading
+                StockDetailsViewModel.State(
+                    StockDetailsViewModel.StockDetailsState.Loading
                 )
             )
             awaitItem().shouldBeEqualTo(
-                CodeChallengeDetailViewModel.State(
-                    CodeChallengeDetailViewModel.CodeChallengeState.Error(
+                StockDetailsViewModel.State(
+                    StockDetailsViewModel.StockDetailsState.Error(
                         AppError.GeneralError(exception)
                     )
                 )
@@ -101,7 +101,7 @@ class CodeChallengeDetailViewModelTest : BaseCoroutineTestWithInstantTaskExecuto
             cancelAndConsumeRemainingEvents()
         }
         coVerify(exactly = 1) {
-            getCodeChallengeByIdUseCase.launch(viewModel.codeChallengeId)
+            getStockOverviewByTickerUseCase.launch(viewModel.ticker)
         }
     }
 }

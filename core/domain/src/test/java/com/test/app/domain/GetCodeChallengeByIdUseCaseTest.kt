@@ -3,8 +3,8 @@ package com.test.app.domain
 import app.cash.turbine.test
 import com.test.app.common.error.AppError
 import com.test.app.common.result.DataResult
-import com.test.app.data.repository.CodeChallengesRepositoryImpl
-import com.test.app.testing.data.testCodeChallengeDetail
+import com.test.app.data.repository.StocksRepositoryImpl
+import com.test.app.testing.data.testStockDetails
 import com.test.app.testing.utils.BaseCoroutineTestWithTestDispatcherProvider
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -17,18 +17,18 @@ import org.junit.Before
 import org.junit.Test
 
 class GetCodeChallengeByIdUseCaseTest : BaseCoroutineTestWithTestDispatcherProvider() {
-    private lateinit var useCase: GetCodeChallengeByIdUseCase
+    private lateinit var useCase: GetStockOverviewByTickerUseCase
 
     @MockK
-    private lateinit var repository: CodeChallengesRepositoryImpl
+    private lateinit var repository: StocksRepositoryImpl
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
 
-        useCase = GetCodeChallengeByIdUseCase(
+        useCase = GetStockOverviewByTickerUseCase(
             dispatcherProvider = testDispatcherProvider,
-            codeChallengesRepository = repository
+            stocksRepository = repository
         )
     }
 
@@ -36,19 +36,19 @@ class GetCodeChallengeByIdUseCaseTest : BaseCoroutineTestWithTestDispatcherProvi
     fun `test use case`() = runTest {
         val challengeId = "id"
 
-        coEvery { repository.getCodeChallengeById(challengeId) } returns testCodeChallengeDetail
+        coEvery { repository.getStockOverviewByTicker(challengeId) } returns testStockDetails
 
         useCase.launch(challengeId).test {
             val firstItem = awaitItem()
             firstItem.shouldBeEqualTo(DataResult.Loading)
 
             val secondItem = awaitItem()
-            secondItem.shouldBeEqualTo(DataResult.Success(testCodeChallengeDetail))
+            secondItem.shouldBeEqualTo(DataResult.Success(testStockDetails))
             cancelAndIgnoreRemainingEvents()
         }
 
         coVerify(exactly = 1) {
-            repository.getCodeChallengeById(challengeId)
+            repository.getStockOverviewByTicker(challengeId)
         }
     }
 
@@ -57,7 +57,7 @@ class GetCodeChallengeByIdUseCaseTest : BaseCoroutineTestWithTestDispatcherProvi
         val challengeId = "id"
 
         val exception = mockk<IllegalStateException>()
-        coEvery { repository.getCodeChallengeById(challengeId) } throws exception
+        coEvery { repository.getStockOverviewByTicker(challengeId) } throws exception
 
         useCase.launch(challengeId).test {
             val firstItem = awaitItem()
@@ -69,7 +69,7 @@ class GetCodeChallengeByIdUseCaseTest : BaseCoroutineTestWithTestDispatcherProvi
         }
 
         coVerify(exactly = 1) {
-            repository.getCodeChallengeById(challengeId)
+            repository.getStockOverviewByTicker(challengeId)
         }
     }
 }

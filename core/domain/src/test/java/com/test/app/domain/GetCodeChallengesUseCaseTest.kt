@@ -1,7 +1,7 @@
 package com.test.app.domain
 
 import app.cash.turbine.test
-import com.test.app.data.repository.CodeChallengesRepository
+import com.test.app.data.repository.StocksRepository
 import com.test.app.testing.data.testPagingData
 import com.test.app.testing.utils.BaseCoroutineTestWithTestDispatcherProvider
 import io.mockk.MockKAnnotations
@@ -19,18 +19,18 @@ class GetCodeChallengesUseCaseTest : BaseCoroutineTestWithTestDispatcherProvider
     private lateinit var useCase: GetCodeChallengesUseCase
 
     @MockK
-    private lateinit var repository: CodeChallengesRepository
+    private lateinit var repository: StocksRepository
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
 
-        useCase = GetCodeChallengesUseCase(codeChallengesRepository = repository)
+        useCase = GetCodeChallengesUseCase(stocksRepository = repository)
     }
 
     @Test
     fun `test use case`() = runTest {
-        coEvery { repository.getCodeChallengesFlow() } returns flow {
+        coEvery { repository.getStocksFlow() } returns flow {
             emit(testPagingData)
         }
 
@@ -41,7 +41,7 @@ class GetCodeChallengesUseCaseTest : BaseCoroutineTestWithTestDispatcherProvider
         }
 
         coVerify(exactly = 1) {
-            repository.getCodeChallengesFlow()
+            repository.getStocksFlow()
         }
     }
 }

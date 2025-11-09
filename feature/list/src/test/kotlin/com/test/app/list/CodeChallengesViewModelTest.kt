@@ -1,38 +1,60 @@
 package com.test.app.list
 
 import androidx.paging.testing.asSnapshot
-import com.test.app.domain.GetCodeChallengesUseCase
-import com.test.app.testing.data.testCodeChallengeOverviewList
-import com.test.app.testing.repository.TestCodeChallengesRepository
+import app.cash.turbine.test
+import com.test.app.testing.data.testPagingData
+import com.test.app.testing.data.testStockOverviewLists
+import com.test.app.testing.repository.TestStocksRepository
 import com.test.app.testing.utils.BaseCoroutineTestWithInstantTaskExecutorRule
+import io.mockk.coEvery
+import io.mockk.coVerify
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertEquals
 
 class CodeChallengesViewModelTest : BaseCoroutineTestWithInstantTaskExecutorRule() {
 
-    private lateinit var viewModel: CodeChallengesViewModel
+    private lateinit var viewModel: StocksListViewModel
 
-    private var testCodeChallengesRepository = TestCodeChallengesRepository()
+    private var testCodeChallengesRepository = TestStocksRepository()
 
     private var getCodeChallengesUseCase = GetCodeChallengesUseCase(testCodeChallengesRepository)
 
     @Before
     fun setUp() {
-        viewModel = CodeChallengesViewModel(getCodeChallengesUseCase = getCodeChallengesUseCase)
+        viewModel = StocksListViewModel(getCodeChallengesUseCase = getCodeChallengesUseCase)
     }
 
     @Test
     fun `test codeChallenges`() = runTest {
         val collectJob = launch(UnconfinedTestDispatcher()) {
-            viewModel.codeChallenges.asSnapshot()
+            viewModel.stocksPaging.asSnapshot()
         }
 
-        assertEquals(testCodeChallengeOverviewList, viewModel.codeChallenges.asSnapshot())
+        assertEquals(testStockOverviewLists, viewModel.stocksPaging.asSnapshot())
 
         collectJob.cancel()
+    }
+
+    @Test
+    fun `test flow`() = runTest {
+        coEvery { repository.getStocksFlow() } returns flow {
+            emit(testPagingData)
+        }
+
+        useCase.launch().test {
+            val firstItem = awaitItem()
+            firstItem.shouldBeEqualTo(testPagingData)
+            cancelAndIgnoreRemainingEvents()
+        }
+
+        coVerify(exactly = 1) {
+            repository.getStocksFlow()
+        }
     }
 }

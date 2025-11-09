@@ -13,10 +13,9 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performScrollToNode
 import com.test.app.common.error.AppError
-import com.test.app.details.CodeChallengeDetailScreen
-import com.test.app.details.CodeChallengeDetailViewModel
-import com.test.app.details.R
-import com.test.app.testing.data.testCodeChallengeDetail
+import com.test.app.details.StockDetailsScreen
+import com.test.app.details.StockDetailsViewModel
+import com.test.app.testing.data.testStockDetails
 import io.mockk.InternalPlatformDsl.toStr
 import org.junit.Before
 import org.junit.Rule
@@ -72,11 +71,11 @@ class CodeChallengeDetailScreenTest {
     fun check_top_bar_back_button_is_displayed() {
         composeTestRule.setContent {
             val snackBarHostState = remember { SnackbarHostState() }
-            CodeChallengeDetailScreen(
+            StockDetailsScreen(
                 snackBarHostState = snackBarHostState,
 
-                uiState = CodeChallengeDetailViewModel.State(
-                    codeChallengeState = CodeChallengeDetailViewModel.CodeChallengeState.Loading
+                uiState = StockDetailsViewModel.State(
+                    stockDetailsState = StockDetailsViewModel.StockDetailsState.Loading
                 )
             )
         }
@@ -90,11 +89,11 @@ class CodeChallengeDetailScreenTest {
     fun check_loading_is_displayed() {
         composeTestRule.setContent {
             val snackBarHostState = remember { SnackbarHostState() }
-            CodeChallengeDetailScreen(
+            StockDetailsScreen(
                 snackBarHostState = snackBarHostState,
 
-                uiState = CodeChallengeDetailViewModel.State(
-                    codeChallengeState = CodeChallengeDetailViewModel.CodeChallengeState.Loading
+                uiState = StockDetailsViewModel.State(
+                    stockDetailsState = StockDetailsViewModel.StockDetailsState.Loading
                 )
             )
         }
@@ -112,12 +111,12 @@ class CodeChallengeDetailScreenTest {
     fun check_content_is_displayed() {
         composeTestRule.setContent {
             val snackBarHostState = remember { SnackbarHostState() }
-            CodeChallengeDetailScreen(
+            StockDetailsScreen(
                 snackBarHostState = snackBarHostState,
 
-                uiState = CodeChallengeDetailViewModel.State(
-                    codeChallengeState = CodeChallengeDetailViewModel.CodeChallengeState.Success(
-                        testCodeChallengeDetail
+                uiState = StockDetailsViewModel.State(
+                    stockDetailsState = StockDetailsViewModel.StockDetailsState.Success(
+                        testStockDetails
                     )
                 )
             )
@@ -125,46 +124,46 @@ class CodeChallengeDetailScreenTest {
 
         scrollToTexts(
             listOf(
-                testCodeChallengeDetail.name!!,
+                testStockDetails.name!!,
                 categoryTitle,
-                testCodeChallengeDetail.category!!,
+                testStockDetails.category!!,
                 descriptionTitle,
-                testCodeChallengeDetail.description!!,
+                testStockDetails.description!!,
                 rankTitle,
-                testCodeChallengeDetail.rank!!.name!!,
+                testStockDetails.rank!!.name!!,
                 createdByTitle,
-                testCodeChallengeDetail.createdBy!!.username!!,
+                testStockDetails.createdBy!!.username!!,
                 approvedByTitle,
-                testCodeChallengeDetail.approvedBy!!.username!!,
+                testStockDetails.approvedBy!!.username!!,
                 totalAttemptsTitle,
-                testCodeChallengeDetail.totalAttempts.toStr(),
+                testStockDetails.totalAttempts.toStr(),
                 totalCompletedTitle,
-                testCodeChallengeDetail.totalCompleted.toStr(),
+                testStockDetails.totalCompleted.toStr(),
                 totalStarsTitle,
-                testCodeChallengeDetail.totalStars.toStr(),
+                testStockDetails.totalStars.toStr(),
                 voteScoreTitle,
-                testCodeChallengeDetail.voteScore.toStr(),
+                testStockDetails.voteScore.toStr(),
                 publishedAtTitle,
-                testCodeChallengeDetail.publishedAt.toStr(),
+                testStockDetails.publishedAt.toStr(),
                 approvedAtTitle,
-                testCodeChallengeDetail.approvedAt.toStr(),
+                testStockDetails.approvedAt.toStr(),
                 tagsTitle,
                 languagesTitle
             )
         )
-        scrollToTexts(testCodeChallengeDetail.tags!!)
-        scrollToTexts(testCodeChallengeDetail.languages!!)
+        scrollToTexts(testStockDetails.tags!!)
+        scrollToTexts(testStockDetails.languages!!)
     }
 
     @Test
     fun check_Error_is_displayed() {
         composeTestRule.setContent {
             val snackBarHostState = remember { SnackbarHostState() }
-            CodeChallengeDetailScreen(
+            StockDetailsScreen(
                 snackBarHostState = snackBarHostState,
 
-                uiState = CodeChallengeDetailViewModel.State(
-                    codeChallengeState = CodeChallengeDetailViewModel.CodeChallengeState.Error(
+                uiState = StockDetailsViewModel.State(
+                    stockDetailsState = StockDetailsViewModel.StockDetailsState.Error(
                         error = AppError.GeneralError(RuntimeException("Some error"))
                     )
                 )

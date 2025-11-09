@@ -1,11 +1,9 @@
 package com.test.app.data.repository
 
 import androidx.paging.Pager
-import com.test.app.data.repository.CodeChallengesRepository
-import com.test.app.data.repository.CodeChallengesRepositoryImpl
-import com.test.app.model.data.CodeChallengeOverview
-import com.test.app.network.retrofit.CodeWarsApi
-import com.test.app.testing.data.testCodeChallengeDetail
+import com.test.app.model.data.StockOverview
+import com.test.app.network.retrofit.StocksApi
+import com.test.app.testing.data.testStockDetails
 import com.test.app.testing.data.testFlowPagingData
 import com.test.app.testing.data.testNetworkCodeChallengeDetail
 import com.test.app.testing.utils.BaseCoroutineTestWithTestDispatcherProvider
@@ -20,26 +18,26 @@ import org.junit.Test
 
 class CodeChallengesRepositoryImplTest : BaseCoroutineTestWithTestDispatcherProvider() {
 
-    private lateinit var repository: CodeChallengesRepository
+    private lateinit var repository: StocksRepository
 
     @MockK
-    private lateinit var getCodeWarsApi: CodeWarsApi
+    private lateinit var getStocksApi: StocksApi
 
     @MockK
-    private lateinit var pager: Pager<Int, CodeChallengeOverview>
+    private lateinit var pager: Pager<Int, StockOverview>
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
 
-        repository = CodeChallengesRepositoryImpl(codeWarsApi = getCodeWarsApi, pager = pager)
+        repository = StocksRepositoryImpl(stocksApi = getStocksApi, pager = pager)
     }
 
     @Test
     fun `test getCodeChallengesFlow`() = runTest {
         coEvery { pager.flow } returns testFlowPagingData
 
-        val flow = repository.getCodeChallengesFlow()
+        val flow = repository.getStocksFlow()
 
         flow.shouldBeEqualTo(testFlowPagingData)
 
@@ -52,14 +50,14 @@ class CodeChallengesRepositoryImplTest : BaseCoroutineTestWithTestDispatcherProv
     fun `test getCodeChallengeById`() = runTest {
         val codeChallengeId = "id"
 
-        coEvery { getCodeWarsApi.getCodeChallenge(codeChallengeId) } returns testNetworkCodeChallengeDetail
+        coEvery { getStocksApi.getCodeChallenge(codeChallengeId) } returns testNetworkCodeChallengeDetail
 
-        val coinMarkets = repository.getCodeChallengeById(codeChallengeId)
+        val coinMarkets = repository.getStockOverviewByTicker(codeChallengeId)
 
-        coinMarkets.shouldBeEqualTo(testCodeChallengeDetail)
+        coinMarkets.shouldBeEqualTo(testStockDetails)
 
         coVerify(exactly = 1) {
-            getCodeWarsApi.getCodeChallenge(codeChallengeId)
+            getStocksApi.getCodeChallenge(codeChallengeId)
         }
     }
 

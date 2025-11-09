@@ -2,25 +2,19 @@
 
 package com.test.app.list
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
@@ -36,27 +30,24 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.test.app.designsystem.component.BackgroundPreview
-import com.test.app.designsystem.component.CodeWarsTitleLarge
-import com.test.app.designsystem.theme.AppTheme
-import com.test.app.model.data.CodeChallengeOverview
+import com.test.app.designsystem.component.StocksTitleLarge
+import com.test.app.model.data.Ticker
 import com.test.app.ui.ErrorRetryItem
-import com.test.app.ui.TagsRow
 import com.test.app.ui.showSnackBar
 import dev.olshevski.navigation.reimagined.hilt.hiltViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CodeChallengesRoute(
-    viewModel: CodeChallengesViewModel = hiltViewModel(),
-    onChallengeClick: (String) -> Unit = {}
+fun StocksListRoute(
+    viewModel: StocksListViewModel = hiltViewModel(),
+    onStockClick: (String) -> Unit = {}
 ) {
-    val codeChallenges = viewModel.codeChallenges.collectAsLazyPagingItems()
+    val stocksPaging = viewModel.stocksPaging.collectAsLazyPagingItems()
 
     val pullToRefreshState = rememberPullToRefreshState()
     if (pullToRefreshState.isRefreshing) {
         LaunchedEffect(true) {
-            codeChallenges.refresh()
+            stocksPaging.refresh()
             pullToRefreshState.endRefresh()
         }
     }
@@ -68,19 +59,19 @@ fun CodeChallengesRoute(
         stringResource(id = com.test.app.commonresources.R.string.some_error_happened)
     val tryAgain = stringResource(id = com.test.app.commonresources.R.string.try_again)
 
-    CodeChallengesScreen(
-        codeChallenges,
+    StocksListScreen(
+        stocksPaging,
         snackBarHostState,
         pullToRefreshState,
-        onChallengeClick = onChallengeClick,
+        onStockClick = onStockClick,
         onRefreshError = {
             showSnackBar(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
-                message = (codeChallenges.loadState.refresh as LoadState.Error).error.message
+                message = (stocksPaging.loadState.refresh as LoadState.Error).error.message
                     ?: someErrorHappened,
                 actionLabel = tryAgain,
-                actionPerformed = { codeChallenges.refresh() },
+                actionPerformed = { stocksPaging.refresh() },
                 dismissed = {}
             )
         }
@@ -89,11 +80,11 @@ fun CodeChallengesRoute(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CodeChallengesScreen(
-    codeChallenges: LazyPagingItems<CodeChallengeOverview>,
+fun StocksListScreen(
+    stocksPaging: LazyPagingItems<Ticker>,
     snackBarHostState: SnackbarHostState,
     pullToRefreshState: PullToRefreshState,
-    onChallengeClick: (String) -> Unit = {},
+    onStockClick: (String) -> Unit = {},
     onRefreshError: () -> Unit = {}
 ) {
     Scaffold(
@@ -103,7 +94,7 @@ fun CodeChallengesScreen(
         snackbarHost = { SnackbarHost(snackBarHostState) },
         topBar = {
             CenterAlignedTopAppBar(title = {
-                CodeWarsTitleLarge()
+                StocksTitleLarge()
             })
         },
         content = { padding ->
@@ -112,7 +103,7 @@ fun CodeChallengesScreen(
                     .fillMaxSize()
                     .padding(padding)
             ) {
-                if (codeChallenges.loadState.refresh is LoadState.Loading) {
+                if (stocksPaging.loadState.refresh is LoadState.Loading) {
                     CircularProgressIndicator(
                         modifier = Modifier
                             .align(Alignment.Center)
@@ -125,17 +116,17 @@ fun CodeChallengesScreen(
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        items(count = codeChallenges.itemCount) { index ->
-                            codeChallenges[index]?.let {
-                                ChallengeOverviewItem(
-                                    challengeOverview = it,
-                                    onChallengeClick = onChallengeClick
+                        items(count = stocksPaging.itemCount) { index ->
+                            stocksPaging[index]?.let {
+                                StockListItem(
+                                    stockItem = it,
+                                    onStockClick = onStockClick
                                 )
                             }
                         }
 
                         when {
-                            codeChallenges.loadState.append is LoadState.Loading -> {
+                            stocksPaging.loadState.append is LoadState.Loading -> {
                                 item {
                                     CircularProgressIndicator(
                                         modifier = Modifier
@@ -145,18 +136,18 @@ fun CodeChallengesScreen(
                                 }
                             }
 
-                            codeChallenges.loadState.append is LoadState.Error -> {
+                            stocksPaging.loadState.append is LoadState.Error -> {
                                 item {
                                     ErrorRetryItem(
-                                        error = (codeChallenges.loadState.append as LoadState.Error).error.message,
+                                        error = (stocksPaging.loadState.append as LoadState.Error).error.message,
                                         onTryClicked = {
-                                            codeChallenges.retry()
+                                            stocksPaging.retry()
                                         }
                                     )
                                 }
                             }
 
-                            codeChallenges.loadState.refresh is LoadState.Error -> {
+                            stocksPaging.loadState.refresh is LoadState.Error -> {
                                 onRefreshError.invoke()
                             }
                         }
@@ -178,65 +169,4 @@ fun CodeChallengesScreen(
             }
         }
     )
-}
-
-@Composable
-fun ChallengeOverviewItem(
-    challengeOverview: CodeChallengeOverview,
-    onChallengeClick: (String) -> Unit = {}
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .clickable { onChallengeClick(challengeOverview.id) },
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Text(
-                text = challengeOverview.name,
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(start = 16.dp, top = 16.dp, end = 16.dp, bottom = 8.dp)
-            )
-            TagsRow(
-                Modifier.align(Alignment.CenterHorizontally),
-                challengeOverview.completedLanguages
-            )
-            Text(
-                text = challengeOverview.completedAt,
-                style = MaterialTheme.typography.labelSmall,
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .padding(8.dp)
-            )
-        }
-    }
-}
-
-@BackgroundPreview
-@Composable
-fun ChallengeOverviewItemPreview() {
-    AppTheme {
-        ChallengeOverviewItem(
-            CodeChallengeOverview(
-                name = "Multiples of 3 and 5",
-                completedAt = "2017-04-06",
-                completedLanguages = listOf(
-                    "javascript",
-                    "coffeescript",
-                    "ruby",
-                    "javascript",
-                    "ruby",
-                    "javascript",
-                    "ruby",
-                    "coffeescript",
-                    "javascript",
-                    "ruby",
-                    "coffeescript"
-                )
-            )
-        )
-    }
 }
