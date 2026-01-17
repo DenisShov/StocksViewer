@@ -13,11 +13,10 @@ import dev.olshevski.navigation.reimagined.NavBackHandler
 import dev.olshevski.navigation.reimagined.rememberNavController
 
 @Composable
-fun CodeWarsApp(modifier: Modifier = Modifier) {
-    val navController =
-        rememberNavController<Screen>(
-            startDestination = Screen.StocksList,
-        )
+fun StockViewerApp(modifier: Modifier = Modifier) {
+    val navController = rememberNavController<Screen>(
+        startDestination = Screen.StocksList,
+    )
 
     NavBackHandler(navController)
 

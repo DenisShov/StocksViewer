@@ -5,8 +5,8 @@ plugins {
 android {
     namespace = "com.test.app.commonresources"
 
-    compileSdk = 34
+    compileSdk = 36
     defaultConfig {
-        minSdk = 26
+        minSdk = 28
     }
 }

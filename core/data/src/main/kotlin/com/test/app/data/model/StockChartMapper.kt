@@ -5,18 +5,18 @@ import com.test.app.model.data.StockChart
 import com.test.app.network.model.CandleResponse
 import com.test.app.network.model.StockChartResponse
 
-fun StockChartResponse.asExternalModel() = StockChart(
+fun StockChartResponse.toDomain() = StockChart(
     ticker = ticker,
     queryCount = queryCount,
     resultsCount = resultsCount,
     adjusted = adjusted,
-    results = results.map { it.asExternalModel() },
+    results = results.map { it.toDomain() },
     status = status,
     requestId = requestId,
     count = count,
 )
 
-fun CandleResponse.asExternalModel() = Candle(
+fun CandleResponse.toDomain() = Candle(
     volume = volume,
     vwap = vwap,
     open = open,

@@ -8,9 +8,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface StocksRepository {
 
-    fun getStocksFlow(): Flow<PagingData<Ticker>>
+    fun getStocksFlow(query: String): Flow<PagingData<Ticker>>
 
     suspend fun getStockOverviewByTicker(ticker: String): StockOverview
 
-    suspend fun getStockChartData(ticker: String): StockChart
+    suspend fun getStockChartData(ticker: String, startDate: String, endDate: String, period: String): StockChart
 }

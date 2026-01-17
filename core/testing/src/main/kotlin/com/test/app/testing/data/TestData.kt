@@ -4,10 +4,14 @@ import androidx.paging.LoadState
 import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import com.test.app.model.data.ApprovedBy
+import com.test.app.model.data.Candle
+import com.test.app.model.data.Company
 import com.test.app.model.data.StockDetails
 import com.test.app.model.data.StockOverview
 import com.test.app.model.data.CreatedBy
 import com.test.app.model.data.Rank
+import com.test.app.model.data.StockChart
+import com.test.app.model.data.Ticker
 import com.test.app.network.model.NetworkApprovedBy
 import com.test.app.network.model.NetworkCodeChallengeDetail
 import com.test.app.network.model.NetworkCodeChallengeOverview
@@ -15,6 +19,7 @@ import com.test.app.network.model.NetworkCodeChallenges
 import com.test.app.network.model.NetworkCreatedBy
 import com.test.app.network.model.NetworkRank
 import kotlinx.coroutines.flow.flow
+import kotlin.String
 
 val testNetworkCodeChallengeOverviewList = listOf(
     NetworkCodeChallengeOverview(
@@ -43,62 +48,20 @@ val testNetworkCodeChallenges = NetworkCodeChallenges(
 )
 
 val testStockOverviewLists = listOf(
-    StockOverview(
-        name = "Task 1 \n Some description",
-        completedAt = "2017-04-06",
-        completedLanguages = listOf(
-            "kotlin"
-        )
-    ),
-    StockOverview(
-        name = "Task 2 \n Some description",
-        completedAt = "2017-04-06",
-        completedLanguages = listOf(
-            "kotlin"
-        )
-    ),
-    StockOverview(
-        name = "Task 3 \n Some description",
-        completedAt = "2017-04-06",
-        completedLanguages = listOf(
-            "kotlin"
-        )
-    ),
-    StockOverview(
-        name = "Task 4 \n Some description",
-        completedAt = "2017-04-06",
-        completedLanguages = listOf(
-            "kotlin"
-        )
-    ),
-    StockOverview(
-        name = "Task 5 \n Some description",
-        completedAt = "2017-04-06",
-        completedLanguages = listOf(
-            "kotlin"
-        )
-    ),
-    StockOverview(
-        name = "Task 6 \n Some description",
-        completedAt = "2017-04-06",
-        completedLanguages = listOf(
-            "kotlin"
-        )
-    ),
-    StockOverview(
-        name = "Task 7 \n Some description",
-        completedAt = "2017-04-06",
-        completedLanguages = listOf(
-            "kotlin"
-        )
-    ),
-    StockOverview(
-        name = "Task 8 \n Some description",
-        completedAt = "2017-04-06",
-        completedLanguages = listOf(
-            "kotlin"
-        )
-    ),
+    Ticker(
+        ticker = "", // TODO: add test data
+        name = "",
+        market = "",
+        locale = "",
+        primaryExchange = "",
+        type = "",
+        active = true,
+        currencyName = null,
+        cik = null,
+        compositeFigi = null,
+        shareClassFigi = null,
+        lastUpdatedUtc = null,
+    )
 )
 
 val testPagingData = PagingData.from(testStockOverviewLists)
@@ -168,22 +131,27 @@ val testNetworkCodeChallengeDetail = NetworkCodeChallengeDetail(
     "2013-12-05"
 )
 
-val testStockDetails = StockDetails(
-    "id",
-    "Range Extraction",
-    "",
-    "",
-    "algorithms",
-    "Write a function called `validBraces` that takes a string ...",
-    listOf("Algorithms", "Validation", "Logic", "Utilities"),
-    listOf("javascript", "coffeescript"),
-    Rank(name = "4 kyu"),
-    CreatedBy(username = "username"),
-    ApprovedBy(username = "username"),
-    100,
-    55,
-    40,
-    20,
-    "2013-11-05",
-    "2013-12-05"
+val testStockDetails = StockOverview(
+    requestId = "", // TODO: add test data
+    results = Company(
+        ticker = "",
+        name = "",
+        market = "",
+        locale = "",
+        primaryExchange = "",
+        type = "",
+        active = true,
+    ),
+    status = "",
+)
+
+val testStockChart = StockChart(
+    ticker = "", // TODO: add test data
+    queryCount = 0,
+    resultsCount = 0,
+    adjusted = true,
+    results = emptyList(),
+    status = "",
+    requestId = "",
+    count = 0,
 )

@@ -1,23 +1,33 @@
 package com.test.app.data.repository
 
 import androidx.paging.Pager
-import com.test.app.data.model.asExternalModel
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.test.app.data.model.toDomain
+import com.test.app.data.paging.StocksPagingSource
 import com.test.app.model.data.StockChart
 import com.test.app.model.data.StockOverview
 import com.test.app.model.data.Ticker
 import com.test.app.network.retrofit.StocksApi
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class StocksRepositoryImpl @Inject constructor(
-    private val stocksApi: StocksApi, private val pager: Pager<String, Ticker>
+    private val stocksApi: StocksApi,
 ) : StocksRepository {
 
-    override fun getStocksFlow() = pager.flow
+    override fun getStocksFlow(query: String): Flow<PagingData<Ticker>> = Pager(
+        config = PagingConfig(pageSize = 2),
+        pagingSourceFactory = {
+            StocksPagingSource(stocksApi, query)
+        }).flow
+
 
     override suspend fun getStockOverviewByTicker(ticker: String): StockOverview =
-        stocksApi.getStockOverview(ticker).asExternalModel()
+        stocksApi.getStockOverview(ticker).toDomain()
 
-    override suspend fun getStockChartData(ticker: String): StockChart =
-        stocksApi.getStockChartData(ticker).asExternalModel()
+    override suspend fun getStockChartData(
+        ticker: String, startDate: String, endDate: String, period: String
+    ): StockChart = stocksApi.getStockChartData(ticker, startDate, endDate, period).toDomain()
 
 }

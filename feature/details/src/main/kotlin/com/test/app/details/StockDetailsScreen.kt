@@ -1,13 +1,24 @@
 package com.test.app.details
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -25,21 +36,25 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.os.bundleOf
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.AsyncImage
 import com.test.app.common.error.AppError
 import com.test.app.common.result.toErrorMessage
 import com.test.app.designsystem.component.BackgroundPreview
 import com.test.app.designsystem.component.LoadingData
-import com.test.app.designsystem.icon.CodeWarsIcon.ArrowBack
 import com.test.app.designsystem.theme.AppTheme
 import com.test.app.details.StockDetailsViewModel.Companion.STOCK_TICKER_ARG
-import com.test.app.model.data.StockChart
-import com.test.app.model.data.StockOverview
+import com.test.app.details.actions.StockDetailsActions
+import com.test.app.details.chart.StockChart
+import com.test.app.details.model.CandleUiModel
+import com.test.app.details.model.StockOverviewUiModel
 import com.test.app.ui.showSnackBar
 import dev.olshevski.navigation.reimagined.hilt.hiltViewModel
 
@@ -53,9 +68,14 @@ fun StockDetailsRoute(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    val actions = StockDetailsActions(
+        onChartPeriodChange = viewModel::getStockChartData
+    )
+
     val snackBarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+    val retry = stringResource(com.test.app.commonresources.R.string.retry)
 
     StockDetailsScreen(
         uiState = uiState,
@@ -66,30 +86,30 @@ fun StockDetailsRoute(
                 scope = scope,
                 snackBarHostState = snackBarHostState,
                 message = appError.toErrorMessage(context),
-                actionLabel = context.resources.getString(com.test.app.commonresources.R.string.retry),
+                actionLabel = retry,
                 actionPerformed = { viewModel.getStockOverviewByTicker() },
-                dismissed = {}
+                dismissed = {},
             )
-        }
+        },
+        actions = actions,
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StockDetailsScreen(
-    uiState: StockDetailsViewModel.State = StockDetailsViewModel.State(
-        stockDetailsState = StockDetailsViewModel.StockDetailsState.Loading
-    ),
+    uiState: StockDetailsViewModel.State,
     snackBarHostState: SnackbarHostState,
     onBackButtonClick: () -> Unit = {},
     onShowErrorSnackbar: (AppError) -> Unit = {},
+    actions: StockDetailsActions,
 ) {
     Scaffold(
         topBar = {
             TopAppBar(title = {}, navigationIcon = {
                 IconButton(onClick = { onBackButtonClick.invoke() }) {
                     Icon(
-                        imageVector = ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(id = com.test.app.commonresources.R.string.ui_return_to_previous_screen),
                         modifier = Modifier.padding(start = 12.dp),
                     )
@@ -113,7 +133,8 @@ fun StockDetailsScreen(
                 is StockDetailsViewModel.StockDetailsState.Success -> {
                     StockDetailsContent(
                         stockOverview = stockDetailsUiState.stockOverview,
-                        stockChart = stockDetailsUiState.stockChart,
+                        candles = stockDetailsUiState.candles,
+                        actions = actions,
                     )
                 }
 
@@ -135,54 +156,89 @@ fun StockDetailsScreen(
 }
 
 @Composable
-private fun StockDetailsContent(stockOverview: StockOverview, stockChart: StockChart) {
-    LazyColumn(
+private fun StockDetailsContent(
+    stockOverview: StockOverviewUiModel,
+    candles: List<CandleUiModel>,
+    actions: StockDetailsActions,
+) {
+    val scrollState = rememberScrollState()
+    Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .background(
-                color = MaterialTheme.colorScheme.background,
-                shape = MaterialTheme.shapes.large,
-            ),
+            .fillMaxSize()
+            .verticalScroll(scrollState)
+            .padding(8.dp),
     ) {
-        item {
-            stockOverview.results.name.let {
-                Title(it)
+        stockOverview.iconUrl?.let {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                AsyncImage(
+                    modifier = Modifier.size(48.dp),
+                    model = it,
+                    contentScale = ContentScale.Crop,
+                    alignment = Alignment.Center,
+                    contentDescription = "",
+                )
             }
-            stockOverview.results.description?.let {
-                Description(it)
-            }
+        }
 
-//            StockChartGraph(
-//                modifier = Modifier,
-//                opening = getOpening(stockChart),
-//                closing = getClosing(stockChart),
-//                low = getLow(stockChart),
-//                high = getHigh(stockChart),
-//            )
+        Title(stockOverview.name)
+        Description(stockOverview)
+
+        if (candles.isNotEmpty()) {
+            StockChart(
+                modifier = Modifier,
+                data = candles,
+            )
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+        ) {
+            Button(
+                onClick = { actions.onChartPeriodChange("day") }
+            ) {
+                Text(
+                    text = "Day",
+                    color = Color.White,
+                    style = MaterialTheme.typography.labelLarge,
+                )
+            }
+            Button(
+                onClick = { actions.onChartPeriodChange("week") }
+            ) {
+                Text(
+                    text = "Week",
+                    color = Color.White,
+                    style = MaterialTheme.typography.labelLarge,
+                )
+            }
+            Button(
+                onClick = { actions.onChartPeriodChange("month") }
+            ) {
+                Text(
+                    text = "Month",
+                    color = Color.White,
+                    style = MaterialTheme.typography.labelLarge,
+                )
+            }
+            Button(
+                onClick = { actions.onChartPeriodChange("quarter") }
+            ) {
+                Text(
+                    text = "Quarter",
+                    color = Color.White,
+                    style = MaterialTheme.typography.labelLarge,
+                )
+            }
         }
     }
-}
-
-//opening: Collection<Number>,
-//               closing: Collection<Number>,
-//               low: Collection<Number>,
-//               high: Collection<Number>,
-
-private fun getOpening(stockChart: StockChart): Collection<Number> {
-    return stockChart.results.map { it.open }.toList()
-}
-
-private fun getClosing(stockChart: StockChart): Collection<Number> {
-    return stockChart.results.map { it.close }.toList()
-}
-
-private fun getLow(stockChart: StockChart): Collection<Number> {
-    return stockChart.results.map { it.low }.toList()
-}
-
-private fun getHigh(stockChart: StockChart): Collection<Number> {
-    return stockChart.results.map { it.high }.toList()
 }
 
 @Composable
@@ -210,7 +266,7 @@ private fun Title(title: String) {
 }
 
 @Composable
-private fun Description(description: String) {
+private fun Description(stockOverview: StockOverviewUiModel) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -223,11 +279,43 @@ private fun Description(description: String) {
             style = MaterialTheme.typography.titleMedium,
         )
 
+        stockOverview.description?.let {
+            Text(
+                modifier = Modifier.padding(vertical = 8.dp),
+                text = it,
+                style = MaterialTheme.typography.bodyMedium,
+            )
+        }
+
+        stockOverview.homepageUrl?.let {
+            Text(
+                modifier = Modifier.padding(vertical = 8.dp),
+                text = it,
+                style = MaterialTheme.typography.bodyMedium,
+            )
+        }
+
         Text(
             modifier = Modifier.padding(vertical = 8.dp),
-            text = description,
+            text = "Locale: ${stockOverview.locale}",
             style = MaterialTheme.typography.bodyMedium,
         )
+
+        stockOverview.totalEmployees?.let {
+            Text(
+                modifier = Modifier.padding(vertical = 8.dp),
+                text = "Total employees: $it",
+                style = MaterialTheme.typography.bodyMedium,
+            )
+        }
+
+        stockOverview.listDate?.let {
+            Text(
+                modifier = Modifier.padding(vertical = 8.dp),
+                text = "List date: $it",
+                style = MaterialTheme.typography.bodyMedium,
+            )
+        }
 
         HorizontalDivider(
             modifier = Modifier
@@ -270,7 +358,7 @@ private fun Description(description: String) {
 @Composable
 fun TitlePreview() {
     AppTheme {
-        Title("The builder of things")
+        Title(title = "Agilent Technologies Inc.")
     }
 }
 
@@ -279,7 +367,13 @@ fun TitlePreview() {
 fun DescriptionPreview() {
     AppTheme {
         Description(
-            "Write a function called `validBraces` that takes a string ..."
+            stockOverview = StockOverviewUiModel(
+                ticker = "Ticker",
+                name = "Name",
+                locale = "Locale",
+                type = "Type",
+                description = "Originally spun out of Hewlett-Packard in 1999, Agilent has evolved into a leading life science and diagnostic firm. Today, Agilent's measurement technologies serve a broad base of customers with its three operating segments: life science and applied tools, cross lab consisting of consumables and services related to life science and applied tools, and diagnostics and genomics.",
+            ),
         )
     }
 }

@@ -6,10 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.test.app.common.error.AppError
 import com.test.app.common.result.fold
+import com.test.app.details.model.CandleUiModel
+import com.test.app.details.model.StockOverviewUiModel
+import com.test.app.details.model.toUiModel
 import com.test.app.domain.GetStockChartDataUseCase
 import com.test.app.domain.GetStockOverviewByTickerUseCase
-import com.test.app.model.data.StockChart
-import com.test.app.model.data.StockOverview
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -43,7 +44,14 @@ class StockDetailsViewModel @Inject constructor(
             getStockOverviewByTickerUseCase.launch(ticker).onEach { result ->
                 result.fold(
                     onSuccess = { stockOverview ->
-                        getStockChartData(stockOverview)
+                        _uiState.update {
+                            it.copy(
+                                stockDetailsState = StockDetailsState.Success(
+                                    stockOverview = stockOverview.toUiModel()
+                                )
+                            )
+                        }
+                        getStockChartData("week")
                     },
                     onFailure = { error ->
                         _uiState.update {
@@ -59,18 +67,21 @@ class StockDetailsViewModel @Inject constructor(
         }
     }
 
-    fun getStockChartData(stockOverview: StockOverview) {
+    fun getStockChartData(period: String) {
         viewModelScope.launch {
-            getStockChartDataUseCase.launch(ticker).onEach { result ->
+            getStockChartDataUseCase.launch(ticker, period).onEach { result ->
                 result.fold(
                     onSuccess = { stockChart ->
-                        _uiState.update {
-                            it.copy(
-                                stockDetailsState = StockDetailsState.Success(
-                                    stockOverview = stockOverview,
-                                    stockChart = stockChart
+                        val stockDetailsState =
+                            (_uiState.value.stockDetailsState as? StockDetailsState.Success)
+                        stockDetailsState?.let {
+                            _uiState.update {
+                                it.copy(
+                                    stockDetailsState = stockDetailsState.copy(
+                                        candles = stockChart.results.map { result -> result.toUiModel() }
+                                    )
                                 )
-                            )
+                            }
                         }
                     },
                     onFailure = { error ->
@@ -90,8 +101,10 @@ class StockDetailsViewModel @Inject constructor(
     )
 
     sealed interface StockDetailsState {
-        data class Success(val stockOverview: StockOverview, val stockChart: StockChart) :
-            StockDetailsState
+        data class Success(
+            val stockOverview: StockOverviewUiModel,
+            val candles: List<CandleUiModel> = emptyList()
+        ) : StockDetailsState
 
         data class Error(val error: AppError) : StockDetailsState
 

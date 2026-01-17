@@ -3,7 +3,7 @@ package com.test.app.data.model
 import com.test.app.model.data.Ticker
 import com.test.app.network.model.TickerResponse
 
-fun TickerResponse.asExternalModel() = Ticker(
+fun TickerResponse.toDomain() = Ticker(
     ticker = ticker,
     name = name,
     market = market,

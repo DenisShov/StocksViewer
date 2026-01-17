@@ -36,8 +36,6 @@ fun ErrorRetryItem(error: String?, onTryClicked: () -> Unit) {
             style = MaterialTheme.typography.titleMedium
         )
         Button(
-            modifier = Modifier
-                .wrapContentWidth(),
             onClick = onTryClicked
         ) {
             Text(

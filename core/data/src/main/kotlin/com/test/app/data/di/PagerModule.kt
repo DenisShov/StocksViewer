@@ -21,7 +21,7 @@ object PagerModule {
         return Pager(
             PagingConfig(pageSize = 2)
         ) {
-            StocksPagingSource(stocksApi)
+            StocksPagingSource(stocksApi, "")
         }
     }
 }

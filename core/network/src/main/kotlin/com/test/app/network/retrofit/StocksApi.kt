@@ -10,9 +10,9 @@ import retrofit2.http.Query
 
 interface StocksApi {
 
-    @GET("v3/reference/tickers?market=stocks&search={query}&active=true&limit=50&apiKey=${BuildConfig.API_KEY}")
+    @GET("v3/reference/tickers?market=stocks&active=true&limit=50&apiKey=${BuildConfig.API_KEY}")
     suspend fun searchStockByQuery(
-        @Path("query") query: String, @Query("cursor") cursor: String? = null
+        @Query("search") searchQuery: String, @Query("cursor") cursor: String? = null
     ): TickersResponse
 
     @GET("v3/reference/tickers?market=stocks&active=true&limit=50&apiKey=${BuildConfig.API_KEY}")
@@ -21,6 +21,11 @@ interface StocksApi {
     @GET("v3/reference/tickers/{ticker}?apiKey=${BuildConfig.API_KEY}")
     suspend fun getStockOverview(@Path("ticker") ticker: String): StockOverviewResponse
 
-    @GET("v2/aggs/ticker/{ticker}/range/1/day/2023-01-01/2025-09-28?adjusted=true&sort=asc&limit=50000&apiKey=${BuildConfig.API_KEY}")
-    suspend fun getStockChartData(@Path("ticker") ticker: String): StockChartResponse
+    @GET("v2/aggs/ticker/{ticker}/range/1/{period}/{startDate}/{endDate}?adjusted=true&sort=asc&limit=50000&apiKey=${BuildConfig.API_KEY}")
+    suspend fun getStockChartData(
+        @Path("ticker") ticker: String,
+        @Path("startDate") startDate: String,
+        @Path("endDate") endDate: String,
+        @Path("period") period: String
+    ): StockChartResponse
 }

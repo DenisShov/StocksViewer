@@ -1,19 +1,20 @@
 [versions]
-agp = "8.4.1"
-kotlin = "1.9.22"
-ksp = "1.9.22-1.0.18"
-coreKtx = "1.13.1"
-kotlinxCoroutines = "1.8.0"
+agp = "8.13.0"
+kotlin = "2.2.21"
+ksp = "2.2.21-2.0.4"
+coreKtx = "1.17.0"
+kotlinxCoroutines = "1.10.2"
 
-androidxActivity = "1.9.0"
+androidxActivity = "1.11.0"
 androidxLifecycle = "2.7.0"
-androidxComposeBom = "2024.05.00"
+androidxComposeBom = "2025.12.00"
 androidxComposeCompiler = "1.5.8"
 androidxComposeUiManifest = "1.6.7"
 androidxComposeMaterial3 = "1.2.1"
 androidxPagingCompose = "3.3.0"
+materialIcons = "1.7.3"
 
-hilt = "2.51"
+hilt = "2.57.2"
 navigationHilt = "1.5.0"
 okhttp = "4.12.0"
 retrofit = "2.9.0"
@@ -21,7 +22,7 @@ timberVersion = "5.0.1"
 secretsVersion = "2.0.1"
 jodaTimeVersion = "2.10.9.1"
 coil = "2.4.0"
-#vico = "2.3.0"
+vico = "2.3.1"
 
 deteKtVersion = "1.23.0-RC3"
 jacoco = "0.8.7"
@@ -48,7 +49,7 @@ androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 
 # Material icons
-#material-icons = { group = "org.jetbrains.compose.material", name = "material-icons-core", version.ref = "materialIcons" }
+material-icons = { group = "org.jetbrains.compose.material", name = "material-icons-extended", version.ref = "materialIcons" }
 
 # AppCompat theme
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
@@ -65,7 +66,7 @@ androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", 
 coil = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 
 # Chart library
-#vico-compose-m3 = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vico" }
+vico-compose-m3 = { group = "com.patrykandpatrick.vico", name = "compose-m3", version.ref = "vico" }
 
 # UI Tests
 androidx-compose-ui-test = { group = "androidx.compose.ui", name = "ui-test-junit4", version.ref = "androidxComposeUiTest" }
@@ -105,6 +106,7 @@ kluent-android = { group = "org.amshove.kluent", name = "kluent-android", versio
 # Dependencies of the included build-config
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+compose-gradlePlugin = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin" }
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 detekt-gradlePlugin = { group = "io.gitlab.arturbosch.detekt", name = "io.gitlab.arturbosch.detekt.gradle.plugin", version.ref = "deteKtVersion" }
 
@@ -117,7 +119,7 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secretsVersion" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 deteKt = { id = "io.gitlab.arturbosch.detekt", version.ref = "deteKtVersion" }
-jetbrains-kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 
 # Plugins defined by this project
 codewars-android-application = { id = "codewars.android.application", version = "unspecified" }

@@ -9,13 +9,13 @@ import com.test.app.network.model.BrandingResponse
 import com.test.app.network.model.CompanyResponse
 import com.test.app.network.model.StockOverviewResponse
 
-fun StockOverviewResponse.asExternalModel() = StockOverview(
+fun StockOverviewResponse.toDomain() = StockOverview(
     requestId = requestId,
-    results = results.asExternalModel(),
+    results = results.toDomain(),
     status = status,
 )
 
-fun CompanyResponse.asExternalModel() = Company(
+fun CompanyResponse.toDomain() = Company(
     ticker = ticker,
     name = name,
     market = market,
@@ -29,7 +29,7 @@ fun CompanyResponse.asExternalModel() = Company(
     shareClassFigi = shareClassFigi,
     marketCap = marketCap,
     phoneNumber = phoneNumber,
-    address = address?.asExternalModel(),
+    address = address?.toDomain(),
     description = description,
     sicCode = sicCode,
     sicDescription = sicDescription,
@@ -37,20 +37,20 @@ fun CompanyResponse.asExternalModel() = Company(
     homepageUrl = homepageUrl,
     totalEmployees = totalEmployees,
     listDate = listDate,
-    branding = branding?.asExternalModel(),
+    branding = branding?.toDomain(),
     shareClassSharesOutstanding = shareClassSharesOutstanding,
     weightedSharesOutstanding = weightedSharesOutstanding,
     roundLot = roundLot,
 )
 
-fun AddressResponse.asExternalModel() = Address(
+fun AddressResponse.toDomain() = Address(
     address1 = address1,
     city = city,
     state = state,
     postalCode = postalCode,
 )
 
-fun BrandingResponse.asExternalModel() = Branding(
+fun BrandingResponse.toDomain() = Branding(
     logoUrl = logoUrl,
     iconUrl = iconUrl,
 )
