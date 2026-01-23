@@ -23,6 +23,7 @@ secretsVersion = "2.0.1"
 jodaTimeVersion = "2.10.9.1"
 coil = "2.4.0"
 vico = "2.3.1"
+arrow = "2.0.1"
 
 deteKtVersion = "1.23.0-RC3"
 jacoco = "0.8.7"
@@ -93,6 +94,10 @@ timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "tim
 
 # Joda time
 joda-time = { group = "net.danlew", name = "android.joda", version.ref = "jodaTimeVersion" }
+
+# Arrow
+arrow-core = { group = "io.arrow-kt", name = "arrow-core", version.ref = "arrow" }
+arrow-core-retrofit = { group = "io.arrow-kt", name = "arrow-core-retrofit", version.ref = "arrow" }
 
 # Unit tests
 androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "androidxTestRules" }

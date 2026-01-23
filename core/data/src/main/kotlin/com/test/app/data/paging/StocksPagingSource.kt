@@ -13,20 +13,22 @@ class StocksPagingSource @Inject constructor(
 ) : PagingSource<String, Ticker>() {
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, Ticker> {
-        return try {
-            val resp = if (query.isNotEmpty()) {
-                stocksApi.searchStockByQuery(searchQuery = query, cursor = params.key)
-            } else {
-                stocksApi.getStockList(cursor = params.key)
+        return if (query.isNotEmpty()) {
+            stocksApi.searchStockByQuery(searchQuery = query, cursor = params.key)
+        } else {
+            stocksApi.getStockList(cursor = params.key)
+        }.fold(
+            ifLeft = { error ->
+                LoadResult.Error(Exception(error.toString()))
+            },
+            ifRight = { resp ->
+                LoadResult.Page(
+                    data = resp.results.map { it.toDomain() },
+                    prevKey = null,
+                    nextKey = resp.nextUrl?.substringAfter(CURSOR_PARAMETER),
+                )
             }
-            LoadResult.Page(
-                data = resp.results.map { it.toDomain() },
-                prevKey = null,
-                nextKey = resp.nextUrl?.substringAfter(CURSOR_PARAMETER),
-            )
-        } catch (e: Exception) {
-            LoadResult.Error(e)
-        }
+        )
     }
 
     override fun getRefreshKey(state: PagingState<String, Ticker>): String? = null

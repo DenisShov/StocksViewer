@@ -1,6 +1,8 @@
 package com.test.app.network.retrofit
 
+import arrow.core.Either
 import com.test.app.network.BuildConfig
+import com.test.app.network.model.ApiError
 import com.test.app.network.model.StockChartResponse
 import com.test.app.network.model.StockOverviewResponse
 import com.test.app.network.model.TickersResponse
@@ -12,14 +14,19 @@ interface StocksApi {
 
     @GET("v3/reference/tickers?market=stocks&active=true&limit=50&apiKey=${BuildConfig.API_KEY}")
     suspend fun searchStockByQuery(
-        @Query("search") searchQuery: String, @Query("cursor") cursor: String? = null
-    ): TickersResponse
+        @Query("search") searchQuery: String,
+        @Query("cursor") cursor: String? = null
+    ): Either<ApiError, TickersResponse>
 
     @GET("v3/reference/tickers?market=stocks&active=true&limit=50&apiKey=${BuildConfig.API_KEY}")
-    suspend fun getStockList(@Query("cursor") cursor: String? = null): TickersResponse
+    suspend fun getStockList(
+        @Query("cursor") cursor: String? = null
+    ): Either<ApiError, TickersResponse>
 
     @GET("v3/reference/tickers/{ticker}?apiKey=${BuildConfig.API_KEY}")
-    suspend fun getStockOverview(@Path("ticker") ticker: String): StockOverviewResponse
+    suspend fun getStockOverview(
+        @Path("ticker") ticker: String
+    ): Either<ApiError, StockOverviewResponse>
 
     @GET("v2/aggs/ticker/{ticker}/range/1/{period}/{startDate}/{endDate}?adjusted=true&sort=asc&limit=50000&apiKey=${BuildConfig.API_KEY}")
     suspend fun getStockChartData(
@@ -27,5 +34,5 @@ interface StocksApi {
         @Path("startDate") startDate: String,
         @Path("endDate") endDate: String,
         @Path("period") period: String
-    ): StockChartResponse
+    ): Either<ApiError, StockChartResponse>
 }

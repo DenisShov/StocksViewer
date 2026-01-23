@@ -3,7 +3,7 @@ package com.test.app.network.di
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.test.app.network.BuildConfig
-import com.test.app.network.retrofit.ApiErrorInterceptor
+import com.test.app.network.retrofit.EitherCallAdapterFactory
 import com.test.app.network.retrofit.StocksApi
 import dagger.Module
 import dagger.Provides
@@ -32,7 +32,6 @@ object NetworkModule {
     fun provideHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
             .addLoggingInterceptor(BuildConfig.DEBUG)
-            .addInterceptor(ApiErrorInterceptor())
             .build()
     }
 
@@ -53,12 +52,13 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideStocksApi(
-    okHttpClient: OkHttpClient,
-    gson: Gson,
+        okHttpClient: OkHttpClient,
+        gson: Gson,
     ): StocksApi {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BACKEND_URL)
             .client(okHttpClient)
+            .addCallAdapterFactory(EitherCallAdapterFactory())
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(StocksApi::class.java)

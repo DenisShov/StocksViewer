@@ -2,7 +2,7 @@ package com.test.app.details
 
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
-import com.test.app.common.error.AppError
+import com.test.app.common.error.DomainError
 import com.test.app.common.result.DataResult
 import com.test.app.details.StockDetailsViewModel.Companion.STOCK_TICKER_ARG
 import com.test.app.domain.GetStockOverviewByTickerUseCase
@@ -79,7 +79,7 @@ class CodeChallengeDetailViewModelTest : BaseCoroutineTestWithInstantTaskExecuto
         val exception = mockk<IllegalStateException>()
         coEvery { getStockOverviewByTickerUseCase.launch(viewModel.ticker) } returns
                 flow {
-                    emit(DataResult.Failure(AppError.GeneralError(exception)))
+                    emit(DataResult.Failure(DomainError.GeneralError(exception)))
                 }
 
         viewModel.getStockOverviewByTicker()
@@ -93,7 +93,7 @@ class CodeChallengeDetailViewModelTest : BaseCoroutineTestWithInstantTaskExecuto
             awaitItem().shouldBeEqualTo(
                 StockDetailsViewModel.State(
                     StockDetailsViewModel.StockDetailsState.Error(
-                        AppError.GeneralError(exception)
+                        DomainError.GeneralError(exception)
                     )
                 )
             )

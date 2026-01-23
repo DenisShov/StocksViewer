@@ -1,6 +1,5 @@
 package com.test.app.details
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,9 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -45,7 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.os.bundleOf
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import com.test.app.common.error.AppError
+import com.test.app.common.error.DomainError
 import com.test.app.common.result.toErrorMessage
 import com.test.app.designsystem.component.BackgroundPreview
 import com.test.app.designsystem.component.LoadingData
@@ -101,7 +98,7 @@ fun StockDetailsScreen(
     uiState: StockDetailsViewModel.State,
     snackBarHostState: SnackbarHostState,
     onBackButtonClick: () -> Unit = {},
-    onShowErrorSnackbar: (AppError) -> Unit = {},
+    onShowErrorSnackbar: (DomainError) -> Unit = {},
     actions: StockDetailsActions,
 ) {
     Scaffold(

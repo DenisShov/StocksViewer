@@ -1,7 +1,7 @@
 package com.test.app.domain
 
 import app.cash.turbine.test
-import com.test.app.common.error.AppError
+import com.test.app.common.error.DomainError
 import com.test.app.common.result.DataResult
 import com.test.app.data.repository.StocksRepositoryImpl
 import com.test.app.testing.data.testStockDetails
@@ -64,7 +64,7 @@ class GetCodeChallengeByIdUseCaseTest : BaseCoroutineTestWithTestDispatcherProvi
             firstItem.shouldBeEqualTo(DataResult.Loading)
 
             val secondItem = awaitItem()
-            secondItem.shouldBeEqualTo(DataResult.Failure(AppError.GeneralError(exception)))
+            secondItem.shouldBeEqualTo(DataResult.Failure(DomainError.GeneralError(exception)))
             cancelAndIgnoreRemainingEvents()
         }
 

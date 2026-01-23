@@ -12,7 +12,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performScrollToNode
-import com.test.app.common.error.AppError
+import com.test.app.common.error.DomainError
 import com.test.app.details.StockDetailsScreen
 import com.test.app.details.StockDetailsViewModel
 import com.test.app.testing.data.testStockDetails
@@ -164,7 +164,7 @@ class CodeChallengeDetailScreenTest {
 
                 uiState = StockDetailsViewModel.State(
                     stockDetailsState = StockDetailsViewModel.StockDetailsState.Error(
-                        error = AppError.GeneralError(RuntimeException("Some error"))
+                        error = DomainError.GeneralError(RuntimeException("Some error"))
                     )
                 )
             )

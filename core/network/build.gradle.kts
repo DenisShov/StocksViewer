@@ -28,4 +28,5 @@ dependencies {
     implementation(libs.retrofit.core)
     implementation(libs.converter.gson)
     implementation(libs.timber)
+    api(libs.arrow.core)
 }
