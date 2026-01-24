@@ -26,5 +26,4 @@ fun StockViewerApp(modifier: Modifier = Modifier) {
             StocksNavHost(navController)
         }
     }
-
 }

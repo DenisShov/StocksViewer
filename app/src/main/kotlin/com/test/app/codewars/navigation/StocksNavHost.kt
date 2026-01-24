@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.toRoute
 import com.test.app.common.navigation.Screen
 import com.test.app.details.StockDetailsRoute
 import com.test.app.list.StocksListRoute

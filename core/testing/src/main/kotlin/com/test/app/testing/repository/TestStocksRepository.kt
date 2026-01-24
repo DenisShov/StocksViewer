@@ -3,11 +3,11 @@ package com.test.app.testing.repository
 import androidx.paging.PagingData
 import arrow.core.Either
 import arrow.core.right
+import com.test.app.common.error.DomainError
 import com.test.app.data.repository.StocksRepository
 import com.test.app.model.data.StockChart
 import com.test.app.model.data.StockOverview
 import com.test.app.model.data.Ticker
-import com.test.app.network.model.ApiError
 import com.test.app.testing.data.testFlowPagingData
 import com.test.app.testing.data.testStockChart
 import com.test.app.testing.data.testStockDetails
@@ -19,7 +19,7 @@ class TestStocksRepository : StocksRepository {
         return testFlowPagingData
     }
 
-    override suspend fun getStockOverviewByTicker(ticker: String): Either<ApiError, StockOverview> {
+    override suspend fun getStockOverviewByTicker(ticker: String): Either<DomainError, StockOverview> {
         return testStockDetails.right()
     }
 
@@ -28,7 +28,7 @@ class TestStocksRepository : StocksRepository {
         startDate: String,
         endDate: String,
         period: String
-    ): Either<ApiError, StockChart> {
+    ): Either<DomainError, StockChart> {
         return testStockChart.right()
     }
 }
