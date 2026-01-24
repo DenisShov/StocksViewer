@@ -37,7 +37,8 @@ dependencies {
     implementation(project(":feature:list"))
     implementation(project(":feature:details"))
 
-    implementation(libs.navigation.hilt)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.runtime)

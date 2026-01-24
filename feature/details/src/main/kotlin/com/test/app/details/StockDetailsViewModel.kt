@@ -4,7 +4,9 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.test.app.common.error.DomainError
+import com.test.app.common.navigation.Screen
 import com.test.app.details.model.CandleUiModel
 import com.test.app.details.model.StockOverviewUiModel
 import com.test.app.details.model.toUiModel
@@ -25,10 +27,10 @@ class StockDetailsViewModel @Inject constructor(
     private val getStockChartDataUseCase: GetStockChartDataUseCase,
 ) : ViewModel() {
 
-    private val args: StockDetailArgs = StockDetailArgs(savedStateHandle)
+    private val args = savedStateHandle.toRoute<Screen.StocksDetail>()
 
     @VisibleForTesting
-    val ticker = args.tickerArgument
+    val ticker = args.stockTicker
 
     private val _uiState = MutableStateFlow(State(stockDetailsState = StockDetailsState.Loading))
     val uiState: StateFlow<State> by lazy {
@@ -96,19 +98,5 @@ class StockDetailsViewModel @Inject constructor(
         data class Error(val error: DomainError) : StockDetailsState
 
         data object Loading : StockDetailsState
-    }
-
-    companion object {
-        const val STOCK_TICKER_ARG = "stock_ticker_arg"
-    }
-
-    internal class StockDetailArgs(val tickerArgument: String) {
-        constructor(savedStateHandle: SavedStateHandle) : this(
-            checkNotNull(
-                savedStateHandle.get<String>(
-                    STOCK_TICKER_ARG
-                )
-            )
-        )
     }
 }

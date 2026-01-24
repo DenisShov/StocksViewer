@@ -7,18 +7,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.rememberNavController
 import com.test.app.codewars.navigation.StocksNavHost
-import com.test.app.common.navigation.Screen
-import dev.olshevski.navigation.reimagined.NavBackHandler
-import dev.olshevski.navigation.reimagined.rememberNavController
 
 @Composable
 fun StockViewerApp(modifier: Modifier = Modifier) {
-    val navController = rememberNavController<Screen>(
-        startDestination = Screen.StocksList,
-    )
-
-    NavBackHandler(navController)
+    val navController = rememberNavController()
 
     Scaffold(
         modifier = modifier.fillMaxSize(),

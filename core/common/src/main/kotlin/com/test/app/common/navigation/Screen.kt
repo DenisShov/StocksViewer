@@ -1,12 +1,12 @@
 package com.test.app.common.navigation
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
-sealed class Screen : Parcelable {
-    @Parcelize
+@Serializable
+sealed class Screen {
+    @Serializable
     data object StocksList : Screen()
 
-    @Parcelize
+    @Serializable
     data class StocksDetail(val stockTicker: String) : Screen()
 }

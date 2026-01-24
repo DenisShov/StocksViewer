@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.codewars.android.library)
     alias(libs.plugins.codewars.android.hilt)
     alias(libs.plugins.codewars.android.library.jacoco)
-    id("kotlin-parcelize")
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -16,4 +16,5 @@ android {
 dependencies {
     implementation(libs.converter.gson)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.kotlinx.serialization.json)
 }

@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -36,7 +37,6 @@ import com.test.app.designsystem.component.SearchTopAppBar
 import com.test.app.model.data.Ticker
 import com.test.app.ui.ErrorRetryItem
 import com.test.app.ui.showSnackBar
-import dev.olshevski.navigation.reimagined.hilt.hiltViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

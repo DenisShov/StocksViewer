@@ -39,7 +39,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.core.os.bundleOf
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.test.app.common.error.DomainError
@@ -47,20 +47,15 @@ import com.test.app.common.result.toErrorMessage
 import com.test.app.designsystem.component.BackgroundPreview
 import com.test.app.designsystem.component.LoadingData
 import com.test.app.designsystem.theme.AppTheme
-import com.test.app.details.StockDetailsViewModel.Companion.STOCK_TICKER_ARG
 import com.test.app.details.actions.StockDetailsActions
 import com.test.app.details.chart.StockChart
 import com.test.app.details.model.CandleUiModel
 import com.test.app.details.model.StockOverviewUiModel
 import com.test.app.ui.showSnackBar
-import dev.olshevski.navigation.reimagined.hilt.hiltViewModel
 
 @Composable
 fun StockDetailsRoute(
-    stockTicker: String,
-    viewModel: StockDetailsViewModel = hiltViewModel(
-        defaultArguments = bundleOf(STOCK_TICKER_ARG to stockTicker)
-    ),
+    viewModel: StockDetailsViewModel = hiltViewModel(),
     onBackButtonClick: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
