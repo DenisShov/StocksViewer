@@ -1,8 +1,8 @@
 plugins {
-    alias(libs.plugins.codewars.android.feature)
-    alias(libs.plugins.codewars.android.library.compose)
-    alias(libs.plugins.codewars.android.hilt)
-    alias(libs.plugins.codewars.android.library.jacoco)
+    alias(libs.plugins.stockviewer.android.feature)
+    alias(libs.plugins.stockviewer.android.library.compose)
+    alias(libs.plugins.stockviewer.android.hilt)
+    alias(libs.plugins.stockviewer.android.library.jacoco)
 }
 
 android {

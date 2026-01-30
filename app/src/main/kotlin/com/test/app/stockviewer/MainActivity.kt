@@ -1,10 +1,10 @@
-package com.test.app.codewars
+package com.test.app.stockviewer
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
-import com.test.app.codewars.ui.StockViewerApp
+import com.test.app.stockviewer.ui.StockViewerApp
 import com.test.app.designsystem.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 

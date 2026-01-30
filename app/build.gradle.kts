@@ -1,20 +1,20 @@
 plugins {
-    alias(libs.plugins.codewars.android.application)
-    alias(libs.plugins.codewars.android.application.compose)
-    alias(libs.plugins.codewars.android.hilt)
-    alias(libs.plugins.codewars.android.application.jacoco)
+    alias(libs.plugins.stockviewer.android.application)
+    alias(libs.plugins.stockviewer.android.application.compose)
+    alias(libs.plugins.stockviewer.android.hilt)
+    alias(libs.plugins.stockviewer.android.application.jacoco)
     alias(libs.plugins.kotlin.serialization)
 }
 
 android {
-    namespace = "com.test.app.codewars"
+    namespace = "com.test.app.stockviewer"
 
     buildFeatures {
         buildConfig = true
     }
 
     defaultConfig {
-        applicationId = "com.test.app.codewars"
+        applicationId = "com.test.app.stockviewer"
         versionCode = 1
         versionName = "1.0"
 

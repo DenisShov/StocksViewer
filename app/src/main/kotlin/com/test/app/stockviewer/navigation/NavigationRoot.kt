@@ -1,4 +1,4 @@
-package com.test.app.codewars.navigation
+package com.test.app.stockviewer.navigation
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable

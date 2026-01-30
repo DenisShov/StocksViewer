@@ -1,7 +1,7 @@
 plugins {
-    alias(libs.plugins.codewars.android.library)
-    alias(libs.plugins.codewars.android.hilt)
-    alias(libs.plugins.codewars.android.library.jacoco)
+    alias(libs.plugins.stockviewer.android.library)
+    alias(libs.plugins.stockviewer.android.hilt)
+    alias(libs.plugins.stockviewer.android.library.jacoco)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 

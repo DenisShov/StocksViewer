@@ -1,3 +1,3 @@
 plugins {
-    alias(libs.plugins.codewars.jvm.library)
+    alias(libs.plugins.stockviewer.jvm.library)
 }

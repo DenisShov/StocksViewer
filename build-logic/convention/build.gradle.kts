@@ -2,7 +2,7 @@ plugins {
     `kotlin-dsl`
 }
 
-group = "com.test.app.codewars.buildlogic"
+group = "com.test.app.stockviewer.buildlogic"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -28,52 +28,52 @@ gradlePlugin {
     plugins {
 
         register("androidHilt") {
-            id = "codewars.android.hilt"
+            id = "stockviewer.android.hilt"
             implementationClass = "AndroidHiltConventionPlugin"
         }
 
         register("androidApplication") {
-            id = "codewars.android.application"
+            id = "stockviewer.android.application"
             implementationClass = "AndroidApplicationConventionPlugin"
         }
 
         register("androidApplicationCompose") {
-            id = "codewars.android.application.compose"
+            id = "stockviewer.android.application.compose"
             implementationClass = "AndroidApplicationComposeConventionPlugin"
         }
 
         register("androidApplicationJacoco") {
-            id = "codewars.android.application.jacoco"
+            id = "stockviewer.android.application.jacoco"
             implementationClass = "AndroidApplicationJacocoConventionPlugin"
         }
 
         register("androidApplicationDetekt") {
-            id = "codewars.android.application.detekt"
+            id = "stockviewer.android.application.detekt"
             implementationClass = "AndroidApplicationDeteKtConventionPlugin"
         }
 
         register("androidFeature") {
-            id = "codewars.android.feature"
+            id = "stockviewer.android.feature"
             implementationClass = "AndroidFeatureConventionPlugin"
         }
 
         register("androidLibrary") {
-            id = "codewars.android.library"
+            id = "stockviewer.android.library"
             implementationClass = "AndroidLibraryConventionPlugin"
         }
 
         register("androidLibraryCompose") {
-            id = "codewars.android.library.compose"
+            id = "stockviewer.android.library.compose"
             implementationClass = "AndroidLibraryComposeConventionPlugin"
         }
 
         register("androidLibraryJacoco") {
-            id = "codewars.android.library.jacoco"
+            id = "stockviewer.android.library.jacoco"
             implementationClass = "AndroidLibraryJacocoConventionPlugin"
         }
 
         register("jvmLibrary") {
-            id = "codewars.jvm.library"
+            id = "stockviewer.jvm.library"
             implementationClass = "JvmLibraryConventionPlugin"
         }
 

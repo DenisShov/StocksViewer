@@ -149,13 +149,13 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
 # Plugins defined by this project
-codewars-android-application = { id = "codewars.android.application", version = "unspecified" }
-codewars-android-application-compose = { id = "codewars.android.application.compose", version = "unspecified" }
-codewars-android-application-jacoco = { id = "codewars.android.application.jacoco", version = "unspecified" }
-codewars-android-application-detekt = { id = "codewars.android.application.detekt", version = "unspecified" }
-codewars-android-feature = { id = "codewars.android.feature", version = "unspecified" }
-codewars-android-library = { id = "codewars.android.library", version = "unspecified" }
-codewars-android-library-compose = { id = "codewars.android.library.compose", version = "unspecified" }
-codewars-android-library-jacoco = { id = "codewars.android.library.jacoco", version = "unspecified" }
-codewars-jvm-library = { id = "codewars.jvm.library", version = "unspecified" }
-codewars-android-hilt = { id = "codewars.android.hilt", version = "unspecified" }
+stockviewer-android-application = { id = "stockviewer.android.application", version = "unspecified" }
+stockviewer-android-application-compose = { id = "stockviewer.android.application.compose", version = "unspecified" }
+stockviewer-android-application-jacoco = { id = "stockviewer.android.application.jacoco", version = "unspecified" }
+stockviewer-android-application-detekt = { id = "stockviewer.android.application.detekt", version = "unspecified" }
+stockviewer-android-feature = { id = "stockviewer.android.feature", version = "unspecified" }
+stockviewer-android-library = { id = "stockviewer.android.library", version = "unspecified" }
+stockviewer-android-library-compose = { id = "stockviewer.android.library.compose", version = "unspecified" }
+stockviewer-android-library-jacoco = { id = "stockviewer.android.library.jacoco", version = "unspecified" }
+stockviewer-jvm-library = { id = "stockviewer.jvm.library", version = "unspecified" }
+stockviewer-android-hilt = { id = "stockviewer.android.hilt", version = "unspecified" }

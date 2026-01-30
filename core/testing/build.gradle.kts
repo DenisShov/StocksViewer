@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.codewars.android.library)
+    alias(libs.plugins.stockviewer.android.library)
 }
 
 android {
