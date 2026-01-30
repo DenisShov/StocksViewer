@@ -38,7 +38,7 @@ import com.test.app.ui.showSnackBar
 @Composable
 fun StocksListRoute(
     viewModel: StocksListViewModel = hiltViewModel(),
-    onStockClick: (String) -> Unit = {}
+    onStockClick: (String) -> Unit,
 ) {
     val stocksPaging = viewModel.stocksPaging.collectAsLazyPagingItems()
 

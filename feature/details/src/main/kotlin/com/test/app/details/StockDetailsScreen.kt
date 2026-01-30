@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.test.app.common.error.DomainError
-import com.test.app.common.result.toErrorMessage
+import com.test.app.data.util.toErrorMessage
 import com.test.app.designsystem.component.BackgroundPreview
 import com.test.app.designsystem.component.LoadingData
 import com.test.app.designsystem.theme.AppTheme
@@ -50,14 +50,12 @@ import com.test.app.details.actions.StockDetailsActions
 import com.test.app.details.chart.StockChart
 import com.test.app.details.model.CandleUiModel
 import com.test.app.details.model.StockOverviewUiModel
-import com.test.app.ui.DevicePreviews
 import com.test.app.ui.showSnackBar
-import kotlin.String
 
 @Composable
 fun StockDetailsRoute(
     viewModel: StockDetailsViewModel,
-    onBackButtonClick: () -> Unit = {}
+    onBackButtonClick: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
