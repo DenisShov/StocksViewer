@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.codewars.android.application.compose)
     alias(libs.plugins.codewars.android.hilt)
     alias(libs.plugins.codewars.android.application.jacoco)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -37,8 +38,12 @@ dependencies {
     implementation(project(":feature:list"))
     implementation(project(":feature:details"))
 
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+    implementation(libs.kotlinx.serialization.core)
+    implementation(libs.androidx.hilt.lifecycle.viewmodel.compose)
+
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.runtime)

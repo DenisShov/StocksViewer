@@ -17,4 +17,5 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.androidx.core.ktx)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.navigation3.runtime)
 }

@@ -24,8 +24,12 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
             dependencies {
                 add("implementation", project(":core:designsystem"))
 
-                add("implementation", libs.findLibrary("androidx.navigation.compose").get())
-                add("implementation", libs.findLibrary("androidx.hilt.navigation.compose").get())
+                add("implementation", libs.findLibrary("androidx.navigation3.runtime").get())
+                add("implementation", libs.findLibrary("androidx.navigation3.ui").get())
+                add("implementation", libs.findLibrary("androidx.lifecycle.viewmodel.navigation3").get())
+                add("implementation", libs.findLibrary("androidx.hilt.lifecycle.viewmodel.compose").get())
+
+                add("implementation", libs.findLibrary("kotlinx.serialization.core").get())
                 add("implementation", libs.findLibrary("androidx.lifecycle.runtimeCompose").get())
                 add("implementation", libs.findLibrary("androidx.lifecycle.viewModelCompose").get())
 

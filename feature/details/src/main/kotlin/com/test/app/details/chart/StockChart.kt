@@ -97,19 +97,6 @@ private fun StockChartContent(
     )
 }
 
-private fun getBottomAxisValueFormatter(time: List<Long>): CartesianValueFormatter =
-    CartesianValueFormatter { _, value, _ ->
-//        val timestamp = time.getOrNull(value.toInt())
-//        if (timestamp != null) {
-//            formateDate(timestamp)
-//        } else {
-//            "EMPTY"
-//        }
-        time.getOrNull(value.toInt())
-            ?.let { timestamp -> formateDate(timestamp) }
-            .orEmpty()
-    }
-
 @Composable
 fun StockChart(
     modifier: Modifier = Modifier,

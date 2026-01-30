@@ -39,7 +39,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.test.app.common.error.DomainError
@@ -51,11 +50,13 @@ import com.test.app.details.actions.StockDetailsActions
 import com.test.app.details.chart.StockChart
 import com.test.app.details.model.CandleUiModel
 import com.test.app.details.model.StockOverviewUiModel
+import com.test.app.ui.DevicePreviews
 import com.test.app.ui.showSnackBar
+import kotlin.String
 
 @Composable
 fun StockDetailsRoute(
-    viewModel: StockDetailsViewModel = hiltViewModel(),
+    viewModel: StockDetailsViewModel,
     onBackButtonClick: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -318,33 +319,32 @@ private fun Description(stockOverview: StockOverviewUiModel) {
     }
 }
 
-//@DevicePreviews
-//@Composable
-//fun CodeChallengeContentPreview() {
-//    AppTheme {
-//        StockDetailsContent(
-//            stockDetails = StockDetails(
-//                "",
-//                "Range Extraction",
-//                "",
-//                "",
-//                "algorithms",
-//                "Write a function called `validBraces` that takes a string ...",
-//                listOf("Algorithms", "Validation", "Logic", "Utilities"),
-//                listOf("javascript", "coffeescript"),
-//                Rank(name = "4 kyu"),
-//                CreatedBy(username = "username"),
-//                ApprovedBy(username = "username"),
-//                100,
-//                50,
-//                50,
-//                50,
-//                "2013-11-05",
-//                "2013-11-05"
-//            )
-//        )
-//    }
-//}
+@BackgroundPreview
+@Composable
+fun StockDetailsContentPreview() {
+    AppTheme {
+        StockDetailsContent(
+            stockOverview = StockOverviewUiModel(
+                ticker = "",
+                name = "",
+                locale = "",
+                type = "",
+                currencyName = null,
+                marketCap = null,
+                description = null,
+                homepageUrl = null,
+                totalEmployees = null,
+                sicDescription = null,
+                listDate = null,
+                iconUrl = null,
+            ),
+            candles = emptyList(),
+            actions = StockDetailsActions(
+                onChartPeriodChange = {}
+            ),
+        )
+    }
+}
 
 @BackgroundPreview
 @Composable
@@ -364,30 +364,13 @@ fun DescriptionPreview() {
                 name = "Name",
                 locale = "Locale",
                 type = "Type",
-                description = "Originally spun out of Hewlett-Packard in 1999, Agilent has evolved into a leading life science and diagnostic firm. Today, Agilent's measurement technologies serve a broad base of customers with its three operating segments: life science and applied tools, cross lab consisting of consumables and services related to life science and applied tools, and diagnostics and genomics.",
+                description = "Originally spun out of Hewlett-Packard in 1999, " +
+                        "Agilent has evolved into a leading life science and diagnostic firm. " +
+                        "Today, Agilent's measurement technologies serve a broad base of customers " +
+                        "with its three operating segments: life science and applied tools, cross " +
+                        "lab consisting of consumables and services related to life science and " +
+                        "applied tools, and diagnostics and genomics.",
             ),
         )
     }
 }
-
-//@BackgroundPreview
-//@Composable
-//fun CodeChallengeRowItemPreview() {
-//    AppTheme {
-//        CodeChallengeRowItem(
-//            stringResource(id = com.test.app.commonresources.R.string.category),
-//            "some category"
-//        )
-//    }
-//}
-//
-//@BackgroundPreview
-//@Composable
-//fun CodeChallengeTagsItemPreview() {
-//    AppTheme {
-//        CodeChallengeTagsItem(
-//            stringResource(id = com.test.app.commonresources.R.string.languages),
-//            listOf("kotlin", "javascript", "python")
-//        )
-//    }
-//}

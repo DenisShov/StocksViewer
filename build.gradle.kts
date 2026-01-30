@@ -9,4 +9,5 @@ plugins {
     alias(libs.plugins.secrets) apply false
     alias(libs.plugins.hilt) apply false
     alias(libs.plugins.deteKt) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
 }
