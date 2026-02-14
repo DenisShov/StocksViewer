@@ -2,10 +2,8 @@ package com.test.app.details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.test.app.common.error.DomainError
-import com.test.app.details.model.CandleUiModel
-import com.test.app.details.model.StockOverviewUiModel
 import com.test.app.details.model.toUiModel
+import com.test.app.details.state.StockDetailsState
 import com.test.app.domain.GetStockChartDataUseCase
 import com.test.app.domain.GetStockOverviewByTickerUseCase
 import dagger.assisted.Assisted
@@ -31,8 +29,8 @@ class StockDetailsViewModel @AssistedInject constructor(
         fun create(ticker: String): StockDetailsViewModel
     }
 
-    private val _uiState = MutableStateFlow(State(stockDetailsState = StockDetailsState.Loading))
-    val uiState: StateFlow<State> by lazy {
+    private val _uiState = MutableStateFlow(StockDetailsState())
+    val uiState: StateFlow<StockDetailsState> by lazy {
         getStockOverviewByTicker()
         _uiState.asStateFlow()
     }
@@ -40,22 +38,26 @@ class StockDetailsViewModel @AssistedInject constructor(
     fun getStockOverviewByTicker() {
         viewModelScope.launch {
             _uiState.update {
-                it.copy(stockDetailsState = StockDetailsState.Loading)
+                it.copy(
+                    isLoading = true,
+                )
             }
             getStockOverviewByTickerUseCase.launch(ticker).fold(
                 ifRight = { stockOverview ->
                     _uiState.update {
                         it.copy(
-                            stockDetailsState = StockDetailsState.Success(
-                                stockOverview = stockOverview.toUiModel()
-                            )
+                            stockOverview = stockOverview.toUiModel(),
+                            isLoading = false,
                         )
                     }
                     getStockChartData("week")
                 },
                 ifLeft = { error ->
                     _uiState.update {
-                        it.copy(stockDetailsState = StockDetailsState.Error(error))
+                        it.copy(
+                            error = error,
+                            isLoading = false,
+                        )
                     }
                 },
             )
@@ -65,37 +67,23 @@ class StockDetailsViewModel @AssistedInject constructor(
     fun getStockChartData(period: String) {
         viewModelScope.launch {
             getStockChartDataUseCase.launch(ticker, period).fold(
-                    ifRight = { stockChart ->
-                        val stockDetailsState =
-                            (_uiState.value.stockDetailsState as? StockDetailsState.Success)
-                        stockDetailsState?.let {
-                            _uiState.update {
-                                it.copy(
-                                    stockDetailsState = stockDetailsState.copy(
-                                    candles = stockChart.results.map { result -> result.toUiModel() }))
-                            }
-                        }
-                    },
-                    ifLeft = { error ->
-                        _uiState.update {
-                            it.copy(stockDetailsState = StockDetailsState.Error(error))
-                        }
-                    },
-                )
+                ifRight = { stockChart ->
+                    _uiState.update {
+                        it.copy(
+                            candles = stockChart.results.map { result -> result.toUiModel() },
+                            isLoading = false,
+                        )
+                    }
+                },
+                ifLeft = { error ->
+                    _uiState.update {
+                        it.copy(
+                            error = error,
+                            isLoading = false,
+                        )
+                    }
+                },
+            )
         }
-    }
-
-    data class State(
-        val stockDetailsState: StockDetailsState,
-    )
-
-    sealed interface StockDetailsState {
-        data class Success(
-            val stockOverview: StockOverviewUiModel, val candles: List<CandleUiModel> = emptyList()
-        ) : StockDetailsState
-
-        data class Error(val error: DomainError) : StockDetailsState
-
-        data object Loading : StockDetailsState
     }
 }

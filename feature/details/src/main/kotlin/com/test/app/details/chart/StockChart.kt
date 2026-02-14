@@ -93,7 +93,7 @@ private fun StockChartContent(
         chart = chart,
         modelProducer = modelProducer,
         scrollState = scrollState,
-        modifier = modifier.height(600.dp),
+        modifier = modifier.height(400.dp),
     )
 }
 

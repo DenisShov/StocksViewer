@@ -26,4 +26,20 @@
     <string name="faced_an_error">Faced an error: </string>
     <string name="try_again">Try again</string>
     <string name="all_stocks">All stocks</string>
+
+    <string name="logo_string">Logo</string>
+    <string name="market_data">Market Data</string>
+    <string name="market_cap">Market Cap</string>
+    <string name="employees">Employees</string>
+    <string name="listed_date">Listed Date</string>
+    <string name="sector">Sector</string>
+    <string name="about">About</string>
+    <string name="show_less">Show Less</string>
+    <string name="read_more">Read More</string>
+    <string name="cik">CIK:</string>
+
+    <string name="day">Day</string>
+    <string name="week">Week</string>
+    <string name="month">Month</string>
+    <string name="quartal">Quartal</string>
 </resources>

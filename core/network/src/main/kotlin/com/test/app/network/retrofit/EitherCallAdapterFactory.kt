@@ -110,13 +110,20 @@ class EitherCallAdapterFactory : CallAdapter.Factory() {
                     ).left()
                 }
             } else {
+                val errorBodyString = errorBody()?.string()
+                val errorMessage = getErrorMessage(errorBodyString)
+
                 ApiError.HttpError(
                     code = code(),
-                    message = message(),
-                    body = errorBody()?.string()
+                    message = errorMessage,
+                    body = errorBodyString,
                 ).left()
             }
             return result
         }
+
+        private fun Response<R>.getErrorMessage(errorBodyString: String?): String? = errorBodyString?.let {
+            """"error":"([^"]+)"""".toRegex().find(it)?.groupValues?.get(1)
+        } ?: message()
     }
 }

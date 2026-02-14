@@ -26,7 +26,9 @@ private fun ApiError.toDomainError(): DomainError = when (this) {
 fun DomainError.toErrorMessage(context: Context): String {
     return when (this) {
         is DomainError.MissingNetworkConnection -> context.resources.getString(com.test.app.commonresources.R.string.no_network_connection)
-        is DomainError.HttpError -> context.resources.getString(com.test.app.commonresources.R.string.some_server_problem)
+
+        is DomainError.HttpError -> message ?: context.resources.getString(com.test.app.commonresources.R.string.some_server_problem)
+
         else -> context.resources.getString(com.test.app.commonresources.R.string.something_went_wrong)
     }
 }

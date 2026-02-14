@@ -17,6 +17,7 @@ dependencies {
     api(project(":core:data"))
     api(project(":core:model"))
     api(project(":core:common"))
+    implementation(libs.androidx.paging.compose)
 
     testImplementation(project(":core:testing"))
 }

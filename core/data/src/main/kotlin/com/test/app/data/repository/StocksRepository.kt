@@ -6,7 +6,6 @@ import com.test.app.common.error.DomainError
 import com.test.app.model.data.StockChart
 import com.test.app.model.data.StockOverview
 import com.test.app.model.data.Ticker
-import com.test.app.network.model.ApiError
 import kotlinx.coroutines.flow.Flow
 
 interface StocksRepository {

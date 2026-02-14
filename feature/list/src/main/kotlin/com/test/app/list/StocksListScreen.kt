@@ -2,8 +2,11 @@ package com.test.app.list
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
@@ -31,7 +34,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.test.app.designsystem.component.SearchTopAppBar
-import com.test.app.model.data.Ticker
+import com.test.app.list.model.TickerUiModel
 import com.test.app.ui.ErrorRetryItem
 import com.test.app.ui.showSnackBar
 
@@ -47,9 +50,7 @@ fun StocksListRoute(
 
     val scope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
-
-    val someErrorHappened =
-        stringResource(id = com.test.app.commonresources.R.string.some_error_happened)
+    val someErrorHappened = stringResource(id = com.test.app.commonresources.R.string.some_error_happened)
     val tryAgain = stringResource(id = com.test.app.commonresources.R.string.try_again)
 
     StocksListScreen(
@@ -75,7 +76,7 @@ fun StocksListRoute(
 
 @Composable
 fun StocksListScreen(
-    stocksPaging: LazyPagingItems<Ticker>,
+    stocksPaging: LazyPagingItems<TickerUiModel>,
     snackBarHostState: SnackbarHostState,
     pullToRefreshState: PullToRefreshState,
     isRefreshing: Boolean,
@@ -95,6 +96,7 @@ fun StocksListScreen(
                 onRefresh = { stocksPaging.refresh() },
             ),
         snackbarHost = { SnackbarHost(snackBarHostState) },
+        contentWindowInsets = WindowInsets.navigationBars,
         topBar = {
             SearchTopAppBar(
                 query = query,
@@ -130,7 +132,7 @@ fun StocksListScreen(
 
 @Composable
 private fun StocksListContent(
-    stocksPaging: LazyPagingItems<Ticker>,
+    stocksPaging: LazyPagingItems<TickerUiModel>,
     onStockClick: (String) -> Unit,
     onRefreshError: () -> Unit,
     isRefreshing: Boolean,
@@ -149,7 +151,8 @@ private fun StocksListContent(
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                contentPadding = PaddingValues(top = 16.dp),
             ) {
                 items(count = stocksPaging.itemCount) { index ->
                     stocksPaging[index]?.let {
