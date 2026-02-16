@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.outlined.Info
@@ -26,7 +27,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -35,7 +35,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.SuggestionChipDefaults
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -47,7 +46,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
@@ -77,7 +75,7 @@ import java.text.NumberFormat
 import java.util.Locale
 
 @Composable
-fun StockDetailsRoute2(
+fun StockDetailsRoute(
     viewModel: StockDetailsViewModel,
     onBackButtonClick: () -> Unit,
 ) {
@@ -159,7 +157,7 @@ fun StockDetailScreen(
                 }
 
                 uiState.stockOverview != null && uiState.candles.isNotEmpty() -> {
-                    StockDetailsContent2(
+                    StockDetailsContent(
                         stockOverview = uiState.stockOverview,
                         candles = uiState.candles,
                         actions = actions,
@@ -184,7 +182,7 @@ fun StockDetailScreen(
 }
 
 @Composable
-fun StockDetailsContent2(
+fun StockDetailsContent(
     stockOverview: StockOverviewUiModel,
     candles: List<CandleUiModel>,
     actions: StockDetailsActions,
@@ -255,9 +253,7 @@ fun CompanyHeader(stock: StockOverviewUiModel) {
 @Composable
 fun KeyStatsGrid(stock: StockOverviewUiModel) {
     Column {
-        if (stock.marketCap != null && stock.totalEmployees != null ||
-            stock.listDate != null && stock.sicDescription != null
-        ) {
+        if (stock.marketCap != null && stock.totalEmployees != null || stock.sicDescription != null) {
             Text(
                 text = stringResource(com.test.app.commonresources.R.string.market_data),
                 style = MaterialTheme.typography.titleMedium,
@@ -283,21 +279,12 @@ fun KeyStatsGrid(stock: StockOverviewUiModel) {
             }
             Spacer(modifier = Modifier.height(12.dp))
         }
-        if (stock.listDate != null && stock.sicDescription != null) {
-            Column (
+        if (stock.sicDescription != null) {
+            StatCard(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                StatCard(
-                    label = stringResource(com.test.app.commonresources.R.string.sector),
-                    value = stock.sicDescription,
-                )
-                StatCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    label = stringResource(com.test.app.commonresources.R.string.listed_date),
-                    value = stock.listDate,
-                )
-            }
+                label = stringResource(com.test.app.commonresources.R.string.sector),
+                value = stock.sicDescription,
+            )
         }
     }
 }
@@ -383,6 +370,9 @@ fun ContactInfo(stock: StockOverviewUiModel) {
         if (stock.homepageUrl.isNullOrEmpty().not()) {
             ContactRow(icon = Icons.Default.Language, text = stock.homepageUrl)
         }
+        if (stock.listDate.isNullOrEmpty().not()) {
+            ContactRow(icon = Icons.Default.CalendarToday, text = stock.listDate)
+        }
         if (stock.cik.isNullOrEmpty().not()) {
             ContactRow(
                 icon = Icons.Outlined.Info,
@@ -414,29 +404,6 @@ fun ContactRow(icon: ImageVector, text: String) {
         )
     }
 }
-
-//// --- 4. Android Studio Preview ---
-//@Preview(showBackground = true, showSystemUi = true)
-//@Composable
-//fun StockDetailScreenPreview() {
-//    // Mock Data based on your JSON
-//    val mockAdobe = StockData(
-//        ticker = "ADBE",
-//        name = "Adobe Inc.",
-//        marketCap = 1.10584595e11, // approx 110.58 Billion
-//        description = "Adobe provides content creation, document management, and digital marketing and advertising software and services to creative professionals and marketers for creating, managing, delivering, measuring, optimizing, and engaging with compelling content multiple operating systems, devices, and media.",
-//        logoUrl = "", // Empty for preview (Coil won't load in standard preview without mock engine)
-//        employees = 31360,
-//        listDate = "1986-08-20",
-//        exchange = "NASDAQ",
-//        homepage = "https://www.adobe.com",
-//        address = "345 Park Ave, San Jose, CA"
-//    )
-//
-//    MaterialTheme {
-//        StockDetailScreen(stock = mockAdobe)
-//    }
-//}
 
 @Composable
 private fun Chart(candles: List<CandleUiModel>, actions: StockDetailsActions) {
@@ -492,117 +459,174 @@ private fun Chart(candles: List<CandleUiModel>, actions: StockDetailsActions) {
     }
 }
 
-@Composable
-private fun Title(title: String) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = title,
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.headlineLarge,
-        )
-
-        HorizontalDivider(
-            modifier = Modifier
-                .padding(horizontal = 8.dp)
-                .alpha(0.5f),
-            thickness = 1.dp,
-            color = MaterialTheme.colorScheme.secondary,
-        )
-    }
-}
-
-@Composable
-private fun Description(stockOverview: StockOverviewUiModel) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            modifier = Modifier.padding(8.dp),
-            text = stringResource(id = com.test.app.commonresources.R.string.description),
-            style = MaterialTheme.typography.titleMedium,
-        )
-
-        stockOverview.description?.let {
-            Text(
-                modifier = Modifier.padding(vertical = 8.dp),
-                text = it,
-                style = MaterialTheme.typography.bodyMedium,
-            )
-        }
-
-        stockOverview.homepageUrl?.let {
-            Text(
-                modifier = Modifier.padding(vertical = 8.dp),
-                text = it,
-                style = MaterialTheme.typography.bodyMedium,
-            )
-        }
-
-        Text(
-            modifier = Modifier.padding(vertical = 8.dp),
-            text = "Locale: ${stockOverview.locale}",
-            style = MaterialTheme.typography.bodyMedium,
-        )
-
-        stockOverview.totalEmployees?.let {
-            Text(
-                modifier = Modifier.padding(vertical = 8.dp),
-                text = "Total employees: $it",
-                style = MaterialTheme.typography.bodyMedium,
-            )
-        }
-
-        stockOverview.listDate?.let {
-            Text(
-                modifier = Modifier.padding(vertical = 8.dp),
-                text = "List date: $it",
-                style = MaterialTheme.typography.bodyMedium,
-            )
-        }
-
-        HorizontalDivider(
-            modifier = Modifier
-                .padding(horizontal = 8.dp)
-                .alpha(0.2f),
-            color = MaterialTheme.colorScheme.secondary,
-        )
-    }
-}
-
 @BackgroundPreview
 @Composable
-fun TitlePreview() {
+fun StockDetailsContentPreview() {
     AppTheme {
-        Title(title = "Agilent Technologies Inc.")
-    }
-}
-
-@BackgroundPreview
-@Composable
-fun DescriptionPreview() {
-    AppTheme {
-        Description(
+        StockDetailsContent(
             stockOverview = StockOverviewUiModel(
-                ticker = "Ticker",
-                name = "Name",
-                locale = "Locale",
-                type = "Type",
-                exchange = "Exchange",
-                description = "Originally spun out of Hewlett-Packard in 1999, " +
-                        "Agilent has evolved into a leading life science and diagnostic firm. " +
-                        "Today, Agilent's measurement technologies serve a broad base of customers " +
-                        "with its three operating segments: life science and applied tools, cross " +
-                        "lab consisting of consumables and services related to life science and " +
-                        "applied tools, and diagnostics and genomics.",
+                ticker = "ADBE",
+                name = "Adobe Inc.",
+                exchange = "NASDAQ",
+                marketCap = 110584595000.0,
+                totalEmployees = 31360,
+                sicDescription = "Technology",
+                description = "Adobe provides content creation, document management, and digital marketing software.",
+                address = "345 Park Ave, San Jose, CA",
+                homepageUrl = "https://www.adobe.com",
+                listDate = "20 August 1986",
+                cik = "0000796343"
             ),
+            candles = listOf(
+                CandleUiModel(
+                    open = 185.82,
+                    close = 184.8,
+                    high = 186.03,
+                    low = 184.21,
+                    timestampMs = 1699851600000
+                ),
+                CandleUiModel(
+                    open = 187.7,
+                    close = 187.44,
+                    high = 188.11,
+                    low = 186.3,
+                    timestampMs = 1699938000000
+                ),
+                CandleUiModel(
+                    open = 187.845,
+                    close = 188.01,
+                    high = 189.5,
+                    low = 187.78,
+                    timestampMs = 1700024400000
+                ),
+                CandleUiModel(
+                    open = 189.57,
+                    close = 189.71,
+                    high = 190.96,
+                    low = 188.65,
+                    timestampMs = 1700110800000
+                ),
+                CandleUiModel(
+                    open = 190.25,
+                    close = 189.69,
+                    high = 190.38,
+                    low = 188.57,
+                    timestampMs = 1700197200000
+                ),
+                CandleUiModel(
+                    open = 189.89,
+                    close = 191.45,
+                    high = 191.905,
+                    low = 189.88,
+                    timestampMs = 1700456400000
+                ),
+                CandleUiModel(
+                    open = 191.41,
+                    close = 190.64,
+                    high = 191.52,
+                    low = 189.74,
+                    timestampMs = 1700542800000
+                ),
+                CandleUiModel(
+                    open = 191.49,
+                    close = 191.31,
+                    high = 192.93,
+                    low = 190.825,
+                    timestampMs = 1700629200000
+                ),
+                CandleUiModel(
+                    open = 190.87,
+                    close = 189.97,
+                    high = 190.9,
+                    low = 189.25,
+                    timestampMs = 1700802000000
+                ),
+                CandleUiModel(
+                    open = 189.92,
+                    close = 189.79,
+                    high = 190.67,
+                    low = 188.9,
+                    timestampMs = 1701061200000
+                ),
+                CandleUiModel(
+                    open = 189.78,
+                    close = 190.4,
+                    high = 191.08,
+                    low = 189.4,
+                    timestampMs = 1701147600000
+                ),
+                CandleUiModel(
+                    open = 190.9,
+                    close = 189.37,
+                    high = 192.09,
+                    low = 188.97,
+                    timestampMs = 1701234000000
+                ),
+                CandleUiModel(
+                    open = 189.84,
+                    close = 189.95,
+                    high = 190.32,
+                    low = 188.19,
+                    timestampMs = 1701320400000
+                ),
+                CandleUiModel(
+                    open = 190.33,
+                    close = 191.24,
+                    high = 191.56,
+                    low = 189.23,
+                    timestampMs = 1701406800000
+                ),
+                CandleUiModel(
+                    open = 189.98,
+                    close = 189.43,
+                    high = 190.05,
+                    low = 187.4511,
+                    timestampMs = 1701666000000
+                ),
+                CandleUiModel(
+                    open = 190.21,
+                    close = 193.42,
+                    high = 194.4,
+                    low = 190.18,
+                    timestampMs = 1701752400000
+                ),
+                CandleUiModel(
+                    open = 194.45,
+                    close = 192.32,
+                    high = 194.76,
+                    low = 192.11,
+                    timestampMs = 1701838800000
+                ),
+                CandleUiModel(
+                    open = 193.63,
+                    close = 194.27,
+                    high = 195.0,
+                    low = 193.59,
+                    timestampMs = 1701925200000
+                ),
+                CandleUiModel(
+                    open = 194.2,
+                    close = 195.71,
+                    high = 195.99,
+                    low = 193.67,
+                    timestampMs = 1702011600000
+                ),
+                CandleUiModel(
+                    open = 193.11,
+                    close = 193.18,
+                    high = 193.49,
+                    low = 191.42,
+                    timestampMs = 1702270800000
+                ),
+                CandleUiModel(
+                    open = 193.08,
+                    close = 194.71,
+                    high = 194.72,
+                    low = 191.721,
+                    timestampMs = 1702357200000
+                ),
+            ),
+            actions = StockDetailsActions(),
         )
     }
 }

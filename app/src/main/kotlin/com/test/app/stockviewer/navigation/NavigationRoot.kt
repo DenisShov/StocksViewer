@@ -9,7 +9,7 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.test.app.common.navigation.Screen
-import com.test.app.details.StockDetailsRoute2
+import com.test.app.details.StockDetailsRoute
 import com.test.app.details.StockDetailsViewModel
 import com.test.app.list.StocksListRoute
 
@@ -45,7 +45,7 @@ fun NavigationRoot() {
                                 factory.create(ticker = key.stockTicker)
                             }
 
-                        StockDetailsRoute2(
+                        StockDetailsRoute(
                             viewModel = viewModel,
                             onBackButtonClick = {
                                 if (backStack.size > 1) {
