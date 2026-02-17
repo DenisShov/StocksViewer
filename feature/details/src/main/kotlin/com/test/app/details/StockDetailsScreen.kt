@@ -62,8 +62,14 @@ import coil.request.ImageRequest
 import com.test.app.common.error.DomainError
 import com.test.app.data.util.toErrorMessage
 import com.test.app.designsystem.component.BackgroundPreview
-import com.test.app.designsystem.component.LoadingData
 import com.test.app.designsystem.theme.AppTheme
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.RoundedCornerShape
 import com.test.app.details.actions.StockDetailsActions
 import com.test.app.details.chart.StockChart
 import com.test.app.details.model.CandleUiModel
@@ -101,7 +107,6 @@ fun StockDetailsRoute(
                 message = appError.toErrorMessage(context),
                 actionLabel = retry,
                 actionPerformed = { viewModel.getStockOverviewByTicker() },
-                dismissed = {},
             )
         },
         actions = actions,
@@ -151,9 +156,7 @@ fun StockDetailScreen(
         ) {
             when {
                 uiState.isLoading -> {
-                    LoadingData(
-                        modifier = Modifier.align(Alignment.Center)
-                    )
+                    StockDetailsSkeleton()
                 }
 
                 uiState.stockOverview != null && uiState.candles.isNotEmpty() -> {
@@ -269,7 +272,7 @@ fun KeyStatsGrid(stock: StockOverviewUiModel) {
                 StatCard(
                     modifier = Modifier.weight(1f),
                     label = stringResource(com.test.app.commonresources.R.string.market_cap),
-                    value = "$${formatCompactNumber(stock.marketCap)}"
+                    value = stock.marketCap
                 )
                 StatCard(
                     modifier = Modifier.weight(1f),
@@ -286,16 +289,6 @@ fun KeyStatsGrid(stock: StockOverviewUiModel) {
                 value = stock.sicDescription,
             )
         }
-    }
-}
-
-fun formatCompactNumber(number: Double): String {
-    return when {
-        number >= 1_000_000_000_000 -> "%.2fT".format(number / 1_000_000_000_000)
-        number >= 1_000_000_000 -> "%.2fB".format(number / 1_000_000_000)
-        number >= 1_000_000 -> "%.2fM".format(number / 1_000_000)
-        number >= 1_000 -> "%.2fK".format(number / 1_000)
-        else -> "%.2f".format(number)
     }
 }
 
@@ -406,6 +399,161 @@ fun ContactRow(icon: ImageVector, text: String) {
 }
 
 @Composable
+fun StockDetailsSkeleton() {
+    val infiniteTransition = rememberInfiniteTransition(label = "skeleton")
+    val alpha by infiniteTransition.animateFloat(
+        initialValue = 0.3f,
+        targetValue = 0.7f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1000),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "alpha"
+    )
+
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(24.dp),
+        contentPadding = PaddingValues(bottom = 24.dp)
+    ) {
+        item {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    modifier = Modifier
+                        .size(72.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+                Column {
+                    Box(
+                        modifier = Modifier
+                            .width(150.dp)
+                            .height(24.dp)
+                            .clip(RoundedCornerShape(4.dp))
+                            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Box(
+                        modifier = Modifier
+                            .width(80.dp)
+                            .height(30.dp)
+                            .clip(RoundedCornerShape(15.dp))
+                            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+                    )
+                }
+            }
+        }
+
+        item {
+            Column {
+                Box(
+                    modifier = Modifier
+                        .width(120.dp)
+                        .height(20.dp)
+                        .clip(RoundedCornerShape(4.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    repeat(2) {
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(74.dp)
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+                        )
+                    }
+
+                }
+                Spacer(modifier = Modifier.height(12.dp))
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(74.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+                )
+            }
+        }
+
+        item {
+            Box(
+                modifier = Modifier
+                    .width(60.dp)
+                    .height(20.dp)
+                    .clip(RoundedCornerShape(4.dp))
+                    .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(80.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+            )
+        }
+
+        item {
+            Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                repeat(4) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Box(
+                            modifier = Modifier
+                                .size(24.dp)
+                                .clip(CircleShape)
+                                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(16.dp)
+                                .clip(RoundedCornerShape(4.dp))
+                                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+                        )
+                    }
+                }
+            }
+        }
+
+        item {
+            Column {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(250.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    repeat(4) {
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(40.dp)
+                                .clip(RoundedCornerShape(20.dp))
+                                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
 private fun Chart(candles: List<CandleUiModel>, actions: StockDetailsActions) {
     if (candles.isNotEmpty()) {
         StockChart(
@@ -468,7 +616,7 @@ fun StockDetailsContentPreview() {
                 ticker = "ADBE",
                 name = "Adobe Inc.",
                 exchange = "NASDAQ",
-                marketCap = 110584595000.0,
+                marketCap = "110.59B",
                 totalEmployees = 31360,
                 sicDescription = "Technology",
                 description = "Adobe provides content creation, document management, and digital marketing software.",
@@ -628,5 +776,13 @@ fun StockDetailsContentPreview() {
             ),
             actions = StockDetailsActions(),
         )
+    }
+}
+
+@BackgroundPreview
+@Composable
+fun StockDetailsSkeletonPreview() {
+    AppTheme {
+        StockDetailsSkeleton()
     }
 }

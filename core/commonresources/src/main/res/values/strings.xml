@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">StocksViewer</string>
-    <string name="some_error_happened">Some error happened</string>
+
     <string name="retry">Retry</string>
-    <string name="no_network_connection">No network connection</string>
-    <string name="some_server_problem">Server problem has occurred</string>
-    <string name="something_went_wrong">Something went wrong</string>
+    <string name="try_again">Try again</string>
+
     <string name="loading_data">Loading data…</string>
     <string name="ui_return_to_previous_screen">Return to previous screen</string>
+
+    <!-- List -->
+    <string name="all_stocks">All stocks</string>
+    <string name="search_stocks">Search stocks</string>
+
+    <string name="a11y_close_search">Close Search</string>
+
+
     <string name="category">Category:</string>
     <string name="description">Description</string>
     <string name="tags">Tags:</string>
@@ -21,12 +28,10 @@
     <string name="approved_by">Approved by:</string>
     <string name="published_at">Published at:</string>
     <string name="approved_at">Approved at:</string>
-    <string name="no_network">No network</string>
-    <string name="some_api_error">Some API error</string>
-    <string name="faced_an_error">Faced an error: </string>
-    <string name="try_again">Try again</string>
-    <string name="all_stocks">All stocks</string>
 
+
+
+    <!-- Details -->
     <string name="logo_string">Logo</string>
     <string name="market_data">Market Data</string>
     <string name="market_cap">Market Cap</string>
@@ -37,9 +42,17 @@
     <string name="show_less">Show Less</string>
     <string name="read_more">Read More</string>
     <string name="cik">CIK:</string>
-
     <string name="day">Day</string>
     <string name="week">Week</string>
     <string name="month">Month</string>
     <string name="quartal">Quartal</string>
+
+    <!-- Errors -->
+    <string name="some_error_happened">Oops! Something went wrong</string>
+    <string name="no_network_connection">No network connection</string>
+    <string name="some_server_problem">Server problem has occurred</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="no_network">No network</string>
+    <string name="some_api_error">Some API error</string>
+    <string name="faced_an_error">Faced an error: </string>
 </resources>

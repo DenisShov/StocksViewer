@@ -52,7 +52,7 @@ fun SearchTopAppBar(
                 IconButton(onClick = onSearchClose) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Close Search"
+                        contentDescription = stringResource(id = com.test.app.commonresources.R.string.a11y_close_search)
                     )
                 }
             }
@@ -81,7 +81,12 @@ fun SearchTextField(
     TextField(
         value = query,
         onValueChange = onQueryChange,
-        placeholder = { Text("Search stocks", style = MaterialTheme.typography.bodyLarge) },
+        placeholder = {
+            Text(
+                stringResource(id = com.test.app.commonresources.R.string.search_stocks),
+                style = MaterialTheme.typography.bodyLarge
+            )
+        },
         singleLine = true,
         colors = TextFieldDefaults.colors(
             focusedContainerColor = Color.Transparent,

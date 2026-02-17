@@ -15,7 +15,7 @@ fun StockOverview.toUiModel() = StockOverviewUiModel(
     address = getAddress(results.address),
     exchange = results.primaryExchange,
     currencyName = results.currencyName,
-    marketCap = results.marketCap,
+    marketCap = results.marketCap?.let { formatMarketCap(it) },
     description = results.description,
     homepageUrl = results.homepageUrl,
     totalEmployees = results.totalEmployees,
@@ -41,5 +41,15 @@ fun formatDate(dateString: String?): String? {
         val outputFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.getDefault())
         val date = LocalDate.parse(dateString, inputFormatter)
         date.format(outputFormatter)
+    }
+}
+
+fun formatMarketCap(marketCap: Double): String {
+    return when {
+        marketCap >= 1_000_000_000_000 -> "%.2fT".format(marketCap / 1_000_000_000_000)
+        marketCap >= 1_000_000_000 -> "%.2fB".format(marketCap / 1_000_000_000)
+        marketCap >= 1_000_000 -> "%.2fM".format(marketCap / 1_000_000)
+        marketCap >= 1_000 -> "%.2fK".format(marketCap / 1_000)
+        else -> "%.2f".format(marketCap)
     }
 }

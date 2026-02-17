@@ -8,7 +8,7 @@ data class StockOverviewUiModel(
     val exchange: String = "",
     val address: String? = null,
     val currencyName: String? = null,
-    val marketCap: Double? = null,
+    val marketCap: String? = null,
     val description: String? = null,
     val homepageUrl: String? = null,
     val totalEmployees: Long? = null,

@@ -12,7 +12,7 @@ fun showSnackBar(
     message: String,
     actionLabel: String,
     actionPerformed: () -> Unit,
-    dismissed: () -> Unit
+    dismissed: () -> Unit = {}
 ) {
     scope.launch {
         val snackBarResult = snackBarHostState.showSnackbar(
