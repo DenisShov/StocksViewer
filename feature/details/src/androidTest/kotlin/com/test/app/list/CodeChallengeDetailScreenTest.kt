@@ -13,7 +13,6 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performScrollToNode
 import com.test.app.common.error.DomainError
-import com.test.app.details.StockDetailsScreen
 import com.test.app.details.StockDetailsViewModel
 import com.test.app.testing.data.testStockDetails
 import io.mockk.InternalPlatformDsl.toStr
@@ -47,23 +46,7 @@ class CodeChallengeDetailScreenTest {
 //    @Before
 //    fun setup() {
 //        composeTestRule.activity.apply {
-//            returnToPreviousScreen =
-//                getString(com.test.app.commonresources.R.string.ui_return_to_previous_screen)
-//            descriptionTitle = getString(com.test.app.commonresources.R.string.description)
-//            categoryTitle = getString(com.test.app.commonresources.R.string.category)
-//            rankTitle = getString(com.test.app.commonresources.R.string.rank)
-//            totalAttemptsTitle = getString(com.test.app.commonresources.R.string.total_attempts)
-//            totalCompletedTitle = getString(com.test.app.commonresources.R.string.total_completed)
-//            totalStarsTitle = getString(com.test.app.commonresources.R.string.total_stars)
-//            voteScoreTitle = getString(com.test.app.commonresources.R.string.total_score)
-//            createdByTitle = getString(com.test.app.commonresources.R.string.created_by)
-//            approvedByTitle = getString(com.test.app.commonresources.R.string.approved_by)
-//            publishedAtTitle = getString(com.test.app.commonresources.R.string.published_at)
-//            approvedAtTitle = getString(com.test.app.commonresources.R.string.approved_at)
-//            tagsTitle = getString(com.test.app.commonresources.R.string.tags)
-//            languagesTitle = getString(com.test.app.commonresources.R.string.languages)
-//            loadingDataText = getString(com.test.app.commonresources.R.string.loading_data)
-//            someErrorHappened = getString(com.test.app.commonresources.R.string.some_error_happened)
+
 //        }
 //    }
 //

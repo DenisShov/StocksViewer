@@ -1,4 +1,4 @@
-package com.test.app.details.chart
+package com.test.app.details.compose.chart
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

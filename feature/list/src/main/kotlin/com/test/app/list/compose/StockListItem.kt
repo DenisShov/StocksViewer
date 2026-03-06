@@ -1,4 +1,4 @@
-package com.test.app.list
+package com.test.app.list.compose
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

@@ -1,5 +1,11 @@
-package com.test.app.details
+package com.test.app.details.compose
 
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,16 +20,15 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,8 +36,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
@@ -42,17 +45,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -60,23 +62,16 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.test.app.common.error.DomainError
-import com.test.app.data.util.toErrorMessage
+import com.test.app.commonresources.R
 import com.test.app.designsystem.component.BackgroundPreview
+import com.test.app.designsystem.component.HandleError
 import com.test.app.designsystem.theme.AppTheme
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
-import androidx.compose.foundation.shape.RoundedCornerShape
+import com.test.app.details.StockDetailsViewModel
 import com.test.app.details.actions.StockDetailsActions
-import com.test.app.details.chart.StockChart
+import com.test.app.details.compose.chart.StockChart
 import com.test.app.details.model.CandleUiModel
 import com.test.app.details.model.StockOverviewUiModel
 import com.test.app.details.state.StockDetailsState
-import androidx.compose.ui.draw.clip
-import com.test.app.ui.showSnackBar
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -88,27 +83,13 @@ fun StockDetailsRoute(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val actions = StockDetailsActions(
-        onChartPeriodChange = viewModel::getStockChartData
+        onChartPeriodChange = viewModel::getStockChartData,
+        retry = { viewModel.getStockOverviewByTicker() },
     )
-
-    val snackBarHostState = remember { SnackbarHostState() }
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    val retry = stringResource(com.test.app.commonresources.R.string.retry)
 
     StockDetailScreen(
         uiState = uiState,
-        snackBarHostState = snackBarHostState,
         onBackButtonClick = onBackButtonClick,
-        onShowErrorSnackbar = { appError ->
-            showSnackBar(
-                scope = scope,
-                snackBarHostState = snackBarHostState,
-                message = appError.toErrorMessage(context),
-                actionLabel = retry,
-                actionPerformed = { viewModel.getStockOverviewByTicker() },
-            )
-        },
         actions = actions,
     )
 }
@@ -117,9 +98,7 @@ fun StockDetailsRoute(
 @Composable
 fun StockDetailScreen(
     uiState: StockDetailsState,
-    snackBarHostState: SnackbarHostState,
     onBackButtonClick: () -> Unit = {},
-    onShowErrorSnackbar: (DomainError) -> Unit = {},
     actions: StockDetailsActions,
 ) {
     Scaffold(
@@ -135,7 +114,7 @@ fun StockDetailScreen(
                     IconButton(onClick = { onBackButtonClick.invoke() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(id = com.test.app.commonresources.R.string.ui_return_to_previous_screen),
+                            contentDescription = stringResource(id = R.string.a11y_return_to_previous_screen),
                             modifier = Modifier.padding(start = 12.dp),
                         )
                     }
@@ -146,7 +125,6 @@ fun StockDetailScreen(
                 windowInsets = WindowInsets(),
             )
         },
-        snackbarHost = { SnackbarHost(snackBarHostState) },
         contentWindowInsets = WindowInsets.navigationBars,
     ) { innerPadding ->
         Box(
@@ -168,20 +146,22 @@ fun StockDetailScreen(
                 }
 
                 uiState.error != null -> {
-                    Text(
-                        text = stringResource(id = com.test.app.commonresources.R.string.some_error_happened),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight(align = Alignment.CenterVertically)
-                            .padding(16.dp),
-                        color = MaterialTheme.colorScheme.error,
-                        textAlign = TextAlign.Center,
+                    HandleError(
+                        errorMessage = getErrorMessage(uiState.error),
+                        onRetry = actions.retry,
+                        modifier = Modifier.fillMaxSize()
                     )
-                    onShowErrorSnackbar.invoke(uiState.error)
                 }
             }
         }
     }
+}
+
+@Composable
+private fun getErrorMessage(error: DomainError): String = when (error) {
+    is DomainError.HttpError -> error.message ?: stringResource(R.string.some_server_problem)
+    is DomainError.MissingNetworkConnection -> stringResource(R.string.no_network_connection)
+    is DomainError.GeneralError -> stringResource(R.string.something_went_wrong)
 }
 
 @Composable
@@ -218,13 +198,15 @@ fun StockDetailsContent(
 @Composable
 fun CompanyHeader(stock: StockOverviewUiModel) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        val logoString = stringResource(com.test.app.commonresources.R.string.logo_string)
+        val logoString = stringResource(R.string.a11y_logo)
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(stock.iconUrl)
                 .crossfade(true)
                 .build(),
             contentDescription = "${stock.name} $logoString",
+            placeholder = painterResource(com.test.app.details.R.drawable.ic_image_placeholder),
+            error = painterResource(com.test.app.details.R.drawable.ic_image_placeholder),
             modifier = Modifier
                 .size(72.dp)
                 .clip(CircleShape),
@@ -258,7 +240,7 @@ fun KeyStatsGrid(stock: StockOverviewUiModel) {
     Column {
         if (stock.marketCap != null && stock.totalEmployees != null || stock.sicDescription != null) {
             Text(
-                text = stringResource(com.test.app.commonresources.R.string.market_data),
+                text = stringResource(R.string.market_data),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 12.dp)
@@ -271,12 +253,12 @@ fun KeyStatsGrid(stock: StockOverviewUiModel) {
             ) {
                 StatCard(
                     modifier = Modifier.weight(1f),
-                    label = stringResource(com.test.app.commonresources.R.string.market_cap),
+                    label = stringResource(R.string.market_cap),
                     value = stock.marketCap
                 )
                 StatCard(
                     modifier = Modifier.weight(1f),
-                    label = stringResource(com.test.app.commonresources.R.string.employees),
+                    label = stringResource(R.string.employees),
                     value = NumberFormat.getNumberInstance(Locale.US).format(stock.totalEmployees)
                 )
             }
@@ -285,7 +267,7 @@ fun KeyStatsGrid(stock: StockOverviewUiModel) {
         if (stock.sicDescription != null) {
             StatCard(
                 modifier = Modifier.fillMaxWidth(),
-                label = stringResource(com.test.app.commonresources.R.string.sector),
+                label = stringResource(R.string.sector),
                 value = stock.sicDescription,
             )
         }
@@ -343,8 +325,8 @@ fun CompanyAbout(description: String) {
                     lineHeight = 22.sp
                 )
                 Text(
-                    text = if (expanded) stringResource(com.test.app.commonresources.R.string.show_less) else
-                        stringResource(com.test.app.commonresources.R.string.read_more),
+                    text = if (expanded) stringResource(R.string.show_less) else
+                        stringResource(R.string.read_more),
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.labelLarge,
                     modifier = Modifier.padding(top = 8.dp)
@@ -369,7 +351,7 @@ fun ContactInfo(stock: StockOverviewUiModel) {
         if (stock.cik.isNullOrEmpty().not()) {
             ContactRow(
                 icon = Icons.Outlined.Info,
-                text = stringResource(com.test.app.commonresources.R.string.cik) + " ${stock.cik}"
+                text = stringResource(R.string.cik) + " ${stock.cik}"
             )
         }
     }
@@ -561,49 +543,9 @@ private fun Chart(candles: List<CandleUiModel>, actions: StockDetailsActions) {
             data = candles,
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-        ) {
-            Button(
-                onClick = { actions.onChartPeriodChange("day") }
-            ) {
-                Text(
-                    text = stringResource(com.test.app.commonresources.R.string.day),
-                    color = Color.White,
-                    style = MaterialTheme.typography.labelLarge,
-                )
-            }
-            Button(
-                onClick = { actions.onChartPeriodChange("week") }
-            ) {
-                Text(
-                    text = stringResource(com.test.app.commonresources.R.string.week),
-                    color = Color.White,
-                    style = MaterialTheme.typography.labelLarge,
-                )
-            }
-            Button(
-                onClick = { actions.onChartPeriodChange("month") }
-            ) {
-                Text(
-                    text = stringResource(com.test.app.commonresources.R.string.month),
-                    color = Color.White,
-                    style = MaterialTheme.typography.labelLarge,
-                )
-            }
-            Button(
-                onClick = { actions.onChartPeriodChange("quarter") }
-            ) {
-                Text(
-                    text = stringResource(com.test.app.commonresources.R.string.quartal),
-                    color = Color.White,
-                    style = MaterialTheme.typography.labelLarge,
-                )
-            }
-        }
+        PeriodButtons(onChartPeriodChange = actions.onChartPeriodChange)
     }
 }
 

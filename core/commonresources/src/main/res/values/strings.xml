@@ -2,37 +2,17 @@
 <resources>
     <string name="app_name">StocksViewer</string>
 
+    <!-- Common -->
     <string name="retry">Retry</string>
-    <string name="try_again">Try again</string>
-
-    <string name="loading_data">Loading data…</string>
-    <string name="ui_return_to_previous_screen">Return to previous screen</string>
+    <string name="a11y_return_to_previous_screen">Return to previous screen</string>
 
     <!-- List -->
     <string name="all_stocks">All stocks</string>
     <string name="search_stocks">Search stocks</string>
-
     <string name="a11y_close_search">Close Search</string>
 
-
-    <string name="category">Category:</string>
-    <string name="description">Description</string>
-    <string name="tags">Tags:</string>
-    <string name="languages">Languages:</string>
-    <string name="rank">Rank:</string>
-    <string name="total_attempts">Total attempts:</string>
-    <string name="total_completed">Total completed:</string>
-    <string name="total_stars">Total stars:</string>
-    <string name="total_score">Total score:</string>
-    <string name="created_by">Created by:</string>
-    <string name="approved_by">Approved by:</string>
-    <string name="published_at">Published at:</string>
-    <string name="approved_at">Approved at:</string>
-
-
-
     <!-- Details -->
-    <string name="logo_string">Logo</string>
+    <string name="a11y_logo">Logo</string>
     <string name="market_data">Market Data</string>
     <string name="market_cap">Market Cap</string>
     <string name="employees">Employees</string>
@@ -52,7 +32,4 @@
     <string name="no_network_connection">No network connection</string>
     <string name="some_server_problem">Server problem has occurred</string>
     <string name="something_went_wrong">Something went wrong</string>
-    <string name="no_network">No network</string>
-    <string name="some_api_error">Some API error</string>
-    <string name="faced_an_error">Faced an error: </string>
 </resources>

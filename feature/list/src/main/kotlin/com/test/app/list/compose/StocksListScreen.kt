@@ -1,4 +1,4 @@
-package com.test.app.list
+package com.test.app.list.compose
 
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -29,8 +29,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.material3.pulltorefresh.pullToRefresh
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -38,7 +36,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -52,12 +49,15 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.test.app.commonresources.R
+import com.test.app.data.paging.SearchResultsError
 import com.test.app.designsystem.component.BackgroundPreview
+import com.test.app.designsystem.component.HandleError
 import com.test.app.designsystem.component.SearchTopAppBar
 import com.test.app.designsystem.theme.AppTheme
+import com.test.app.list.StocksListViewModel
 import com.test.app.list.model.TickerUiModel
 import com.test.app.ui.ErrorRetryItem
-import com.test.app.ui.showSnackBar
 import kotlinx.coroutines.flow.flowOf
 
 @Composable
@@ -70,39 +70,21 @@ fun StocksListRoute(
     val pullToRefreshState = rememberPullToRefreshState()
     var isRefreshing by remember { mutableStateOf(false) }
 
-    val scope = rememberCoroutineScope()
-    val snackBarHostState = remember { SnackbarHostState() }
-    val someErrorHappened = stringResource(id = com.test.app.commonresources.R.string.some_error_happened)
-    val tryAgain = stringResource(id = com.test.app.commonresources.R.string.try_again)
-
     StocksListScreen(
         stocksPaging = stocksPaging,
-        snackBarHostState = snackBarHostState,
         pullToRefreshState = pullToRefreshState,
         isRefreshing = isRefreshing,
         onStockClick = onStockClick,
-        onRefreshError = {
-            showSnackBar(
-                scope = scope,
-                snackBarHostState = snackBarHostState,
-                message = (stocksPaging.loadState.refresh as LoadState.Error).error.message
-                    ?: someErrorHappened,
-                actionLabel = tryAgain,
-                actionPerformed = { stocksPaging.refresh() },
-            )
-        },
-        onSearchQueryChange = viewModel::onSearchQueryChange
+        onSearchQueryChange = viewModel::onSearchQueryChange,
     )
 }
 
 @Composable
 fun StocksListScreen(
     stocksPaging: LazyPagingItems<TickerUiModel>,
-    snackBarHostState: SnackbarHostState,
     pullToRefreshState: PullToRefreshState,
     isRefreshing: Boolean,
     onStockClick: (String) -> Unit = {},
-    onRefreshError: () -> Unit = {},
     onSearchQueryChange: (String) -> Unit = {},
 ) {
     var isSearching by rememberSaveable { mutableStateOf(false) }
@@ -116,7 +98,6 @@ fun StocksListScreen(
                 isRefreshing = isRefreshing,
                 onRefresh = { stocksPaging.refresh() },
             ),
-        snackbarHost = { SnackbarHost(snackBarHostState) },
         contentWindowInsets = WindowInsets.navigationBars,
         topBar = {
             SearchTopAppBar(
@@ -140,7 +121,6 @@ fun StocksListScreen(
             StocksListContent(
                 stocksPaging = stocksPaging,
                 onStockClick = onStockClick,
-                onRefreshError = onRefreshError,
                 isRefreshing = isRefreshing,
                 pullToRefreshState = pullToRefreshState,
                 modifier = Modifier
@@ -155,7 +135,6 @@ fun StocksListScreen(
 private fun StocksListContent(
     stocksPaging: LazyPagingItems<TickerUiModel>,
     onStockClick: (String) -> Unit,
-    onRefreshError: () -> Unit,
     isRefreshing: Boolean,
     pullToRefreshState: PullToRefreshState,
     modifier: Modifier = Modifier,
@@ -163,6 +142,14 @@ private fun StocksListContent(
     Box(modifier = modifier) {
         if (stocksPaging.loadState.refresh is LoadState.Loading) {
             StocksListSkeleton()
+        } else if (stocksPaging.loadState.prepend is LoadState.Error ||
+            stocksPaging.loadState.refresh is LoadState.Error
+        ) {
+            HandleError(
+                errorMessage = getErrorMessage(stocksPaging),
+                onRetry = { stocksPaging.refresh() },
+                modifier = Modifier.fillMaxSize()
+            )
         } else {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
@@ -200,10 +187,6 @@ private fun StocksListContent(
                             )
                         }
                     }
-
-                    stocksPaging.loadState.refresh is LoadState.Error -> {
-                        onRefreshError.invoke()
-                    }
                 }
             }
             if (isRefreshing) {
@@ -222,6 +205,28 @@ private fun StocksListContent(
             }
         }
     }
+}
+
+@Composable
+private fun getErrorMessage(stocksPaging: LazyPagingItems<TickerUiModel>): String {
+    val error = when {
+        stocksPaging.loadState.prepend is LoadState.Error -> {
+            (stocksPaging.loadState.prepend as LoadState.Error).error as SearchResultsError
+        }
+
+        stocksPaging.loadState.refresh is LoadState.Error -> {
+            (stocksPaging.loadState.refresh as LoadState.Error).error as SearchResultsError
+        }
+
+        else -> null
+    }
+    val errorMessage = when (error) {
+        is SearchResultsError.HttpError -> error.errorMessage ?: stringResource(R.string.some_server_problem)
+        is SearchResultsError.NetworkError -> stringResource(R.string.no_network_connection)
+        is SearchResultsError.UnknownError -> stringResource(R.string.something_went_wrong)
+        else -> ""
+    }
+    return errorMessage
 }
 
 @Composable
@@ -301,7 +306,7 @@ fun StocksListPreview() {
                 )
             )
         ).collectAsLazyPagingItems()
-        
+
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(16.dp),

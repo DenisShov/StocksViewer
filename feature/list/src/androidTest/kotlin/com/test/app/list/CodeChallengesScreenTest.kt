@@ -18,6 +18,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performScrollToIndex
 import androidx.compose.ui.test.performScrollToNode
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.test.app.list.compose.StocksListScreen
 import com.test.app.testing.data.testStockOverviewLists
 import com.test.app.testing.data.testErrorMessage
 import com.test.app.testing.data.testFlowPagingData
