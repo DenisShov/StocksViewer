@@ -31,10 +31,11 @@ import androidx.compose.ui.unit.dp
 import com.test.app.commonresources.R
 import com.test.app.designsystem.component.BackgroundPreview
 import com.test.app.designsystem.theme.AppTheme
+import com.test.app.details.actions.ChartPeriod
 
 @Composable
-fun PeriodButtons(onChartPeriodChange: (String) -> Unit) {
-    var selectedPeriod by rememberSaveable { mutableStateOf("week") }
+fun PeriodButtons(onChartPeriodChange: (ChartPeriod) -> Unit) {
+    var selectedPeriod by rememberSaveable { mutableStateOf(ChartPeriod.WEEK) }
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -45,37 +46,37 @@ fun PeriodButtons(onChartPeriodChange: (String) -> Unit) {
     ) {
         PeriodButton(
             text = stringResource(R.string.day),
-            isSelected = selectedPeriod == "day",
+            isSelected = selectedPeriod == ChartPeriod.DAY,
             onClick = {
-                selectedPeriod = "day"
-                onChartPeriodChange("day")
+                selectedPeriod = ChartPeriod.DAY
+                onChartPeriodChange(ChartPeriod.DAY)
             },
             modifier = Modifier.weight(1f)
         )
         PeriodButton(
             text = stringResource(R.string.week),
-            isSelected = selectedPeriod == "week",
+            isSelected = selectedPeriod == ChartPeriod.WEEK,
             onClick = {
-                selectedPeriod = "week"
-                onChartPeriodChange("week")
+                selectedPeriod = ChartPeriod.WEEK
+                onChartPeriodChange(ChartPeriod.WEEK)
             },
             modifier = Modifier.weight(1f)
         )
         PeriodButton(
             text = stringResource(R.string.month),
-            isSelected = selectedPeriod == "month",
+            isSelected = selectedPeriod == ChartPeriod.MONTH,
             onClick = {
-                selectedPeriod = "month"
-                onChartPeriodChange("month")
+                selectedPeriod = ChartPeriod.MONTH
+                onChartPeriodChange(ChartPeriod.MONTH)
             },
             modifier = Modifier.weight(1f)
         )
         PeriodButton(
             text = stringResource(R.string.quartal),
-            isSelected = selectedPeriod == "quarter",
+            isSelected = selectedPeriod == ChartPeriod.QUARTER,
             onClick = {
-                selectedPeriod = "quarter"
-                onChartPeriodChange("quarter")
+                selectedPeriod = ChartPeriod.QUARTER
+                onChartPeriodChange(ChartPeriod.QUARTER)
             },
             modifier = Modifier.weight(1f)
         )

@@ -2,6 +2,7 @@ package com.test.app.details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.test.app.details.actions.ChartPeriod
 import com.test.app.details.model.toUiModel
 import com.test.app.details.state.StockDetailsState
 import com.test.app.domain.GetStockChartDataUseCase
@@ -50,7 +51,7 @@ class StockDetailsViewModel @AssistedInject constructor(
                             isLoading = false,
                         )
                     }
-                    getStockChartData("week")
+                    getStockChartData(ChartPeriod.WEEK)
                 },
                 ifLeft = { error ->
                     _uiState.update {
@@ -64,9 +65,9 @@ class StockDetailsViewModel @AssistedInject constructor(
         }
     }
 
-    fun getStockChartData(period: String) {
+    fun getStockChartData(period: ChartPeriod) {
         viewModelScope.launch {
-            getStockChartDataUseCase.launch(ticker, period).fold(
+            getStockChartDataUseCase.launch(ticker, period.value).fold(
                 ifRight = { stockChart ->
                     _uiState.update {
                         it.copy(
