@@ -23,12 +23,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material.icons.filled.Language
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -49,7 +43,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -65,6 +58,7 @@ import com.test.app.common.error.DomainError
 import com.test.app.commonresources.R
 import com.test.app.designsystem.component.BackgroundPreview
 import com.test.app.designsystem.component.HandleError
+import com.test.app.designsystem.icon.IconResources
 import com.test.app.designsystem.theme.AppTheme
 import com.test.app.details.StockDetailsViewModel
 import com.test.app.details.actions.StockDetailsActions
@@ -113,7 +107,7 @@ fun StockDetailScreen(
                 navigationIcon = {
                     IconButton(onClick = { onBackButtonClick.invoke() }) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            painter = painterResource(id = IconResources.ArrowBack),
                             contentDescription = stringResource(id = R.string.a11y_return_to_previous_screen),
                             modifier = Modifier.padding(start = 12.dp),
                         )
@@ -340,17 +334,17 @@ fun CompanyAbout(description: String) {
 fun ContactInfo(stock: StockOverviewUiModel) {
     Column(verticalArrangement = Arrangement.spacedBy(0.dp)) {
         if (stock.address.isNullOrEmpty().not()) {
-            ContactRow(icon = Icons.Default.LocationOn, text = stock.address)
+            ContactRow(icon = IconResources.LocationOn, text = stock.address)
         }
         if (stock.homepageUrl.isNullOrEmpty().not()) {
-            ContactRow(icon = Icons.Default.Language, text = stock.homepageUrl)
+            ContactRow(icon = IconResources.Language, text = stock.homepageUrl)
         }
         if (stock.listDate.isNullOrEmpty().not()) {
-            ContactRow(icon = Icons.Default.CalendarToday, text = stock.listDate)
+            ContactRow(icon = IconResources.CalendarToday, text = stock.listDate)
         }
         if (stock.cik.isNullOrEmpty().not()) {
             ContactRow(
-                icon = Icons.Outlined.Info,
+                icon = IconResources.Info,
                 text = stringResource(R.string.cik) + " ${stock.cik}"
             )
         }
@@ -358,7 +352,7 @@ fun ContactInfo(stock: StockOverviewUiModel) {
 }
 
 @Composable
-fun ContactRow(icon: ImageVector, text: String) {
+fun ContactRow(icon: Int, text: String) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -366,7 +360,7 @@ fun ContactRow(icon: ImageVector, text: String) {
             .padding(vertical = 8.dp)
     ) {
         Icon(
-            imageVector = icon,
+            painter = painterResource(id = icon),
             contentDescription = null,
             tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(24.dp)

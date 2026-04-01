@@ -13,10 +13,6 @@ androidxComposeCompiler = "1.5.8"
 androidxComposeUiManifest = "1.6.7"
 androidxComposeMaterial3 = "1.2.1"
 androidxPagingCompose = "3.3.6"
-materialIcons = "1.7.3"
-
-
-androidxNavigation = "2.9.6"
 
 # Navigation 3
 nav3Core = "1.0.0"
@@ -43,9 +39,7 @@ jacoco = "0.8.7"
 androidxComposeUiTest = "1.10.1"
 archCoreTestingVersion = "2.2.0"
 mockkVersion = "1.14.7"
-androidxTestExt = "1.1.5"
 androidxTestRules = "1.7.0"
-androidxTestRunner = "1.5.2"
 turbineVersion = "1.2.1"
 kluentVersion = "1.73"
 
@@ -64,13 +58,10 @@ androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime
 # Material 3
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 
-# Material icons
-material-icons = { group = "org.jetbrains.compose.material", name = "material-icons-extended", version.ref = "materialIcons" }
-
 # AppCompat theme
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
 
-# For ViewModels
+# ViewModels
 androidx-lifecycle-runtimeCompose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidxLifecycle" }
 androidx-lifecycle-runtimeTesting = { group = "androidx.lifecycle", name = "lifecycle-runtime-testing", version.ref = "androidxLifecycle" }
 androidx-lifecycle-viewModelCompose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidxLifecycle" }

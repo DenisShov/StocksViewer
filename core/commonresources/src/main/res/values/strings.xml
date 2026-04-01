@@ -10,6 +10,7 @@
     <string name="all_stocks">All stocks</string>
     <string name="search_stocks">Search stocks</string>
     <string name="a11y_close_search">Close Search</string>
+    <string name="a11y_search_description">Search</string>
 
     <!-- Details -->
     <string name="a11y_logo">Logo</string>

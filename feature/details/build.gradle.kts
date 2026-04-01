@@ -15,7 +15,6 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.vico.compose.m3)
     implementation(libs.coil)
-    implementation(libs.material.icons)
 
     testImplementation(project(":core:testing"))
     androidTestImplementation(project(":core:testing"))

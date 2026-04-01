@@ -2,9 +2,6 @@ package com.test.app.designsystem.component
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -20,7 +17,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import com.test.app.designsystem.icon.IconResources
 import com.test.app.designsystem.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,7 +50,7 @@ fun SearchTopAppBar(
             if (isSearching) {
                 IconButton(onClick = onSearchClose) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        painter = painterResource(id = IconResources.ArrowBack),
                         contentDescription = stringResource(id = com.test.app.commonresources.R.string.a11y_close_search)
                     )
                 }
@@ -60,7 +59,10 @@ fun SearchTopAppBar(
         actions = {
             if (!isSearching) {
                 IconButton(onClick = onSearchOpen) {
-                    Icon(imageVector = Icons.Default.Search, contentDescription = "Search")
+                    Icon(
+                        painter = painterResource(id = IconResources.Search),
+                        contentDescription = stringResource(id = com.test.app.commonresources.R.string.a11y_search_description),
+                    )
                 }
             }
         },
