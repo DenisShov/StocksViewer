@@ -31,9 +31,20 @@ object NetworkModule {
     @Singleton
     fun provideHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
+            .addApiKeyInterceptor(BuildConfig.API_KEY)
             .addLoggingInterceptor(BuildConfig.DEBUG)
             .build()
     }
+
+    private fun OkHttpClient.Builder.addApiKeyInterceptor(apiKey: String) =
+        apply {
+            addInterceptor { chain ->
+                val url = chain.request().url.newBuilder()
+                    .addQueryParameter("apiKey", apiKey)
+                    .build()
+                chain.proceed(chain.request().newBuilder().url(url).build())
+            }
+        }
 
     private fun OkHttpClient.Builder.addLoggingInterceptor(isLogEnabled: Boolean) =
         apply {
