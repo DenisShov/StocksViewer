@@ -19,9 +19,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.test.app.designsystem.R
 import com.test.app.designsystem.icon.IconResources
 import com.test.app.designsystem.theme.AppTheme
+import com.test.app.stockviewer.core.commonresources.R
 
 @Composable
 fun HandleError(
@@ -46,7 +46,7 @@ fun HandleError(
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
-            text = stringResource(com.test.app.commonresources.R.string.some_error_happened),
+            text = stringResource(R.string.some_error_happened),
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
@@ -65,7 +65,7 @@ fun HandleError(
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(onClick = onRetry) {
-            Text(text = stringResource(com.test.app.commonresources.R.string.retry))
+            Text(text = stringResource(R.string.retry))
         }
     }
 }

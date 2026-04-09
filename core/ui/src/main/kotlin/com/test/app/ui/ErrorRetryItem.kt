@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.test.app.designsystem.component.ThemePreviews
 import com.test.app.designsystem.theme.AppTheme
+import com.test.app.stockviewer.core.commonresources.R
 
 @Composable
 fun ErrorRetryItem(error: String?, onTryClicked: () -> Unit) {
@@ -30,7 +31,7 @@ fun ErrorRetryItem(error: String?, onTryClicked: () -> Unit) {
                 .wrapContentHeight()
                 .padding(vertical = 8.dp),
             text = error
-                ?: stringResource(id = com.test.app.commonresources.R.string.some_error_happened),
+                ?: stringResource(id = R.string.some_error_happened),
             color = MaterialTheme.colorScheme.error,
             style = MaterialTheme.typography.titleMedium
         )
@@ -38,7 +39,7 @@ fun ErrorRetryItem(error: String?, onTryClicked: () -> Unit) {
             onClick = onTryClicked
         ) {
             Text(
-                text = stringResource(id = com.test.app.commonresources.R.string.retry),
+                text = stringResource(id = R.string.retry),
                 color = Color.White,
                 style = MaterialTheme.typography.labelLarge
             )

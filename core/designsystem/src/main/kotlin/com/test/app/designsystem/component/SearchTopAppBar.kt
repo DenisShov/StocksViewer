@@ -21,6 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.test.app.designsystem.icon.IconResources
 import com.test.app.designsystem.theme.AppTheme
+import com.test.app.stockviewer.core.commonresources.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,7 +41,7 @@ fun SearchTopAppBar(
                 )
             } else {
                 Text(
-                    text = stringResource(id = com.test.app.commonresources.R.string.all_stocks),
+                    text = stringResource(id = R.string.all_stocks),
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.onBackground
                 )
@@ -51,7 +52,7 @@ fun SearchTopAppBar(
                 IconButton(onClick = onSearchClose) {
                     Icon(
                         painter = painterResource(id = IconResources.ArrowBack),
-                        contentDescription = stringResource(id = com.test.app.commonresources.R.string.a11y_close_search)
+                        contentDescription = stringResource(id = R.string.a11y_close_search)
                     )
                 }
             }
@@ -61,7 +62,7 @@ fun SearchTopAppBar(
                 IconButton(onClick = onSearchOpen) {
                     Icon(
                         painter = painterResource(id = IconResources.Search),
-                        contentDescription = stringResource(id = com.test.app.commonresources.R.string.a11y_search_description),
+                        contentDescription = stringResource(id = R.string.a11y_search_description),
                     )
                 }
             }
@@ -85,7 +86,7 @@ fun SearchTextField(
         onValueChange = onQueryChange,
         placeholder = {
             Text(
-                stringResource(id = com.test.app.commonresources.R.string.search_stocks),
+                stringResource(id = R.string.search_stocks),
                 style = MaterialTheme.typography.bodyLarge
             )
         },

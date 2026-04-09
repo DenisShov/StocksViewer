@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.test.app.common"
+    namespace = "com.test.app.stockviewer.core.common"
 
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -17,5 +17,4 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.androidx.core.ktx)
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.androidx.navigation3.runtime)
 }

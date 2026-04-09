@@ -1,11 +1,11 @@
 package com.test.app.network.retrofit
 
 import arrow.core.Either
-import com.test.app.network.BuildConfig
 import com.test.app.network.model.ApiError
 import com.test.app.network.model.StockChartResponse
 import com.test.app.network.model.StockOverviewResponse
 import com.test.app.network.model.TickersResponse
+import com.test.app.stockviewer.core.network.BuildConfig
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

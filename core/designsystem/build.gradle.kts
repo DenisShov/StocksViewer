@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.test.app.designsystem"
+    namespace = "com.test.app.stockviewer.core.designsystem"
 
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

@@ -2,63 +2,39 @@ package com.test.app.stockviewer.navigation
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.compose.runtime.remember
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
-import androidx.navigation3.runtime.NavEntry
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import com.test.app.common.navigation.Screen
-import com.test.app.details.compose.StockDetailsRoute
-import com.test.app.details.StockDetailsViewModel
-import com.test.app.list.compose.StocksListRoute
+import com.test.app.impl.navigation.stockDetailsEntry
+import com.test.app.impl.navigation.stocksListEntry
+import com.test.app.list.api.StocksListKey
+import com.test.app.navigation.Navigator
 
 @Composable
 fun NavigationRoot() {
-    val backStack = rememberNavBackStack(Screen.StocksList)
+    val backStack = rememberNavBackStack(StocksListKey)
 
     BackHandler(enabled = backStack.size > 1) {
         backStack.removeAt(backStack.lastIndex)
+    }
+
+    val navigator = remember { Navigator(backStack = backStack) }
+
+    val entryProvider = entryProvider {
+        stockDetailsEntry(navigator)
+        stocksListEntry(navigator)
     }
 
     NavDisplay(
         backStack = backStack,
         entryDecorators = listOf(
             rememberSaveableStateHolderNavEntryDecorator(),
-            rememberViewModelStoreNavEntryDecorator()
+            rememberViewModelStoreNavEntryDecorator(),
         ),
-        entryProvider = { key ->
-            when (key) {
-                is Screen.StocksList -> {
-                    NavEntry(key) {
-                        StocksListRoute(
-                            onStockClick = { stockTicker ->
-                                backStack.add(Screen.StocksDetail(stockTicker))
-                            })
-                    }
-                }
-
-                is Screen.StocksDetail -> {
-                    NavEntry(key) {
-                        val viewModel =
-                            hiltViewModel<StockDetailsViewModel, StockDetailsViewModel.Factory> { factory ->
-                                factory.create(ticker = key.stockTicker)
-                            }
-
-                        StockDetailsRoute(
-                            viewModel = viewModel,
-                            onBackButtonClick = {
-                                if (backStack.size > 1) {
-                                    backStack.removeAt(backStack.lastIndex)
-                                }
-                            })
-                    }
-                }
-
-                else -> {
-                    throw IllegalArgumentException("Invalid key: $key")
-                }
-            }
-        }
+        entryProvider = entryProvider,
     )
 }

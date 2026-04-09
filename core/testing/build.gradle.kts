@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.test.app.testing"
+    namespace = "com.test.app.stockviewer.core.testing"
 }
 
 dependencies {
@@ -25,4 +25,5 @@ dependencies {
     api(libs.turbine)
     api(libs.androidx.paging.testing)
     api(libs.kluent.android)
+    api(libs.truth)
 }

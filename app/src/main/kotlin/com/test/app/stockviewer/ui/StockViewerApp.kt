@@ -18,7 +18,7 @@ fun StockViewerApp(modifier: Modifier = Modifier) {
         Surface(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
+                .padding(padding),
         ) {
             NavigationRoot()
         }

@@ -42,6 +42,12 @@ mockkVersion = "1.14.7"
 androidxTestRules = "1.7.0"
 turbineVersion = "1.2.1"
 kluentVersion = "1.73"
+junit = "4.13.2"
+junitVersion = "1.1.5"
+espressoCore = "3.5.1"
+truth = "1.4.4"
+appcompat = "1.7.1"
+material = "1.13.0"
 
 [libraries]
 # Support libs
@@ -119,6 +125,7 @@ mockk = { group = "io.mockk", name = "mockk", version.ref = "mockkVersion" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbineVersion" }
 androidx-paging-testing = { group = "androidx.paging", name = "paging-testing", version.ref = "androidxPagingCompose" }
 kluent-android = { group = "org.amshove.kluent", name = "kluent-android", version.ref = "kluentVersion" }
+truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
 
 # Dependencies of the included build-config
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
@@ -126,6 +133,11 @@ kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-pl
 compose-gradlePlugin = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin" }
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 detekt-gradlePlugin = { group = "io.gitlab.arturbosch.detekt", name = "io.gitlab.arturbosch.detekt.gradle.plugin", version.ref = "deteKtVersion" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

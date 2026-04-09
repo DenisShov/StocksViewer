@@ -1,6 +1,6 @@
 package com.test.app.designsystem.icon
 
-import com.test.app.designsystem.R
+import com.test.app.stockviewer.core.designsystem.R
 
 object IconResources {
     val ArrowBack = R.drawable.ic_arrow_back

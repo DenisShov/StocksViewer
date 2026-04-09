@@ -12,6 +12,7 @@ import com.test.app.model.data.CreatedBy
 import com.test.app.model.data.Rank
 import com.test.app.model.data.StockChart
 import com.test.app.model.data.Ticker
+import com.test.app.model.data.Tickers
 import com.test.app.network.model.NetworkApprovedBy
 import com.test.app.network.model.NetworkCodeChallengeDetail
 import com.test.app.network.model.NetworkCodeChallengeOverview
@@ -20,6 +21,7 @@ import com.test.app.network.model.NetworkCreatedBy
 import com.test.app.network.model.NetworkRank
 import kotlinx.coroutines.flow.flow
 import kotlin.String
+import kotlin.collections.List
 
 val testNetworkCodeChallengeOverviewList = listOf(
     NetworkCodeChallengeOverview(
@@ -62,6 +64,14 @@ val testStockOverviewLists = listOf(
         shareClassFigi = null,
         lastUpdatedUtc = null,
     )
+)
+
+val testTickers = Tickers(
+    results = testStockOverviewLists,
+    status = "status",
+    requestId = "requestId",
+    count = 1,
+    nextUrl = null,
 )
 
 val testPagingData = PagingData.from(testStockOverviewLists)

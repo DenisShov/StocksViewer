@@ -35,8 +35,11 @@ android {
 dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:common"))
-    implementation(project(":feature:list"))
-    implementation(project(":feature:details"))
+    implementation(project(":core:navigation"))
+    implementation(project(":feature:list:api"))
+    implementation(project(":feature:list:impl"))
+    implementation(project(":feature:details:api"))
+    implementation(project(":feature:details:impl"))
 
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)

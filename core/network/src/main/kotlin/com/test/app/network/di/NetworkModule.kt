@@ -2,9 +2,9 @@ package com.test.app.network.di
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.test.app.network.BuildConfig
 import com.test.app.network.retrofit.EitherCallAdapterFactory
 import com.test.app.network.retrofit.StocksApi
+import com.test.app.stockviewer.core.network.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
