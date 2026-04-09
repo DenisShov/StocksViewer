@@ -2,12 +2,12 @@ package com.test.app.impl
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.test.app.data.repository.StocksRepository
 import com.test.app.details.impl.actions.ChartPeriod
 import com.test.app.details.impl.model.toUiModel
-import com.test.app.impl.model.toUiModel
 import com.test.app.details.impl.state.StockDetailsState
 import com.test.app.domain.GetStockChartDataUseCase
-import com.test.app.domain.GetStockOverviewByTickerUseCase
+import com.test.app.impl.model.toUiModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 class StockDetailsViewModel @AssistedInject constructor(
     @Assisted
     private val ticker: String,
-    private val getStockOverviewByTickerUseCase: GetStockOverviewByTickerUseCase,
+    private val stocksRepository: StocksRepository,
     private val getStockChartDataUseCase: GetStockChartDataUseCase,
 ) : ViewModel() {
 
@@ -44,7 +44,7 @@ class StockDetailsViewModel @AssistedInject constructor(
                     isLoading = true,
                 )
             }
-            getStockOverviewByTickerUseCase.launch(ticker).fold(
+            stocksRepository.getStockOverviewByTicker(ticker).fold(
                 ifRight = { stockOverview ->
                     _uiState.update {
                         it.copy(

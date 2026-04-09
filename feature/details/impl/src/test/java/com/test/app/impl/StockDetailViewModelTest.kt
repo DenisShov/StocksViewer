@@ -6,7 +6,6 @@ import com.test.app.common.error.DomainError
 import com.test.app.common.result.DataResult
 import com.test.app.impl.StockDetailsViewModel
 import com.test.app.impl.StockDetailsViewModel.Companion.STOCK_TICKER_ARG
-import com.test.app.domain.GetStockOverviewByTickerUseCase
 import com.test.app.testing.data.testStockDetails
 import com.test.app.testing.utils.BaseCoroutineTestWithInstantTaskExecutorRule
 import io.mockk.MockKAnnotations
