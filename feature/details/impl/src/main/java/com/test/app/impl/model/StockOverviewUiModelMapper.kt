@@ -3,7 +3,6 @@ package com.test.app.impl.model
 import com.test.app.details.impl.model.StockOverviewUiModel
 import com.test.app.model.data.Address
 import com.test.app.model.data.StockOverview
-import com.test.app.stockviewer.core.network.BuildConfig.API_KEY
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -24,7 +23,7 @@ fun StockOverview.toUiModel() =
         sicDescription = results.sicDescription,
         cik = results.cik,
         listDate = formatDate(results.listDate),
-        iconUrl = "${results.branding?.iconUrl}?apiKey=$API_KEY",
+        iconUrl = results.branding?.iconUrl,
     )
 
 private fun getAddress(address: Address?) = address?.run {

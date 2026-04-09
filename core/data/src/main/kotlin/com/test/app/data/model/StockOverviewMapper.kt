@@ -8,6 +8,7 @@ import com.test.app.network.model.AddressResponse
 import com.test.app.network.model.BrandingResponse
 import com.test.app.network.model.CompanyResponse
 import com.test.app.network.model.StockOverviewResponse
+import com.test.app.stockviewer.core.network.BuildConfig
 
 fun StockOverviewResponse.toDomain() = StockOverview(
     requestId = requestId,
@@ -51,6 +52,6 @@ fun AddressResponse.toDomain() = Address(
 )
 
 fun BrandingResponse.toDomain() = Branding(
-    logoUrl = logoUrl,
-    iconUrl = iconUrl,
+    logoUrl = logoUrl?.let { "$it?apiKey=${BuildConfig.API_KEY}" },
+    iconUrl = iconUrl?.let { "$it?apiKey=${BuildConfig.API_KEY}" },
 )
