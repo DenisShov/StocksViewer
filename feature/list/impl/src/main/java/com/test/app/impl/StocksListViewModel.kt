@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.test.app.domain.GetResultsPagerUseCase
+import com.test.app.impl.paging.StocksSearchPager
 import com.test.app.list.impl.model.toUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
@@ -18,7 +18,7 @@ import javax.inject.Inject
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class StocksListViewModel @Inject constructor(
-    getResultsPagerUseCase: GetResultsPagerUseCase,
+    stocksSearchPager: StocksSearchPager,
 ) : ViewModel() {
 
     private val searchQuery = MutableStateFlow("")
@@ -27,7 +27,8 @@ class StocksListViewModel @Inject constructor(
         .debounce(1000) // avoid firing on every keystroke
         .distinctUntilChanged()
         .flatMapLatest { query ->
-            getResultsPagerUseCase.execute(query)
+            stocksSearchPager.getPager(query)
+                .distinctUntilChanged()
                 .map { pagingData -> pagingData.map { it.toUiModel() } }
         }
         .cachedIn(viewModelScope)

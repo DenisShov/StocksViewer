@@ -49,7 +49,7 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.test.app.data.paging.SearchResultsError
+import com.test.app.impl.paging.SearchResultsError
 import com.test.app.designsystem.component.BackgroundPreview
 import com.test.app.designsystem.component.HandleError
 import com.test.app.designsystem.component.SearchTopAppBar
