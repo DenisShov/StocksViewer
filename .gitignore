@@ -16,6 +16,8 @@ build/
 
 # Local configuration file (sdk path, etc)
 local.properties
+# local config file with api key
+secrets.defaults.properties
 
 # Windows thumbnail db
 .DS_Store
