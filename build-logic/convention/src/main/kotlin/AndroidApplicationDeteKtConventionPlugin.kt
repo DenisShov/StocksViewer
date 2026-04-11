@@ -1,4 +1,4 @@
-import com.test.app.convention.core.configureDetekt
+import com.test.app.stockviewer.configureDetekt
 import io.gitlab.arturbosch.detekt.extensions.DetektExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project

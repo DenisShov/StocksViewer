@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.test.app.stockviewer.core.testing"
+    namespace = "com.core.testing"
 }
 
 dependencies {

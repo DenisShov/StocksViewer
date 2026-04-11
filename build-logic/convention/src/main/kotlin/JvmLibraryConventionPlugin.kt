@@ -1,4 +1,4 @@
-import com.test.app.convention.core.configureKotlinJvm
+import com.test.app.stockviewer.configureKotlinJvm
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 

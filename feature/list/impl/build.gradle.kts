@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.test.app.stockviewer.feature.list.impl"
+    namespace = "com.feature.list.impl"
     testOptions {
         unitTests {
             isReturnDefaultValues = true

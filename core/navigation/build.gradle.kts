@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.test.app.stockviewer.core.navigation"
+    namespace = "com.core.navigation"
 
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

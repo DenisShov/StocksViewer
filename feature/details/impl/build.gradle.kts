@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.test.app.stockviewer.feature.details.impl"
+    namespace = "com.feature.details.impl"
 }
 
 dependencies {

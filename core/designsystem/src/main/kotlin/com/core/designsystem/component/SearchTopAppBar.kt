@@ -1,0 +1,116 @@
+package com.core.designsystem.component
+
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import com.core.commonresources.R
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SearchTopAppBar(
+    query: String,
+    onQueryChange: (String) -> Unit,
+    onSearchClose: () -> Unit,
+    onSearchOpen: () -> Unit,
+    isSearching: Boolean,
+) {
+    CenterAlignedTopAppBar(
+        title = {
+            if (isSearching) {
+                SearchTextField(
+                    query = query,
+                    onQueryChange = onQueryChange,
+                )
+            } else {
+                Text(
+                    text = stringResource(id = R.string.all_stocks),
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+        },
+        navigationIcon = {
+            if (isSearching) {
+                IconButton(onClick = onSearchClose) {
+                    Icon(
+                        painter = painterResource(id = _root_ide_package_.com.core.designsystem.icon.IconResources.ArrowBack),
+                        contentDescription = stringResource(id = R.string.a11y_close_search)
+                    )
+                }
+            }
+        },
+        actions = {
+            if (!isSearching) {
+                IconButton(onClick = onSearchOpen) {
+                    Icon(
+                        painter = painterResource(id = _root_ide_package_.com.core.designsystem.icon.IconResources.Search),
+                        contentDescription = stringResource(id = R.string.a11y_search_description),
+                    )
+                }
+            }
+        },
+        windowInsets = WindowInsets(),
+    )
+}
+
+@Composable
+fun SearchTextField(
+    query: String,
+    onQueryChange: (String) -> Unit,
+) {
+    val focusRequester = remember { FocusRequester() }
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
+
+    TextField(
+        value = query,
+        onValueChange = onQueryChange,
+        placeholder = {
+            Text(
+                stringResource(id = R.string.search_stocks),
+                style = MaterialTheme.typography.bodyLarge
+            )
+        },
+        singleLine = true,
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .focusRequester(focusRequester)
+    )
+}
+
+@ThemePreviews
+@Composable
+fun SearchTopAppBarPreview() {
+    _root_ide_package_.com.core.designsystem.theme.AppTheme {
+        SearchTopAppBar(
+            query = "query",
+            onQueryChange = {},
+            onSearchClose = {},
+            onSearchOpen = {},
+            isSearching = true,
+        )
+    }
+}

@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.test.app.stockviewer.core.network"
+    namespace = "com.core.network"
 
     buildFeatures {
         buildConfig = true

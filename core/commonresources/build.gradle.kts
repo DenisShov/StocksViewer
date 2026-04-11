@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.test.app.stockviewer.core.commonresources"
+    namespace = "com.core.commonresources"
 
     compileSdk = 36
     defaultConfig {

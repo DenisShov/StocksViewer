@@ -4,15 +4,14 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
-import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import com.test.app.impl.navigation.stockDetailsEntry
-import com.test.app.impl.navigation.stocksListEntry
-import com.test.app.list.api.StocksListKey
-import com.test.app.navigation.Navigator
+import com.core.navigation.Navigator
+import com.feature.details.impl.navigation.stockDetailsEntry
+import com.feature.list.api.StocksListKey
+import com.feature.list.impl.navigation.stocksListEntry
 
 @Composable
 fun NavigationRoot() {
