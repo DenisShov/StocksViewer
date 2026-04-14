@@ -3,30 +3,48 @@ package com.core.testing.data
 import androidx.paging.LoadState
 import androidx.paging.LoadStates
 import androidx.paging.PagingData
+import com.core.model.Candle
+import com.core.model.Company
+import com.core.model.StockChart
+import com.core.model.StockOverview
 import com.core.model.Ticker
+import com.core.model.Tickers
+import com.core.network.model.CandleResponse
+import com.core.network.model.CompanyResponse
+import com.core.network.model.StockChartResponse
+import com.core.network.model.StockOverviewResponse
+import com.core.network.model.TickerResponse
+import com.core.network.model.TickersResponse
 import kotlinx.coroutines.flow.flow
+
+const val TEST_TICKER = "AAPL"
+const val TEST_COMPANY_NAME = "Apple Inc."
+const val TEST_MARKET = "stocks"
+const val TEST_LOCALE = "us"
+const val TEST_EXCHANGE = "XNAS"
+const val TEST_TYPE = "CS"
 
 val testStockOverviewLists = listOf(
     Ticker(
-        ticker = "", // TODO: add test data
-        name = "",
-        market = "",
-        locale = "",
-        primaryExchange = "",
-        type = "",
+        ticker = TEST_TICKER,
+        name = TEST_COMPANY_NAME,
+        market = TEST_MARKET,
+        locale = TEST_LOCALE,
+        primaryExchange = TEST_EXCHANGE,
+        type = TEST_TYPE,
         active = true,
-        currencyName = null,
+        currencyName = "usd",
         cik = null,
         compositeFigi = null,
         shareClassFigi = null,
         lastUpdatedUtc = null,
-    )
+    ),
 )
 
-val testTickers = _root_ide_package_.com.core.model.Tickers(
+val testTickers = Tickers(
     results = testStockOverviewLists,
-    status = "status",
-    requestId = "requestId",
+    status = "OK",
+    requestId = "test-request-id",
     count = 1,
     nextUrl = null,
 )
@@ -43,7 +61,7 @@ val testPagingDataNotLoading = PagingData.from(
         refresh = LoadState.NotLoading(false),
         append = LoadState.NotLoading(false),
         prepend = LoadState.NotLoading(false),
-    )
+    ),
 )
 
 val testFlowPagingDataNotLoading = flow {
@@ -56,7 +74,7 @@ val testPagingDataAppendLoading = PagingData.from(
         refresh = LoadState.NotLoading(false),
         append = LoadState.Loading,
         prepend = LoadState.NotLoading(false),
-    )
+    ),
 )
 
 val testFlowPagingDataAppendLoading = flow {
@@ -71,34 +89,117 @@ val testPagingDataAppendError = PagingData.from(
         refresh = LoadState.NotLoading(false),
         append = LoadState.Error(RuntimeException(testErrorMessage)),
         prepend = LoadState.NotLoading(false),
-    )
+    ),
 )
 
 val testFlowPagingDataAppendError = flow {
     emit(testPagingDataAppendError)
 }
 
-val testStockDetails = _root_ide_package_.com.core.model.StockOverview(
-    requestId = "", // TODO: add test data
-    results = _root_ide_package_.com.core.model.Company(
-        ticker = "",
-        name = "",
-        market = "",
-        locale = "",
-        primaryExchange = "",
-        type = "",
+val testStockDetails = StockOverview(
+    requestId = "test-request-id",
+    results = Company(
+        ticker = TEST_TICKER,
+        name = TEST_COMPANY_NAME,
+        market = TEST_MARKET,
+        locale = TEST_LOCALE,
+        primaryExchange = TEST_EXCHANGE,
+        type = TEST_TYPE,
         active = true,
+        currencyName = "usd",
+        marketCap = 3_000_000_000_000.0,
+        totalEmployees = 164000,
+        description = "Apple Inc. designs, manufactures, and markets smartphones and personal computers.",
+        sicDescription = "Electronic Computers",
     ),
-    status = "",
+    status = "OK",
 )
 
-val testStockChart = _root_ide_package_.com.core.model.StockChart(
-    ticker = "", // TODO: add test data
-    queryCount = 0,
-    resultsCount = 0,
+val testCandles = listOf(
+    Candle(
+        volume = 50_000_000.0,
+        vwap = 185.5,
+        open = 185.82,
+        close = 184.8,
+        high = 186.03,
+        low = 184.21,
+        timestampMs = 1699851600000,
+        transactions = 500000,
+    ),
+    Candle(
+        volume = 45_000_000.0,
+        vwap = 187.0,
+        open = 187.7,
+        close = 187.44,
+        high = 188.11,
+        low = 186.3,
+        timestampMs = 1699938000000,
+        transactions = 450000,
+    ),
+)
+
+val testStockChart = StockChart(
+    ticker = TEST_TICKER,
+    queryCount = 2,
+    resultsCount = 2,
     adjusted = true,
-    results = emptyList(),
-    status = "",
-    requestId = "",
-    count = 0,
+    results = testCandles,
+    status = "OK",
+    requestId = "test-request-id",
+    count = 2,
+)
+
+val tickerResponse = TickerResponse(
+    ticker = "AAPL",
+    name = "Apple Inc.",
+    market = "stocks",
+    locale = "us",
+    primaryExchange = "XNAS",
+    type = "CS",
+    active = true,
+)
+
+val tickersResponse = TickersResponse(
+    results = listOf(tickerResponse),
+    status = "OK",
+    requestId = "req1",
+    count = 1,
+)
+
+val companyResponse = CompanyResponse(
+    ticker = "AAPL",
+    name = "Apple Inc.",
+    market = "stocks",
+    locale = "us",
+    primaryExchange = "XNAS",
+    type = "CS",
+    active = true,
+)
+
+val stockOverviewResponse = StockOverviewResponse(
+    requestId = "req1",
+    results = companyResponse,
+    status = "OK",
+)
+
+val candleResponse = CandleResponse(
+    volume = 1000.0,
+    vwap = 149.5,
+    open = 148.0,
+    close = 150.0,
+    high = 151.0,
+    low = 147.0,
+    timestampMs = 1704067200000,
+    transactions = 500,
+)
+
+val stockChartResponse = StockChartResponse(
+    ticker = "AAPL",
+    queryCount = 1,
+    resultsCount = 1,
+    adjusted = true,
+    results = listOf(candleResponse),
+    status = "OK",
+    requestId = "req1",
+    count = 1,
 )

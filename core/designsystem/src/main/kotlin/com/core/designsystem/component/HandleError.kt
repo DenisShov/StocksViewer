@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.core.commonresources.R
+import com.core.designsystem.theme.AppTheme
 
 @Composable
 fun HandleError(
@@ -35,7 +36,7 @@ fun HandleError(
         verticalArrangement = Arrangement.Center
     ) {
         Icon(
-            painter = painterResource(id = _root_ide_package_.com.core.designsystem.icon.IconResources.ErrorOutline),
+            painter = painterResource(id = com.core.designsystem.icon.IconResources.ErrorOutline),
             contentDescription = null,
             modifier = Modifier.size(80.dp),
             tint = MaterialTheme.colorScheme.error
@@ -71,7 +72,7 @@ fun HandleError(
 @BackgroundPreview
 @Composable
 fun HandleErrorPreview() {
-    _root_ide_package_.com.core.designsystem.theme.AppTheme {
+    AppTheme {
         HandleError(
             errorMessage = "Unable to load data. Please check your internet connection and try again.",
             onRetry = {}

@@ -46,6 +46,7 @@ junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 truth = "1.4.4"
+
 appcompat = "1.7.1"
 material = "1.13.0"
 
@@ -121,11 +122,15 @@ arrow-core-retrofit = { group = "io.arrow-kt", name = "arrow-core-retrofit", ver
 androidx-test-rules = { group = "androidx.test", name = "rules", version.ref = "androidxTestRules" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
 core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "archCoreTestingVersion" }
-mockk = { group = "io.mockk", name = "mockk", version.ref = "mockkVersion" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbineVersion" }
 androidx-paging-testing = { group = "androidx.paging", name = "paging-testing", version.ref = "androidxPagingCompose" }
 kluent-android = { group = "org.amshove.kluent", name = "kluent-android", version.ref = "kluentVersion" }
 truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
+
+## MockK library
+mockk = { module = "io.mockk:mockk", version.ref = "mockkVersion" }
+mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockkVersion" }
+mockk-agent = { module = "io.mockk:mockk-agent", version.ref = "mockkVersion" }
 
 # Dependencies of the included build-config
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }

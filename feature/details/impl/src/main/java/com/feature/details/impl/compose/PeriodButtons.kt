@@ -17,9 +17,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,13 +25,13 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.core.designsystem.component.BackgroundPreview
-import com.feature.details.impl.actions.ChartPeriod
 import com.core.commonresources.R
+import com.core.designsystem.component.BackgroundPreview
+import com.core.designsystem.theme.AppTheme
+import com.feature.details.impl.actions.ChartPeriod
 
 @Composable
-fun PeriodButtons(onChartPeriodChange: (ChartPeriod) -> Unit) {
-    var selectedPeriod by rememberSaveable { mutableStateOf(ChartPeriod.WEEK) }
+fun PeriodButtons(selectedPeriod: ChartPeriod, onChartPeriodChange: (ChartPeriod) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -47,7 +44,6 @@ fun PeriodButtons(onChartPeriodChange: (ChartPeriod) -> Unit) {
             text = stringResource(R.string.day),
             isSelected = selectedPeriod == ChartPeriod.DAY,
             onClick = {
-                selectedPeriod = ChartPeriod.DAY
                 onChartPeriodChange(ChartPeriod.DAY)
             },
             modifier = Modifier.weight(1f)
@@ -56,7 +52,6 @@ fun PeriodButtons(onChartPeriodChange: (ChartPeriod) -> Unit) {
             text = stringResource(R.string.week),
             isSelected = selectedPeriod == ChartPeriod.WEEK,
             onClick = {
-                selectedPeriod = ChartPeriod.WEEK
                 onChartPeriodChange(ChartPeriod.WEEK)
             },
             modifier = Modifier.weight(1f)
@@ -65,7 +60,6 @@ fun PeriodButtons(onChartPeriodChange: (ChartPeriod) -> Unit) {
             text = stringResource(R.string.month),
             isSelected = selectedPeriod == ChartPeriod.MONTH,
             onClick = {
-                selectedPeriod = ChartPeriod.MONTH
                 onChartPeriodChange(ChartPeriod.MONTH)
             },
             modifier = Modifier.weight(1f)
@@ -74,7 +68,6 @@ fun PeriodButtons(onChartPeriodChange: (ChartPeriod) -> Unit) {
             text = stringResource(R.string.quartal),
             isSelected = selectedPeriod == ChartPeriod.QUARTER,
             onClick = {
-                selectedPeriod = ChartPeriod.QUARTER
                 onChartPeriodChange(ChartPeriod.QUARTER)
             },
             modifier = Modifier.weight(1f)
@@ -84,10 +77,7 @@ fun PeriodButtons(onChartPeriodChange: (ChartPeriod) -> Unit) {
 
 @Composable
 private fun PeriodButton(
-    text: String,
-    isSelected: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    text: String, isSelected: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier
 ) {
     val backgroundColor by animateColorAsState(
         targetValue = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
@@ -100,26 +90,21 @@ private fun PeriodButton(
         label = "textColor"
     )
     val scale by animateFloatAsState(
-        targetValue = if (isSelected) 1.05f else 1f,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioMediumBouncy,
-            stiffness = Spring.StiffnessLow
-        ),
-        label = "scale"
+        targetValue = if (isSelected) 1.05f else 1f, animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessLow
+        ), label = "scale"
     )
 
-    Box(
-        modifier = modifier
-            .graphicsLayer {
-                scaleX = scale
-                scaleY = scale
-            }
-            .clip(RoundedCornerShape(8.dp))
-            .background(backgroundColor)
-            .clickable(onClick = onClick)
-            .padding(vertical = 12.dp),
-        contentAlignment = Alignment.Center
-    ) {
+    Box(modifier = modifier
+        .graphicsLayer {
+            scaleX = scale
+            scaleY = scale
+        }
+        .clip(RoundedCornerShape(8.dp))
+        .background(backgroundColor)
+        .clickable(onClick = onClick)
+        .padding(vertical = 12.dp),
+        contentAlignment = Alignment.Center) {
         Text(
             text = text,
             color = textColor,
@@ -132,7 +117,7 @@ private fun PeriodButton(
 @BackgroundPreview
 @Composable
 fun PeriodButtonsPreview() {
-    _root_ide_package_.com.core.designsystem.theme.AppTheme {
-        PeriodButtons(onChartPeriodChange = {})
+    AppTheme {
+        PeriodButtons(selectedPeriod = ChartPeriod.WEEK, onChartPeriodChange = {})
     }
 }

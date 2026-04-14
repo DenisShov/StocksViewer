@@ -98,7 +98,7 @@ fun StocksListScreen(
             ),
         contentWindowInsets = WindowInsets.navigationBars,
         topBar = {
-            _root_ide_package_.com.core.designsystem.component.SearchTopAppBar(
+            com.core.designsystem.component.SearchTopAppBar(
                 query = query,
                 onQueryChange = {
                     query = it
@@ -143,7 +143,7 @@ private fun StocksListContent(
         } else if (stocksPaging.loadState.prepend is LoadState.Error ||
             stocksPaging.loadState.refresh is LoadState.Error
         ) {
-            _root_ide_package_.com.core.designsystem.component.HandleError(
+            com.core.designsystem.component.HandleError(
                 errorMessage = getErrorMessage(stocksPaging),
                 onRetry = { stocksPaging.refresh() },
                 modifier = Modifier.fillMaxSize()

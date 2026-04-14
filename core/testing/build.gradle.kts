@@ -22,6 +22,8 @@ dependencies {
     api(libs.hilt.android.testing)
     api(libs.kotlinx.coroutines.test)
     api(libs.mockk)
+    api(libs.mockk.android)
+    api(libs.mockk.agent)
     api(libs.turbine)
     api(libs.androidx.paging.testing)
     api(libs.kluent.android)

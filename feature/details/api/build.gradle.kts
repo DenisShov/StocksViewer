@@ -14,6 +14,4 @@ android {
 
 dependencies {
     implementation(project(":core:navigation"))
-
-    testImplementation(project(":core:testing"))
 }

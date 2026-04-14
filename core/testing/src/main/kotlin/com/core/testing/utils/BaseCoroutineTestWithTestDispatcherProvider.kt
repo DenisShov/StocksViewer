@@ -8,6 +8,6 @@ abstract class BaseCoroutineTestWithTestDispatcherProvider(
     dispatcher: TestDispatcher = StandardTestDispatcher(),
 ) {
     @get:Rule
-    val mainDispatcherRule = MainDispatcherRule(dispatcher = dispatcher)
+    val coroutineTestRule = CoroutineTestRule(testDispatcher = dispatcher)
 
 }

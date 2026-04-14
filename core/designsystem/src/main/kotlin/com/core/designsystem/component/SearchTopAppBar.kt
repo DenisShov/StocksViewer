@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.core.commonresources.R
+import com.core.designsystem.theme.AppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,7 +50,7 @@ fun SearchTopAppBar(
             if (isSearching) {
                 IconButton(onClick = onSearchClose) {
                     Icon(
-                        painter = painterResource(id = _root_ide_package_.com.core.designsystem.icon.IconResources.ArrowBack),
+                        painter = painterResource(id = com.core.designsystem.icon.IconResources.ArrowBack),
                         contentDescription = stringResource(id = R.string.a11y_close_search)
                     )
                 }
@@ -59,7 +60,7 @@ fun SearchTopAppBar(
             if (!isSearching) {
                 IconButton(onClick = onSearchOpen) {
                     Icon(
-                        painter = painterResource(id = _root_ide_package_.com.core.designsystem.icon.IconResources.Search),
+                        painter = painterResource(id = com.core.designsystem.icon.IconResources.Search),
                         contentDescription = stringResource(id = R.string.a11y_search_description),
                     )
                 }
@@ -104,7 +105,7 @@ fun SearchTextField(
 @ThemePreviews
 @Composable
 fun SearchTopAppBarPreview() {
-    _root_ide_package_.com.core.designsystem.theme.AppTheme {
+    AppTheme {
         SearchTopAppBar(
             query = "query",
             onQueryChange = {},

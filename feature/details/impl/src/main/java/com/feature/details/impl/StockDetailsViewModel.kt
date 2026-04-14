@@ -66,6 +66,12 @@ class StockDetailsViewModel @AssistedInject constructor(
     }
 
     fun getStockChartData(period: ChartPeriod) {
+        _uiState.update {
+            it.copy(
+                selectedPeriod = period,
+                isLoading = true,
+            )
+        }
         viewModelScope.launch {
             getStockChartDataUseCase.launch(ticker, period.value).fold(
                 ifRight = { stockChart ->

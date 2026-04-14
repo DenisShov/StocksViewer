@@ -56,11 +56,13 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.core.common.error.DomainError
 import com.core.commonresources.R
+import com.core.designsystem.theme.AppTheme
+import com.feature.details.impl.actions.ChartPeriod
 import com.feature.details.impl.actions.StockDetailsActions
 import com.feature.details.impl.compose.chart.StockChart
-import com.feature.details.impl.state.StockDetailsState
 import com.feature.details.impl.model.CandleUiModel
 import com.feature.details.impl.model.StockOverviewUiModel
+import com.feature.details.impl.state.StockDetailsState
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -102,7 +104,7 @@ fun StockDetailScreen(
                 navigationIcon = {
                     IconButton(onClick = { onBackButtonClick.invoke() }) {
                         Icon(
-                            painter = painterResource(id = _root_ide_package_.com.core.designsystem.icon.IconResources.ArrowBack),
+                            painter = painterResource(id = com.core.designsystem.icon.IconResources.ArrowBack),
                             contentDescription = stringResource(id = R.string.a11y_return_to_previous_screen),
                             modifier = Modifier.padding(start = 12.dp),
                         )
@@ -130,12 +132,13 @@ fun StockDetailScreen(
                     StockDetailsContent(
                         stockOverview = uiState.stockOverview,
                         candles = uiState.candles,
+                        selectedPeriod = uiState.selectedPeriod,
                         actions = actions,
                     )
                 }
 
                 uiState.error != null -> {
-                    _root_ide_package_.com.core.designsystem.component.HandleError(
+                    com.core.designsystem.component.HandleError(
                         errorMessage = getErrorMessage(uiState.error),
                         onRetry = actions.retry,
                         modifier = Modifier.fillMaxSize()
@@ -157,6 +160,7 @@ private fun getErrorMessage(error: DomainError): String = when (error) {
 fun StockDetailsContent(
     stockOverview: StockOverviewUiModel,
     candles: List<CandleUiModel>,
+    selectedPeriod: ChartPeriod,
     actions: StockDetailsActions,
 ) {
     LazyColumn(
@@ -179,7 +183,7 @@ fun StockDetailsContent(
         item {
             ContactInfo(stock = stockOverview)
 
-            Chart(candles = candles, actions = actions)
+            Chart(candles = candles, selectedPeriod = selectedPeriod, actions = actions)
         }
     }
 }
@@ -329,17 +333,26 @@ fun CompanyAbout(description: String) {
 fun ContactInfo(stock: StockOverviewUiModel) {
     Column(verticalArrangement = Arrangement.spacedBy(0.dp)) {
         if (stock.address.isNullOrEmpty().not()) {
-            ContactRow(icon = _root_ide_package_.com.core.designsystem.icon.IconResources.LocationOn, text = stock.address)
+            ContactRow(
+                icon = com.core.designsystem.icon.IconResources.LocationOn,
+                text = stock.address
+            )
         }
         if (stock.homepageUrl.isNullOrEmpty().not()) {
-            ContactRow(icon = _root_ide_package_.com.core.designsystem.icon.IconResources.Language, text = stock.homepageUrl)
+            ContactRow(
+                icon = com.core.designsystem.icon.IconResources.Language,
+                text = stock.homepageUrl
+            )
         }
         if (stock.listDate.isNullOrEmpty().not()) {
-            ContactRow(icon = _root_ide_package_.com.core.designsystem.icon.IconResources.CalendarToday, text = stock.listDate)
+            ContactRow(
+                icon = com.core.designsystem.icon.IconResources.CalendarToday,
+                text = stock.listDate
+            )
         }
         if (stock.cik.isNullOrEmpty().not()) {
             ContactRow(
-                icon = _root_ide_package_.com.core.designsystem.icon.IconResources.Info,
+                icon = com.core.designsystem.icon.IconResources.Info,
                 text = stringResource(R.string.cik) + " ${stock.cik}"
             )
         }
@@ -525,7 +538,11 @@ fun StockDetailsSkeleton() {
 }
 
 @Composable
-private fun Chart(candles: List<CandleUiModel>, actions: StockDetailsActions) {
+private fun Chart(
+    candles: List<CandleUiModel>,
+    selectedPeriod: ChartPeriod,
+    actions: StockDetailsActions
+) {
     if (candles.isNotEmpty()) {
         StockChart(
             modifier = Modifier,
@@ -534,14 +551,17 @@ private fun Chart(candles: List<CandleUiModel>, actions: StockDetailsActions) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        PeriodButtons(onChartPeriodChange = actions.onChartPeriodChange)
+        PeriodButtons(
+            selectedPeriod = selectedPeriod,
+            onChartPeriodChange = actions.onChartPeriodChange
+        )
     }
 }
 
 @com.core.designsystem.component.BackgroundPreview
 @Composable
 fun StockDetailsContentPreview() {
-    _root_ide_package_.com.core.designsystem.theme.AppTheme {
+    AppTheme {
         StockDetailsContent(
             stockOverview = StockOverviewUiModel(
                 ticker = "ADBE",
@@ -705,6 +725,7 @@ fun StockDetailsContentPreview() {
                     timestampMs = 1702357200000
                 ),
             ),
+            selectedPeriod = ChartPeriod.WEEK,
             actions = StockDetailsActions(),
         )
     }
@@ -713,7 +734,7 @@ fun StockDetailsContentPreview() {
 @com.core.designsystem.component.BackgroundPreview
 @Composable
 fun StockDetailsSkeletonPreview() {
-    _root_ide_package_.com.core.designsystem.theme.AppTheme {
+    AppTheme {
         StockDetailsSkeleton()
     }
 }
