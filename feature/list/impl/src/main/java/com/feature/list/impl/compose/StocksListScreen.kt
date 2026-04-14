@@ -54,6 +54,8 @@ import com.feature.list.impl.StocksListViewModel
 import com.feature.list.impl.model.TickerUiModel
 import com.core.commonresources.R
 import com.core.designsystem.component.BackgroundPreview
+import com.core.designsystem.component.HandleError
+import com.core.designsystem.component.SearchTopAppBar
 import com.core.designsystem.theme.AppTheme
 import com.core.ui.ErrorRetryItem
 import kotlinx.coroutines.flow.flowOf
@@ -98,7 +100,7 @@ fun StocksListScreen(
             ),
         contentWindowInsets = WindowInsets.navigationBars,
         topBar = {
-            com.core.designsystem.component.SearchTopAppBar(
+            SearchTopAppBar(
                 query = query,
                 onQueryChange = {
                     query = it
@@ -143,14 +145,18 @@ private fun StocksListContent(
         } else if (stocksPaging.loadState.prepend is LoadState.Error ||
             stocksPaging.loadState.refresh is LoadState.Error
         ) {
-            com.core.designsystem.component.HandleError(
+            HandleError(
                 errorMessage = getErrorMessage(stocksPaging),
                 onRetry = { stocksPaging.refresh() },
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier
+                    .fillMaxSize()
+                    .testTag("stocks_list_error"),
             )
         } else {
             LazyColumn(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .testTag("stocks_list"),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 contentPadding = PaddingValues(top = 16.dp),
@@ -170,19 +176,21 @@ private fun StocksListContent(
                             CircularProgressIndicator(
                                 modifier = Modifier
                                     .padding(vertical = 6.dp)
-                                    .testTag("AppendLoading")
+                                    .testTag("stocks_list_append_loading")
                             )
                         }
                     }
 
                     stocksPaging.loadState.append is LoadState.Error -> {
                         item {
-                            ErrorRetryItem(
-                                error = (stocksPaging.loadState.append as LoadState.Error).error.message,
-                                onTryClicked = {
-                                    stocksPaging.retry()
-                                }
-                            )
+                            Box {
+                                ErrorRetryItem(
+                                    error = (stocksPaging.loadState.append as LoadState.Error).error.message,
+                                    onTryClicked = {
+                                        stocksPaging.retry()
+                                    }
+                                )
+                            }
                         }
                     }
                 }
@@ -209,11 +217,11 @@ private fun StocksListContent(
 private fun getErrorMessage(stocksPaging: LazyPagingItems<TickerUiModel>): String {
     val error = when {
         stocksPaging.loadState.prepend is LoadState.Error -> {
-            (stocksPaging.loadState.prepend as LoadState.Error).error as SearchResultsError
+            (stocksPaging.loadState.prepend as LoadState.Error).error as? SearchResultsError
         }
 
         stocksPaging.loadState.refresh is LoadState.Error -> {
-            (stocksPaging.loadState.refresh as LoadState.Error).error as SearchResultsError
+            (stocksPaging.loadState.refresh as LoadState.Error).error as? SearchResultsError
         }
 
         else -> null
@@ -241,7 +249,9 @@ fun StocksListSkeleton() {
     )
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .testTag("stocks_list_loading_skeleton"),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(top = 16.dp),
     ) {

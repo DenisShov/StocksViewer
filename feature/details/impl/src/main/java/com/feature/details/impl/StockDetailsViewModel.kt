@@ -2,6 +2,7 @@ package com.feature.details.impl
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.core.common.mapper.ErrorMapper
 import com.core.data.repository.StocksRepository
 import com.core.domain.GetStockChartDataUseCase
 import com.feature.details.impl.actions.ChartPeriod
@@ -23,6 +24,7 @@ class StockDetailsViewModel @AssistedInject constructor(
     private val ticker: String,
     private val stocksRepository: StocksRepository,
     private val getStockChartDataUseCase: GetStockChartDataUseCase,
+    private val errorMapper: ErrorMapper,
 ) : ViewModel() {
 
     @AssistedFactory
@@ -56,7 +58,7 @@ class StockDetailsViewModel @AssistedInject constructor(
                 ifLeft = { error ->
                     _uiState.update {
                         it.copy(
-                            error = error,
+                            errorString = errorMapper.mapToStringError(error),
                             isLoading = false,
                         )
                     }
@@ -85,7 +87,7 @@ class StockDetailsViewModel @AssistedInject constructor(
                 ifLeft = { error ->
                     _uiState.update {
                         it.copy(
-                            error = error,
+                            errorString = errorMapper.mapToStringError(error),
                             isLoading = false,
                         )
                     }

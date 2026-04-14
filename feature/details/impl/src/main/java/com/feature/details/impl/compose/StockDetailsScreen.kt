@@ -45,6 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -54,7 +55,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.core.common.error.DomainError
 import com.core.commonresources.R
 import com.core.designsystem.theme.AppTheme
 import com.feature.details.impl.actions.ChartPeriod
@@ -97,12 +97,16 @@ fun StockDetailScreen(
             TopAppBar(
                 title = {
                     Text(
+                        modifier = Modifier.testTag("stock_details_ticker_name"),
                         text = uiState.stockOverview?.ticker.orEmpty(),
                         fontWeight = FontWeight.Bold
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { onBackButtonClick.invoke() }) {
+                    IconButton(
+                        onClick = { onBackButtonClick.invoke() },
+                        modifier = Modifier.testTag("stock_details_back_button"),
+                    ) {
                         Icon(
                             painter = painterResource(id = com.core.designsystem.icon.IconResources.ArrowBack),
                             contentDescription = stringResource(id = R.string.a11y_return_to_previous_screen),
@@ -137,23 +141,18 @@ fun StockDetailScreen(
                     )
                 }
 
-                uiState.error != null -> {
+                uiState.errorString != null -> {
                     com.core.designsystem.component.HandleError(
-                        errorMessage = getErrorMessage(uiState.error),
+                        errorMessage = uiState.errorString,
                         onRetry = actions.retry,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .testTag("stock_details_error"),
                     )
                 }
             }
         }
     }
-}
-
-@Composable
-private fun getErrorMessage(error: DomainError): String = when (error) {
-    is DomainError.HttpError -> error.message ?: stringResource(R.string.some_server_problem)
-    is DomainError.MissingNetworkConnection -> stringResource(R.string.no_network_connection)
-    is DomainError.GeneralError -> stringResource(R.string.something_went_wrong)
 }
 
 @Composable
@@ -166,7 +165,8 @@ fun StockDetailsContent(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp)
+            .testTag("stock_details_content"),
         verticalArrangement = Arrangement.spacedBy(24.dp),
         contentPadding = PaddingValues(bottom = 24.dp)
     ) {
@@ -190,7 +190,10 @@ fun StockDetailsContent(
 
 @Composable
 fun CompanyHeader(stock: StockOverviewUiModel) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.testTag("company_header"),
+    ) {
         val logoString = stringResource(R.string.a11y_logo)
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
@@ -202,7 +205,8 @@ fun CompanyHeader(stock: StockOverviewUiModel) {
             error = painterResource(com.feature.details.impl.R.drawable.ic_image_placeholder),
             modifier = Modifier
                 .size(72.dp)
-                .clip(CircleShape),
+                .clip(CircleShape)
+                .testTag("company_logo"),
             contentScale = ContentScale.Crop
         )
 
@@ -230,7 +234,7 @@ fun CompanyHeader(stock: StockOverviewUiModel) {
 
 @Composable
 fun KeyStatsGrid(stock: StockOverviewUiModel) {
-    Column {
+    Column(modifier = Modifier.testTag("key_stats_grid")) {
         if (stock.marketCap != null && stock.totalEmployees != null || stock.sicDescription != null) {
             Text(
                 text = stringResource(R.string.market_data),
@@ -296,9 +300,9 @@ fun StatCard(modifier: Modifier = Modifier, label: String, value: String) {
 fun CompanyAbout(description: String) {
     var expanded by remember { mutableStateOf(false) }
 
-    Column {
+    Column(modifier = Modifier.testTag("about_section")) {
         Text(
-            text = "About",
+            text = stringResource(R.string.about),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
@@ -331,7 +335,10 @@ fun CompanyAbout(description: String) {
 
 @Composable
 fun ContactInfo(stock: StockOverviewUiModel) {
-    Column(verticalArrangement = Arrangement.spacedBy(0.dp)) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(0.dp),
+        modifier = Modifier.testTag("contact_info"),
+    ) {
         if (stock.address.isNullOrEmpty().not()) {
             ContactRow(
                 icon = com.core.designsystem.icon.IconResources.LocationOn,
@@ -398,7 +405,8 @@ fun StockDetailsSkeleton() {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp)
+            .testTag("stock_details_loading_skeleton"),
         verticalArrangement = Arrangement.spacedBy(24.dp),
         contentPadding = PaddingValues(bottom = 24.dp)
     ) {
@@ -544,17 +552,19 @@ private fun Chart(
     actions: StockDetailsActions
 ) {
     if (candles.isNotEmpty()) {
-        StockChart(
-            modifier = Modifier,
-            data = candles,
-        )
+        Column(modifier = Modifier.testTag("chart_section")) {
+            StockChart(
+                modifier = Modifier.testTag("stock_chart"),
+                data = candles,
+            )
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        PeriodButtons(
-            selectedPeriod = selectedPeriod,
-            onChartPeriodChange = actions.onChartPeriodChange
-        )
+            PeriodButtons(
+                selectedPeriod = selectedPeriod,
+                onChartPeriodChange = actions.onChartPeriodChange
+            )
+        }
     }
 }
 

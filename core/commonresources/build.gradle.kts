@@ -1,12 +1,20 @@
 plugins {
-    id("com.android.library")
+    alias(libs.plugins.stockviewer.android.library)
 }
 
 android {
     namespace = "com.core.commonresources"
 
-    compileSdk = 36
     defaultConfig {
-        minSdk = 28
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+}
+
+dependencies {
+    implementation(libs.hilt.android)
+    implementation(libs.androidx.paging.compose)
+    implementation(libs.joda.time)
+    implementation(libs.timber)
+
+    testImplementation(project(":core:testing"))
 }

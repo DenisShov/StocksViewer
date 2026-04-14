@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -37,7 +38,8 @@ fun PeriodButtons(selectedPeriod: ChartPeriod, onChartPeriodChange: (ChartPeriod
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
             .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-            .padding(4.dp),
+            .padding(4.dp)
+            .testTag("period_buttons"),
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         PeriodButton(
@@ -46,7 +48,9 @@ fun PeriodButtons(selectedPeriod: ChartPeriod, onChartPeriodChange: (ChartPeriod
             onClick = {
                 onChartPeriodChange(ChartPeriod.DAY)
             },
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .weight(1f)
+                .testTag("period_button_day"),
         )
         PeriodButton(
             text = stringResource(R.string.week),
@@ -54,7 +58,9 @@ fun PeriodButtons(selectedPeriod: ChartPeriod, onChartPeriodChange: (ChartPeriod
             onClick = {
                 onChartPeriodChange(ChartPeriod.WEEK)
             },
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .weight(1f)
+                .testTag("period_button_week"),
         )
         PeriodButton(
             text = stringResource(R.string.month),
@@ -62,7 +68,9 @@ fun PeriodButtons(selectedPeriod: ChartPeriod, onChartPeriodChange: (ChartPeriod
             onClick = {
                 onChartPeriodChange(ChartPeriod.MONTH)
             },
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .weight(1f)
+                .testTag("period_button_month"),
         )
         PeriodButton(
             text = stringResource(R.string.quartal),
@@ -70,7 +78,9 @@ fun PeriodButtons(selectedPeriod: ChartPeriod, onChartPeriodChange: (ChartPeriod
             onClick = {
                 onChartPeriodChange(ChartPeriod.QUARTER)
             },
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .weight(1f)
+                .testTag("period_button_quarter"),
         )
     }
 }

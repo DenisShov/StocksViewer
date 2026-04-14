@@ -55,7 +55,7 @@ class StockDetailsViewModelTest {
             assertNotNull(state.stockOverview)
             assertEquals(TEST_TICKER, state.stockOverview.ticker)
             assertEquals(false, state.isLoading)
-            assertNull(state.error)
+            assertNull(state.errorString)
         }
     }
 
@@ -77,7 +77,7 @@ class StockDetailsViewModelTest {
         sut.uiState.test {
             val state = awaitItem()
             assertNull(state.stockOverview)
-            assertIs<DomainError.MissingNetworkConnection>(state.error)
+            assertIs<DomainError.MissingNetworkConnection>(state.errorString)
             assertEquals(false, state.isLoading)
         }
     }
@@ -105,8 +105,8 @@ class StockDetailsViewModelTest {
         sut.uiState.test {
             val state = awaitItem()
             assertNotNull(state.stockOverview)
-            assertIs<DomainError.HttpError>(state.error)
-            assertEquals(500, state.error.code)
+            assertIs<DomainError.HttpError>(state.errorString)
+            assertEquals(500, state.errorString.code)
         }
     }
 

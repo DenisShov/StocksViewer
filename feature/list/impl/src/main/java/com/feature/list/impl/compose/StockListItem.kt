@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -45,6 +46,7 @@ fun StockListItem(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
+            .testTag("stock_list_item_${stockItem.ticker}"),
     ) {
         Row(
             modifier = Modifier
