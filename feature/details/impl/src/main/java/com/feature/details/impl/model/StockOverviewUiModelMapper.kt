@@ -1,10 +1,12 @@
 package com.feature.details.impl.model
 
+import com.core.model.Address
+import com.core.model.StockOverview
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-fun com.core.model.StockOverview.toUiModel() =
+fun StockOverview.toUiModel() =
     StockOverviewUiModel(
         ticker = results.ticker,
         name = results.name,
@@ -23,7 +25,7 @@ fun com.core.model.StockOverview.toUiModel() =
         iconUrl = results.branding?.iconUrl,
     )
 
-private fun getAddress(address: com.core.model.Address?) = address?.run {
+private fun getAddress(address: Address?) = address?.run {
     listOfNotNull(
         address1,
         city,
@@ -33,7 +35,7 @@ private fun getAddress(address: com.core.model.Address?) = address?.run {
 } ?: ""
 
 
-fun formatDate(dateString: String?): String? {
+private fun formatDate(dateString: String?): String? {
     return dateString?.let {
         val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         val outputFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.getDefault())
@@ -42,7 +44,7 @@ fun formatDate(dateString: String?): String? {
     }
 }
 
-fun formatMarketCap(marketCap: Double): String {
+private fun formatMarketCap(marketCap: Double): String {
     return when {
         marketCap >= 1_000_000_000_000 -> "%.2fT".format(marketCap / 1_000_000_000_000)
         marketCap >= 1_000_000_000 -> "%.2fB".format(marketCap / 1_000_000_000)

@@ -56,6 +56,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.core.commonresources.R
+import com.core.designsystem.component.BackgroundPreview
 import com.core.designsystem.theme.AppTheme
 import com.feature.details.impl.actions.ChartPeriod
 import com.feature.details.impl.actions.StockDetailsActions
@@ -156,7 +157,7 @@ fun StockDetailScreen(
 }
 
 @Composable
-fun StockDetailsContent(
+private fun StockDetailsContent(
     stockOverview: StockOverviewUiModel,
     candles: List<CandleUiModel>,
     selectedPeriod: ChartPeriod,
@@ -189,7 +190,7 @@ fun StockDetailsContent(
 }
 
 @Composable
-fun CompanyHeader(stock: StockOverviewUiModel) {
+private fun CompanyHeader(stock: StockOverviewUiModel) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.testTag("company_header"),
@@ -233,7 +234,7 @@ fun CompanyHeader(stock: StockOverviewUiModel) {
 }
 
 @Composable
-fun KeyStatsGrid(stock: StockOverviewUiModel) {
+private fun KeyStatsGrid(stock: StockOverviewUiModel) {
     Column(modifier = Modifier.testTag("key_stats_grid")) {
         if (stock.marketCap != null && stock.totalEmployees != null || stock.sicDescription != null) {
             Text(
@@ -272,7 +273,7 @@ fun KeyStatsGrid(stock: StockOverviewUiModel) {
 }
 
 @Composable
-fun StatCard(modifier: Modifier = Modifier, label: String, value: String) {
+private fun StatCard(modifier: Modifier = Modifier, label: String, value: String) {
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
@@ -297,7 +298,7 @@ fun StatCard(modifier: Modifier = Modifier, label: String, value: String) {
 }
 
 @Composable
-fun CompanyAbout(description: String) {
+private fun CompanyAbout(description: String) {
     var expanded by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.testTag("about_section")) {
@@ -334,7 +335,7 @@ fun CompanyAbout(description: String) {
 }
 
 @Composable
-fun ContactInfo(stock: StockOverviewUiModel) {
+private fun ContactInfo(stock: StockOverviewUiModel) {
     Column(
         verticalArrangement = Arrangement.spacedBy(0.dp),
         modifier = Modifier.testTag("contact_info"),
@@ -367,7 +368,7 @@ fun ContactInfo(stock: StockOverviewUiModel) {
 }
 
 @Composable
-fun ContactRow(icon: Int, text: String) {
+private fun ContactRow(icon: Int, text: String) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -390,7 +391,7 @@ fun ContactRow(icon: Int, text: String) {
 }
 
 @Composable
-fun StockDetailsSkeleton() {
+private fun StockDetailsSkeleton() {
     val infiniteTransition = rememberInfiniteTransition(label = "skeleton")
     val alpha by infiniteTransition.animateFloat(
         initialValue = 0.3f,
@@ -568,9 +569,9 @@ private fun Chart(
     }
 }
 
-@com.core.designsystem.component.BackgroundPreview
+@BackgroundPreview
 @Composable
-fun StockDetailsContentPreview() {
+private fun StockDetailsContentPreview() {
     AppTheme {
         StockDetailsContent(
             stockOverview = StockOverviewUiModel(
@@ -741,9 +742,9 @@ fun StockDetailsContentPreview() {
     }
 }
 
-@com.core.designsystem.component.BackgroundPreview
+@BackgroundPreview
 @Composable
-fun StockDetailsSkeletonPreview() {
+private fun StockDetailsSkeletonPreview() {
     AppTheme {
         StockDetailsSkeleton()
     }

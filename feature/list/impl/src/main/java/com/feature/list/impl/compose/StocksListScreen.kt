@@ -236,7 +236,7 @@ private fun getErrorMessage(stocksPaging: LazyPagingItems<TickerUiModel>): Strin
 }
 
 @Composable
-fun StocksListSkeleton() {
+private fun StocksListSkeleton() {
     val infiniteTransition = rememberInfiniteTransition(label = "skeleton")
     val alpha by infiniteTransition.animateFloat(
         initialValue = 0.3f,
@@ -303,7 +303,7 @@ fun StocksListSkeleton() {
 
 @BackgroundPreview
 @Composable
-fun StocksListPreview() {
+private fun StocksListPreview() {
     AppTheme {
         val mockStocks = flowOf(
             PagingData.from(
@@ -331,7 +331,7 @@ fun StocksListPreview() {
 
 @BackgroundPreview
 @Composable
-fun StocksListSkeletonPreview() {
+private fun StocksListSkeletonPreview() {
     AppTheme {
         StocksListSkeleton()
     }
