@@ -58,11 +58,11 @@ fun rememberMarker(valueFormatter: ValueFormatter): CartesianMarker {
         LayeredComponent(
             back = indicatorRearComponent,
             front =
-                LayeredComponent(
-                    back = indicatorCenterComponent,
-                    front = indicatorFrontComponent,
-                    padding = insets(5.dp),
-                ),
+            LayeredComponent(
+                back = indicatorCenterComponent,
+                front = indicatorFrontComponent,
+                padding = insets(5.dp),
+            ),
             padding = insets(10.dp),
         )
     val guideline = rememberAxisGuidelineComponent()

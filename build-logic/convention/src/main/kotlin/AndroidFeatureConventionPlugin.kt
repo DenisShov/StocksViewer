@@ -12,6 +12,7 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
                 apply("stockviewer.android.library")
                 apply("stockviewer.android.library.compose")
                 apply("stockviewer.android.library.jacoco")
+                apply("stockviewer.detekt")
             }
 
             extensions.configure<LibraryExtension> {

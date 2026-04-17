@@ -11,7 +11,7 @@ class StockChartResponse(
     val status: String,
     @SerializedName("request_id")
     val requestId: String,
-    val count: Int
+    val count: Int,
 )
 
 data class CandleResponse(
@@ -34,5 +34,5 @@ data class CandleResponse(
     val timestampMs: Long,
     /** Number of transactions */
     @SerializedName("n")
-    val transactions: Int
+    val transactions: Int,
 )

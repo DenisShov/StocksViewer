@@ -17,4 +17,3 @@ data class StockOverviewUiModel(
     val listDate: String? = null,
     val iconUrl: String? = null,
 )
-

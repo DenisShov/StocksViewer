@@ -27,7 +27,7 @@ class EitherCallAdapterFactory : CallAdapter.Factory() {
     override fun get(
         returnType: Type,
         annotations: Array<out Annotation>,
-        retrofit: Retrofit
+        retrofit: Retrofit,
     ): CallAdapter<*, *>? {
         if (getRawType(returnType) != Call::class.java) {
             return null
@@ -49,7 +49,7 @@ class EitherCallAdapterFactory : CallAdapter.Factory() {
     }
 
     private class EitherCallAdapter<R>(
-        private val successType: Type
+        private val successType: Type,
     ) : CallAdapter<R, Call<Either<ApiError, R>>> {
 
         override fun responseType(): Type = successType
@@ -60,7 +60,7 @@ class EitherCallAdapterFactory : CallAdapter.Factory() {
     }
 
     private class EitherCall<R>(
-        private val delegate: Call<R>
+        private val delegate: Call<R>,
     ) : Call<Either<ApiError, R>> {
 
         override fun enqueue(callback: Callback<Either<ApiError, R>>) {
@@ -79,6 +79,7 @@ class EitherCallAdapterFactory : CallAdapter.Factory() {
             })
         }
 
+        @Suppress("TooGenericExceptionCaught")
         override fun execute(): Response<Either<ApiError, R>> {
             return try {
                 val response = delegate.execute()

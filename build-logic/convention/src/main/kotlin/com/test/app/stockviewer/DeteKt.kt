@@ -8,10 +8,7 @@ internal fun Project.configureDetekt(
 ) {
     commonExtension.apply {
         this.config.setFrom(files(file("$rootDir/tools/detekt/config.yml")))
-
-        reports {
-            html.required.set(true)
-            html.outputLocation.set(file("build/reports/detekt/detekt.html"))
-        }
+        autoCorrect = true
+        parallel = true
     }
 }

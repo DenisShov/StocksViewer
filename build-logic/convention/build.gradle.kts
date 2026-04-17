@@ -26,12 +26,6 @@ tasks {
 
 gradlePlugin {
     plugins {
-
-        register("androidHilt") {
-            id = "stockviewer.android.hilt"
-            implementationClass = "AndroidHiltConventionPlugin"
-        }
-
         register("androidApplication") {
             id = "stockviewer.android.application"
             implementationClass = "AndroidApplicationConventionPlugin"
@@ -45,11 +39,6 @@ gradlePlugin {
         register("androidApplicationJacoco") {
             id = "stockviewer.android.application.jacoco"
             implementationClass = "AndroidApplicationJacocoConventionPlugin"
-        }
-
-        register("androidApplicationDetekt") {
-            id = "stockviewer.android.application.detekt"
-            implementationClass = "AndroidApplicationDeteKtConventionPlugin"
         }
 
         register("androidFeature") {
@@ -75,6 +64,16 @@ gradlePlugin {
         register("jvmLibrary") {
             id = "stockviewer.jvm.library"
             implementationClass = "JvmLibraryConventionPlugin"
+        }
+
+        register("androidHilt") {
+            id = "stockviewer.android.hilt"
+            implementationClass = "AndroidHiltConventionPlugin"
+        }
+
+        register("detekt") {
+            id = "stockviewer.detekt"
+            implementationClass = "DetektConventionPlugin"
         }
 
     }

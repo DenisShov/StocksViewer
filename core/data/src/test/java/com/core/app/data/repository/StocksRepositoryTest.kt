@@ -46,7 +46,7 @@ class StocksRepositoryTest {
     @Test
     fun `getStockList returns HttpError on api http error`() = runTest {
         coEvery { getStocksApi.getStockList(null) } returns
-                Either.Left(ApiError.HttpError(404, "Not Found", null))
+            Either.Left(ApiError.HttpError(404, "Not Found", null))
 
         val result = repository.getStockList(null)
 
@@ -60,7 +60,7 @@ class StocksRepositoryTest {
     @Test
     fun `getStockList returns MissingNetworkConnection on network error`() = runTest {
         coEvery { getStocksApi.getStockList(null) } returns
-                Either.Left(ApiError.NetworkError(UnknownHostException()))
+            Either.Left(ApiError.NetworkError(UnknownHostException()))
 
         val result = repository.getStockList(null)
 
@@ -83,7 +83,7 @@ class StocksRepositoryTest {
     @Test
     fun `searchStockByQuery returns error on api failure`() = runTest {
         coEvery { getStocksApi.searchStockByQuery("AAPL", null) } returns
-                Either.Left(ApiError.HttpError(500, "Server Error", null))
+            Either.Left(ApiError.HttpError(500, "Server Error", null))
 
         val result = repository.searchStockByQuery("AAPL", null)
 
@@ -107,7 +107,7 @@ class StocksRepositoryTest {
     @Test
     fun `getStockOverviewByTicker returns error on api failure`() = runTest {
         coEvery { getStocksApi.getStockOverview("AAPL") } returns
-                Either.Left(ApiError.UnknownError(RuntimeException("unexpected")))
+            Either.Left(ApiError.UnknownError(RuntimeException("unexpected")))
 
         val result = repository.getStockOverviewByTicker("AAPL")
 

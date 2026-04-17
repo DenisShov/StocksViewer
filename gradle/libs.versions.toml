@@ -33,7 +33,7 @@ coil = "2.7.0"
 vico = "2.4.1"
 arrow = "2.2.1.1"
 
-deteKtVersion = "1.23.8"
+detekt = "1.23.8"
 jacoco = "0.8.7"
 
 androidxComposeUiTest = "1.10.1"
@@ -132,12 +132,16 @@ mockk = { module = "io.mockk:mockk", version.ref = "mockkVersion" }
 mockk-android = { module = "io.mockk:mockk-android", version.ref = "mockkVersion" }
 mockk-agent = { module = "io.mockk:mockk-agent", version.ref = "mockkVersion" }
 
+detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
+detekt-libraries = { module = "io.gitlab.arturbosch.detekt:detekt-rules-libraries", version.ref = "detekt" }
+
 # Dependencies of the included build-config
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 compose-gradlePlugin = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin" }
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
-detekt-gradlePlugin = { group = "io.gitlab.arturbosch.detekt", name = "io.gitlab.arturbosch.detekt.gradle.plugin", version.ref = "deteKtVersion" }
+detekt-gradlePlugin = { group = "io.gitlab.arturbosch.detekt", name = "io.gitlab.arturbosch.detekt.gradle.plugin", version.ref = "detekt" }
+
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -152,7 +156,7 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 secrets = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "secretsVersion" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
-deteKt = { id = "io.gitlab.arturbosch.detekt", version.ref = "deteKtVersion" }
+deteKt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
@@ -160,10 +164,10 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 stockviewer-android-application = { id = "stockviewer.android.application", version = "unspecified" }
 stockviewer-android-application-compose = { id = "stockviewer.android.application.compose", version = "unspecified" }
 stockviewer-android-application-jacoco = { id = "stockviewer.android.application.jacoco", version = "unspecified" }
-stockviewer-android-application-detekt = { id = "stockviewer.android.application.detekt", version = "unspecified" }
 stockviewer-android-feature = { id = "stockviewer.android.feature", version = "unspecified" }
 stockviewer-android-library = { id = "stockviewer.android.library", version = "unspecified" }
 stockviewer-android-library-compose = { id = "stockviewer.android.library.compose", version = "unspecified" }
 stockviewer-android-library-jacoco = { id = "stockviewer.android.library.jacoco", version = "unspecified" }
 stockviewer-jvm-library = { id = "stockviewer.jvm.library", version = "unspecified" }
 stockviewer-android-hilt = { id = "stockviewer.android.hilt", version = "unspecified" }
+stockviewer-detekt = { id = "stockviewer.detekt", version = "unspecified" }

@@ -1,9 +1,9 @@
 package com.core.domain
 
 import arrow.core.Either
-import com.core.model.StockChart
 import com.core.common.error.DomainError
 import com.core.data.repository.StocksRepository
+import com.core.model.StockChart
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject

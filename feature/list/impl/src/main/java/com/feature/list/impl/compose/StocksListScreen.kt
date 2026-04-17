@@ -49,15 +49,15 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.feature.list.impl.paging.SearchResultsError
-import com.feature.list.impl.StocksListViewModel
-import com.feature.list.impl.model.TickerUiModel
 import com.core.commonresources.R
 import com.core.designsystem.component.BackgroundPreview
 import com.core.designsystem.component.HandleError
 import com.core.designsystem.component.SearchTopAppBar
 import com.core.designsystem.theme.AppTheme
 import com.core.ui.ErrorRetryItem
+import com.feature.list.impl.StocksListViewModel
+import com.feature.list.impl.model.TickerUiModel
+import com.feature.list.impl.paging.SearchResultsError
 import kotlinx.coroutines.flow.flowOf
 
 @Composable

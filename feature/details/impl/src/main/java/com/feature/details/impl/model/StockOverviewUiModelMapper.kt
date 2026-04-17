@@ -34,7 +34,6 @@ private fun getAddress(address: Address?) = address?.run {
     ).joinToString(", ")
 } ?: ""
 
-
 private fun formatDate(dateString: String?): String? {
     return dateString?.let {
         val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")

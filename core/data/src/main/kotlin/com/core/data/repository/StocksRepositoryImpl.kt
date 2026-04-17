@@ -1,13 +1,13 @@
 package com.core.data.repository
 
 import arrow.core.Either
+import com.core.common.error.DomainError
+import com.core.data.model.toDomain
+import com.core.data.utils.mapLeftToDomainError
 import com.core.model.StockChart
 import com.core.model.StockOverview
 import com.core.model.Tickers
 import com.core.network.retrofit.StocksApi
-import com.core.common.error.DomainError
-import com.core.data.model.toDomain
-import com.core.data.utils.mapLeftToDomainError
 import javax.inject.Inject
 
 class StocksRepositoryImpl @Inject constructor(
@@ -16,7 +16,7 @@ class StocksRepositoryImpl @Inject constructor(
 
     override suspend fun searchStockByQuery(
         searchQuery: String,
-        cursor: String?
+        cursor: String?,
     ): Either<DomainError, Tickers> =
         stocksApi.searchStockByQuery(searchQuery = searchQuery, cursor = cursor)
             .mapLeftToDomainError()
@@ -36,7 +36,7 @@ class StocksRepositoryImpl @Inject constructor(
         ticker: String,
         startDate: String,
         endDate: String,
-        period: String
+        period: String,
     ): Either<DomainError, StockChart> =
         stocksApi.getStockChartData(ticker, startDate, endDate, period)
             .mapLeftToDomainError()

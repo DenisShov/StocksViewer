@@ -38,7 +38,7 @@ class StocksListViewModelTest {
         underTest = StocksListViewModel(stocksSearchPager)
 
         every { stocksSearchPager.getPager(any()) } returns
-                flowOf(PagingData.from(testStockOverviewLists))
+            flowOf(PagingData.from(testStockOverviewLists))
     }
 
     @Test
@@ -76,7 +76,7 @@ class StocksListViewModelTest {
             ),
         )
         every { stocksSearchPager.getPager("GOOGL") } returns
-                flowOf(PagingData.from(searchResults))
+            flowOf(PagingData.from(searchResults))
 
         underTest.stocksPaging.test {
             advanceTimeBy(1100)
@@ -96,7 +96,7 @@ class StocksListViewModelTest {
     @Test
     fun whenSearchQueryCleared_thenCallsPagerWithEmptyQuery() = runTest {
         every { stocksSearchPager.getPager("test") } returns
-                flowOf(PagingData.from(testStockOverviewLists))
+            flowOf(PagingData.from(testStockOverviewLists))
 
         underTest.stocksPaging.test {
             advanceTimeBy(1100)
@@ -147,7 +147,7 @@ class StocksListViewModelTest {
     @Test
     fun whenEmptyResults_thenStillEmitsPagingData() = runTest {
         every { stocksSearchPager.getPager("xyz") } returns
-                flowOf(PagingData.from(emptyList()))
+            flowOf(PagingData.from(emptyList()))
 
         underTest.stocksPaging.test {
             advanceTimeBy(1100)

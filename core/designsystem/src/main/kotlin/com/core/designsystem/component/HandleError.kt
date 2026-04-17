@@ -26,7 +26,7 @@ import com.core.designsystem.theme.AppTheme
 fun HandleError(
     errorMessage: String,
     onRetry: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier

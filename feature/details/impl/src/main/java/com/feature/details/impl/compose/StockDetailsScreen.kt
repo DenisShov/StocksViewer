@@ -323,8 +323,11 @@ private fun CompanyAbout(description: String) {
                     lineHeight = 22.sp
                 )
                 Text(
-                    text = if (expanded) stringResource(R.string.show_less) else
-                        stringResource(R.string.read_more),
+                    text = if (expanded) {
+                        stringResource(R.string.show_less)
+                    } else {
+                        stringResource(R.string.read_more)
+                    },
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.labelLarge,
                     modifier = Modifier.padding(top = 8.dp)
@@ -550,7 +553,7 @@ private fun StockDetailsSkeleton() {
 private fun Chart(
     candles: List<CandleUiModel>,
     selectedPeriod: ChartPeriod,
-    actions: StockDetailsActions
+    actions: StockDetailsActions,
 ) {
     if (candles.isNotEmpty()) {
         Column(modifier = Modifier.testTag("chart_section")) {

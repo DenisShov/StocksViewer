@@ -1,8 +1,8 @@
 package com.core.data.utils
 
 import arrow.core.Either
-import com.core.network.model.ApiError
 import com.core.common.error.DomainError
+import com.core.network.model.ApiError
 import java.net.ConnectException
 import java.net.UnknownHostException
 

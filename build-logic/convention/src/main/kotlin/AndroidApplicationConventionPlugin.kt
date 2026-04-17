@@ -11,7 +11,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("com.android.application")
                 apply("org.jetbrains.kotlin.android")
-                apply("stockviewer.android.application.detekt")
+                apply("stockviewer.detekt")
             }
 
             extensions.configure<ApplicationExtension> {

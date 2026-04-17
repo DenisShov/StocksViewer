@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.feature.details.impl.model.CandleUiModel
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
@@ -26,7 +27,6 @@ import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
 import com.patrykandpatrick.vico.core.cartesian.data.candlestickSeries
 import com.patrykandpatrick.vico.core.cartesian.marker.DefaultCartesianMarker
 import com.patrykandpatrick.vico.core.common.data.ExtraStore
-import com.feature.details.impl.model.CandleUiModel
 import kotlinx.coroutines.runBlocking
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -136,10 +136,10 @@ private fun getAxisLabels(data: List<CandleUiModel>): MutableMap<Int, String> {
     data.forEachIndexed { idx, data ->
         val dateStr = formateDate(data.timestampMs)
         axisLabels[idx] = "Date: $dateStr\n" +
-                "Open: $${data.open}\n" +
-                "Close: $${data.close}\n" +
-                "Low: $${data.low}\n" +
-                "High: $${data.high}"
+            "Open: $${data.open}\n" +
+            "Close: $${data.close}\n" +
+            "Low: $${data.low}\n" +
+            "High: $${data.high}"
     }
     return axisLabels
 }

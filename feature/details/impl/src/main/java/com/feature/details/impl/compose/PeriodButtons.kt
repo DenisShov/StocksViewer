@@ -87,7 +87,10 @@ fun PeriodButtons(selectedPeriod: ChartPeriod, onChartPeriodChange: (ChartPeriod
 
 @Composable
 private fun PeriodButton(
-    text: String, isSelected: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier
+    text: String,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val backgroundColor by animateColorAsState(
         targetValue = if (isSelected) MaterialTheme.colorScheme.primary else Color.Transparent,
