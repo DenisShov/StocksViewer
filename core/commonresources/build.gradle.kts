@@ -13,7 +13,6 @@ android {
 dependencies {
     implementation(libs.hilt.android)
     implementation(libs.androidx.paging.compose)
-    implementation(libs.joda.time)
     implementation(libs.timber)
 
     testImplementation(project(":core:testing"))

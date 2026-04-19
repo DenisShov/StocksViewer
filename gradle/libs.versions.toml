@@ -28,7 +28,6 @@ okhttp = "5.3.2"
 retrofit = "3.0.0"
 timberVersion = "5.0.1"
 secretsVersion = "2.0.1"
-jodaTimeVersion = "2.14.0"
 coil = "2.7.0"
 vico = "2.4.1"
 arrow = "2.2.1.1"
@@ -110,9 +109,6 @@ converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", ve
 
 # Timber
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timberVersion" }
-
-# Joda time
-joda-time = { group = "net.danlew", name = "android.joda", version.ref = "jodaTimeVersion" }
 
 # Arrow
 arrow-core = { group = "io.arrow-kt", name = "arrow-core", version.ref = "arrow" }
