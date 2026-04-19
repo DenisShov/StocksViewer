@@ -3,7 +3,7 @@ package com.feature.list.impl.paging
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.core.data.repository.StocksRepository
+import com.core.domain.repository.StocksRepository
 import com.core.model.Ticker
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

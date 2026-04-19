@@ -3,8 +3,8 @@ package com.feature.details.impl
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.core.common.mapper.ErrorMapper
-import com.core.data.repository.StocksRepository
-import com.core.domain.GetStockChartDataUseCase
+import com.core.domain.repository.StocksRepository
+import com.core.domain.usecase.GetStockChartDataUseCase
 import com.feature.details.impl.actions.ChartPeriod
 import com.feature.details.impl.model.toUiModel
 import com.feature.details.impl.state.StockDetailsState

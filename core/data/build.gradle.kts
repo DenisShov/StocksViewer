@@ -15,6 +15,7 @@ android {
 dependencies {
     api(project(":core:model"))
     api(project(":core:network"))
+    api(project(":core:domain"))
 
     implementation(libs.androidx.paging.compose)
     implementation(libs.joda.time)

@@ -4,14 +4,16 @@ import app.cash.turbine.test
 import arrow.core.left
 import arrow.core.right
 import com.core.common.error.DomainError
-import com.core.data.repository.StocksRepository
-import com.core.domain.GetStockChartDataUseCase
+import com.core.common.mapper.ErrorMapper
+import com.core.domain.repository.StocksRepository
+import com.core.domain.usecase.GetStockChartDataUseCase
 import com.core.testing.data.TEST_TICKER
 import com.core.testing.data.testStockChart
 import com.core.testing.data.testStockDetails
 import com.core.testing.utils.CoroutineTestRule
 import com.feature.details.impl.actions.ChartPeriod
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -20,7 +22,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 import kotlin.test.assertTrue
@@ -33,18 +34,21 @@ class StockDetailsViewModelTest {
 
     private val stocksRepository: StocksRepository = mockk()
     private val getStockChartDataUseCase: GetStockChartDataUseCase = mockk()
+    private val errorMapper: ErrorMapper = mockk()
     private lateinit var sut: StockDetailsViewModel
 
     private fun createSut() = StockDetailsViewModel(
         ticker = TEST_TICKER,
         stocksRepository = stocksRepository,
         getStockChartDataUseCase = getStockChartDataUseCase,
+        errorMapper = errorMapper,
     )
 
     @Before
     fun setup() {
         coEvery { stocksRepository.getStockOverviewByTicker(any()) } returns testStockDetails.right()
         coEvery { getStockChartDataUseCase.launch(any(), any()) } returns testStockChart.right()
+        every { errorMapper.mapToStringError(any()) } returns "Something went wrong"
         sut = createSut()
     }
 
@@ -53,7 +57,7 @@ class StockDetailsViewModelTest {
         sut.uiState.test {
             val state = awaitItem()
             assertNotNull(state.stockOverview)
-            assertEquals(TEST_TICKER, state.stockOverview.ticker)
+            assertEquals(TEST_TICKER, state.stockOverview?.ticker)
             assertEquals(false, state.isLoading)
             assertNull(state.errorString)
         }
@@ -73,11 +77,16 @@ class StockDetailsViewModelTest {
         coEvery {
             stocksRepository.getStockOverviewByTicker(any())
         } returns DomainError.MissingNetworkConnection.left()
+        every {
+            errorMapper.mapToStringError(DomainError.MissingNetworkConnection)
+        } returns "No network connection"
+
+        sut = createSut()
 
         sut.uiState.test {
             val state = awaitItem()
             assertNull(state.stockOverview)
-            assertIs<DomainError.MissingNetworkConnection>(state.errorString)
+            assertEquals("No network connection", state.errorString)
             assertEquals(false, state.isLoading)
         }
     }
@@ -98,15 +107,21 @@ class StockDetailsViewModelTest {
 
     @Test
     fun whenChartDataFails_thenShowsError() = runTest {
+        val httpError = DomainError.HttpError(500, "Internal Server Error")
         coEvery {
             getStockChartDataUseCase.launch(any(), any())
-        } returns DomainError.HttpError(500, "Internal Server Error").left()
+        } returns httpError.left()
+        every {
+            errorMapper.mapToStringError(httpError)
+        } returns "Internal Server Error"
+
+        sut = createSut()
 
         sut.uiState.test {
             val state = awaitItem()
+            // Overview succeeded but chart failed
             assertNotNull(state.stockOverview)
-            assertIs<DomainError.HttpError>(state.errorString)
-            assertEquals(500, state.errorString.code)
+            assertEquals("Internal Server Error", state.errorString)
         }
     }
 

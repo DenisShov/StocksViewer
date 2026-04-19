@@ -4,6 +4,7 @@ import arrow.core.Either
 import com.core.common.error.DomainError
 import com.core.data.model.toDomain
 import com.core.data.utils.mapLeftToDomainError
+import com.core.domain.repository.StocksRepository
 import com.core.model.StockChart
 import com.core.model.StockOverview
 import com.core.model.Tickers

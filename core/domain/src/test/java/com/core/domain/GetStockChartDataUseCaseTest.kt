@@ -3,7 +3,8 @@ package com.core.domain
 import arrow.core.left
 import arrow.core.right
 import com.core.common.error.DomainError
-import com.core.data.repository.StocksRepository
+import com.core.domain.repository.StocksRepository
+import com.core.domain.usecase.GetStockChartDataUseCase
 import com.core.testing.data.TEST_TICKER
 import com.core.testing.data.testStockChart
 import io.mockk.coEvery

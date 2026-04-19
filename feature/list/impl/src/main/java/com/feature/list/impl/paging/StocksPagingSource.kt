@@ -3,7 +3,7 @@ package com.feature.list.impl.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.core.common.error.DomainError
-import com.core.data.repository.StocksRepository
+import com.core.domain.repository.StocksRepository
 import com.core.model.Ticker
 
 class StocksPagingSource(

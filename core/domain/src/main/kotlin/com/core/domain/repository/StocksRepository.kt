@@ -1,4 +1,4 @@
-package com.core.data.repository
+package com.core.domain.repository
 
 import arrow.core.Either
 import com.core.common.error.DomainError

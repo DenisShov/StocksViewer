@@ -2,8 +2,8 @@ package com.core.app.data.repository
 
 import arrow.core.Either
 import com.core.common.error.DomainError
-import com.core.data.repository.StocksRepository
 import com.core.data.repository.StocksRepositoryImpl
+import com.core.domain.repository.StocksRepository
 import com.core.network.model.ApiError
 import com.core.network.retrofit.StocksApi
 import com.core.testing.data.stockChartResponse

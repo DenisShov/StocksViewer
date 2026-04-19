@@ -1,8 +1,8 @@
-package com.core.domain
+package com.core.domain.usecase
 
 import arrow.core.Either
 import com.core.common.error.DomainError
-import com.core.data.repository.StocksRepository
+import com.core.domain.repository.StocksRepository
 import com.core.model.StockChart
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
