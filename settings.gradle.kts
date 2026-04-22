@@ -18,9 +18,6 @@ rootProject.name = "StocksViewer"
 
 include(":app")
 include(":core:network")
-include(":core:data")
-include(":core:model")
-include(":core:domain")
 include(":core:designsystem")
 include(":core:common")
 include(":core:ui")

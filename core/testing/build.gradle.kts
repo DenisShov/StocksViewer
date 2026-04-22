@@ -8,9 +8,7 @@ android {
 
 dependencies {
     api(project(":core:common"))
-    api(project(":core:model"))
     api(project(":core:network"))
-    api(project(":core:data"))
 
     debugApi(libs.androidx.compose.ui.testManifest)
 

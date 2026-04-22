@@ -9,9 +9,9 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.core.navigation.Navigator
-import com.feature.details.impl.navigation.stockDetailsEntry
+import com.feature.details.impl.ui.navigation.stockDetailsEntry
 import com.feature.list.api.StocksListKey
-import com.feature.list.impl.navigation.stocksListEntry
+import com.feature.list.impl.ui.navigation.stocksListEntry
 
 @Composable
 fun NavigationRoot() {

@@ -35,7 +35,6 @@ android {
 dependencies {
     implementation(project(":core:designsystem"))
     implementation(project(":core:common"))
-    implementation(project(":core:data"))
     implementation(project(":core:navigation"))
     implementation(project(":feature:list:api"))
     implementation(project(":feature:list:impl"))

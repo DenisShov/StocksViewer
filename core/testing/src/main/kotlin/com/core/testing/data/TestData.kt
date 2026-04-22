@@ -9,12 +9,12 @@ import com.core.model.StockChart
 import com.core.model.StockOverview
 import com.core.model.Ticker
 import com.core.model.Tickers
-import com.core.network.model.CandleResponse
-import com.core.network.model.CompanyResponse
-import com.core.network.model.StockChartResponse
-import com.core.network.model.StockOverviewResponse
-import com.core.network.model.TickerResponse
-import com.core.network.model.TickersResponse
+import com.core.network.model.stocksDetails.CandleResponse
+import com.core.network.model.stocksDetails.CompanyResponse
+import com.core.network.model.stocksDetails.StockChartResponse
+import com.core.network.model.stocksDetails.StockOverviewResponse
+import com.core.network.model.stocksList.TickerResponse
+import com.core.network.model.stocksList.TickersResponse
 import kotlinx.coroutines.flow.flow
 
 const val TEST_TICKER = "AAPL"

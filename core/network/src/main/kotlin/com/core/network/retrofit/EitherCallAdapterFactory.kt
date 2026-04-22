@@ -3,7 +3,7 @@ package com.core.network.retrofit
 import arrow.core.Either
 import arrow.core.left
 import arrow.core.right
-import com.core.network.model.ApiError
+import com.core.network.model.errors.ApiError
 import okhttp3.Request
 import okio.Timeout
 import retrofit2.Call

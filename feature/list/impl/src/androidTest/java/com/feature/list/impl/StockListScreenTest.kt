@@ -16,9 +16,9 @@ import androidx.paging.LoadState
 import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.feature.list.impl.compose.StocksListScreen
-import com.feature.list.impl.model.TickerUiModel
-import com.feature.list.impl.paging.SearchResultsError
+import com.feature.list.impl.ui.compose.StocksListScreen
+import com.feature.list.impl.ui.model.TickerUiModel
+import com.feature.list.impl.ui.paging.SearchResultsError
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Rule
 import org.junit.Test

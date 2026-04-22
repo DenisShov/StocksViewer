@@ -8,12 +8,12 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToNode
-import com.feature.details.impl.actions.ChartPeriod
-import com.feature.details.impl.actions.StockDetailsActions
-import com.feature.details.impl.compose.StockDetailScreen
-import com.feature.details.impl.model.CandleUiModel
-import com.feature.details.impl.model.StockOverviewUiModel
-import com.feature.details.impl.state.StockDetailsState
+import com.feature.details.impl.ui.actions.ChartPeriod
+import com.feature.details.impl.ui.actions.StockDetailsActions
+import com.feature.details.impl.ui.compose.StockDetailScreen
+import com.feature.details.impl.ui.model.CandleUiModel
+import com.feature.details.impl.ui.model.StockOverviewUiModel
+import com.feature.details.impl.ui.state.StockDetailsState
 import org.junit.Rule
 import org.junit.Test
 

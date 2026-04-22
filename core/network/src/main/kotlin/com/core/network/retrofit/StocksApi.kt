@@ -1,10 +1,10 @@
 package com.core.network.retrofit
 
 import arrow.core.Either
-import com.core.network.model.ApiError
-import com.core.network.model.StockChartResponse
-import com.core.network.model.StockOverviewResponse
-import com.core.network.model.TickersResponse
+import com.core.network.model.errors.ApiError
+import com.core.network.model.stocksDetails.StockChartResponse
+import com.core.network.model.stocksDetails.StockOverviewResponse
+import com.core.network.model.stocksList.TickersResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

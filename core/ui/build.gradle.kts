@@ -14,7 +14,6 @@ android {
 
 dependencies {
     implementation(project(":core:designsystem"))
-    implementation(project(":core:model"))
 
     api(libs.androidx.compose.foundation)
     api(libs.androidx.compose.material3)
