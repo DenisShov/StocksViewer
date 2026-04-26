@@ -20,8 +20,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = StockDetailsViewModel.Factory::class)
 class StockDetailsViewModel @AssistedInject constructor(
-    @Assisted
-    private val ticker: String,
+    @Assisted private val ticker: String,
     private val stocksDetailsRepository: StocksDetailsRepository,
     private val getStockChartDataUseCase: GetStockChartDataUseCase,
     private val errorMapper: ErrorMapper,
@@ -50,6 +49,7 @@ class StockDetailsViewModel @AssistedInject constructor(
                     _uiState.update {
                         it.copy(
                             stockOverview = stockOverview.toUiModel(),
+                            errorString = null,
                             isLoading = false,
                         )
                     }
@@ -67,11 +67,15 @@ class StockDetailsViewModel @AssistedInject constructor(
         }
     }
 
+    fun retryGetStockChartData() {
+        getStockChartData(_uiState.value.selectedPeriod)
+    }
+
     fun getStockChartData(period: ChartPeriod) {
         _uiState.update {
             it.copy(
                 selectedPeriod = period,
-                isLoading = true,
+                isChartLoading = true,
             )
         }
         viewModelScope.launch {
@@ -80,15 +84,16 @@ class StockDetailsViewModel @AssistedInject constructor(
                     _uiState.update {
                         it.copy(
                             candles = stockChart.results.map { result -> result.toUiModel() },
-                            isLoading = false,
+                            chartErrorString = null,
+                            isChartLoading = false,
                         )
                     }
                 },
                 ifLeft = { error ->
                     _uiState.update {
                         it.copy(
-                            errorString = errorMapper.mapToStringError(error),
-                            isLoading = false,
+                            chartErrorString = errorMapper.mapToStringError(error),
+                            isChartLoading = false,
                         )
                     }
                 },

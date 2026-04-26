@@ -3,8 +3,9 @@ package com.feature.list.impl.data.repository
 import arrow.core.Either
 import com.core.common.error.DomainError
 import com.core.network.model.errors.ApiError
+import com.core.network.model.stocksList.TickerResponse
+import com.core.network.model.stocksList.TickersResponse
 import com.core.network.retrofit.StocksApi
-import com.core.testing.data.tickersResponse
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
@@ -85,5 +86,22 @@ class StocksListRepositoryImplTest {
         Assert.assertTrue(result.isLeft())
         result.onLeft { Assert.assertTrue(it is DomainError.HttpError) }
     }
+
+    val tickerResponse = TickerResponse(
+        ticker = "AAPL",
+        name = "Apple Inc.",
+        market = "stocks",
+        locale = "us",
+        primaryExchange = "XNAS",
+        type = "CS",
+        active = true,
+    )
+
+    val tickersResponse = TickersResponse(
+        results = listOf(tickerResponse),
+        status = "OK",
+        requestId = "req1",
+        count = 1,
+    )
 
 }

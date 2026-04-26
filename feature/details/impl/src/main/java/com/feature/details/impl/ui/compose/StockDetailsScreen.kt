@@ -63,7 +63,7 @@ import com.core.designsystem.theme.AppTheme
 import com.feature.details.impl.ui.StockDetailsViewModel
 import com.feature.details.impl.ui.actions.ChartPeriod
 import com.feature.details.impl.ui.actions.StockDetailsActions
-import com.feature.details.impl.ui.compose.chart.StockChart
+import com.feature.details.impl.ui.compose.chart.CandleChart
 import com.feature.details.impl.ui.model.CandleUiModel
 import com.feature.details.impl.ui.model.StockOverviewUiModel
 import com.feature.details.impl.ui.state.StockDetailsState
@@ -79,7 +79,8 @@ fun StockDetailsRoute(
 
     val actions = StockDetailsActions(
         onChartPeriodChange = viewModel::getStockChartData,
-        retry = { viewModel.getStockOverviewByTicker() },
+        retry = viewModel::getStockOverviewByTicker,
+        retryChart = viewModel::retryGetStockChartData,
     )
 
     StockDetailScreen(
@@ -141,6 +142,8 @@ fun StockDetailScreen(
                         stockOverview = uiState.stockOverview,
                         candles = uiState.candles,
                         selectedPeriod = uiState.selectedPeriod,
+                        isChartLoading = uiState.isChartLoading,
+                        chartErrorString = uiState.chartErrorString,
                         actions = actions,
                     )
                 }
@@ -164,6 +167,8 @@ private fun StockDetailsContent(
     stockOverview: StockOverviewUiModel,
     candles: List<CandleUiModel>,
     selectedPeriod: ChartPeriod,
+    isChartLoading: Boolean,
+    chartErrorString: String?,
     actions: StockDetailsActions,
 ) {
     LazyColumn(
@@ -187,7 +192,13 @@ private fun StockDetailsContent(
         item {
             ContactInfo(stock = stockOverview)
 
-            Chart(candles = candles, selectedPeriod = selectedPeriod, actions = actions)
+            Chart(
+                candles = candles,
+                selectedPeriod = selectedPeriod,
+                isChartLoading = isChartLoading,
+                chartErrorString = chartErrorString,
+                actions = actions,
+            )
         }
     }
 }
@@ -200,9 +211,7 @@ private fun CompanyHeader(stock: StockOverviewUiModel) {
     ) {
         val logoString = stringResource(R.string.a11y_logo)
         AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(stock.iconUrl)
-                .crossfade(true)
+            model = ImageRequest.Builder(LocalContext.current).data(stock.iconUrl).crossfade(true)
                 .build(),
             contentDescription = "${stock.name} $logoString",
             placeholder = painterResource(com.feature.details.impl.R.drawable.ic_image_placeholder),
@@ -278,8 +287,7 @@ private fun KeyStatsGrid(stock: StockOverviewUiModel) {
 @Composable
 private fun StatCard(modifier: Modifier = Modifier, label: String, value: String) {
     Card(
-        modifier = modifier,
-        colors = CardDefaults.cardColors(
+        modifier = modifier, colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainer
         )
     ) {
@@ -348,26 +356,22 @@ private fun ContactInfo(stock: StockOverviewUiModel) {
     ) {
         if (stock.address.isNullOrEmpty().not()) {
             ContactRow(
-                icon = IconResources.LocationOn,
-                text = stock.address
+                icon = IconResources.LocationOn, text = stock.address
             )
         }
         if (stock.homepageUrl.isNullOrEmpty().not()) {
             ContactRow(
-                icon = IconResources.Language,
-                text = stock.homepageUrl
+                icon = IconResources.Language, text = stock.homepageUrl
             )
         }
         if (stock.listDate.isNullOrEmpty().not()) {
             ContactRow(
-                icon = IconResources.CalendarToday,
-                text = stock.listDate
+                icon = IconResources.CalendarToday, text = stock.listDate
             )
         }
         if (stock.cik.isNullOrEmpty().not()) {
             ContactRow(
-                icon = IconResources.Info,
-                text = stringResource(R.string.cik) + " ${stock.cik}"
+                icon = IconResources.Info, text = stringResource(R.string.cik) + " ${stock.cik}"
             )
         }
     }
@@ -400,13 +404,9 @@ private fun ContactRow(icon: Int, text: String) {
 private fun StockDetailsSkeleton() {
     val infiniteTransition = rememberInfiniteTransition(label = "skeleton")
     val alpha by infiniteTransition.animateFloat(
-        initialValue = 0.3f,
-        targetValue = 0.7f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1000),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "alpha"
+        initialValue = 0.3f, targetValue = 0.7f, animationSpec = infiniteRepeatable(
+            animation = tween(1000), repeatMode = RepeatMode.Reverse
+        ), label = "alpha"
     )
 
     LazyColumn(
@@ -556,23 +556,58 @@ private fun StockDetailsSkeleton() {
 private fun Chart(
     candles: List<CandleUiModel>,
     selectedPeriod: ChartPeriod,
+    isChartLoading: Boolean,
+    chartErrorString: String?,
     actions: StockDetailsActions,
 ) {
-    if (candles.isNotEmpty()) {
-        Column(modifier = Modifier.testTag("chart_section")) {
-            StockChart(
-                modifier = Modifier.testTag("stock_chart"),
-                data = candles,
-            )
+    when {
+        isChartLoading -> {
+            ChartLoading()
+        }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            PeriodButtons(
-                selectedPeriod = selectedPeriod,
-                onChartPeriodChange = actions.onChartPeriodChange
+        chartErrorString != null -> {
+            HandleError(
+                errorMessage = chartErrorString,
+                onRetry = actions.retryChart,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .testTag("stock_chart_details_error"),
             )
         }
+
+        else -> {
+            if (candles.isNotEmpty()) {
+                Column(modifier = Modifier.testTag("chart_section")) {
+                    CandleChart(
+                        modifier = Modifier.testTag("stock_chart"),
+                        data = candles,
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    PeriodButtons(
+                        selectedPeriod = selectedPeriod,
+                        onChartPeriodChange = actions.onChartPeriodChange
+                    )
+                }
+            }
+        }
     }
+}
+
+@Composable
+private fun ChartLoading() {
+    val infiniteTransition = rememberInfiniteTransition(label = "skeleton")
+    val alpha by infiniteTransition.animateFloat(
+        initialValue = 0.3f, targetValue = 0.7f, animationSpec = infiniteRepeatable(
+            animation = tween(1000), repeatMode = RepeatMode.Reverse
+        ), label = "alpha"
+    )
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(500.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+    )
 }
 
 @BackgroundPreview
@@ -743,6 +778,8 @@ private fun StockDetailsContentPreview() {
                 ),
             ),
             selectedPeriod = ChartPeriod.WEEK,
+            isChartLoading = false,
+            chartErrorString = null,
             actions = StockDetailsActions(),
         )
     }

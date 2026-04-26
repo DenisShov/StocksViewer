@@ -10,4 +10,6 @@ data class StockDetailsState(
     val selectedPeriod: ChartPeriod = ChartPeriod.WEEK,
     val isLoading: Boolean = false,
     val errorString: String? = null,
+    val isChartLoading: Boolean = false,
+    val chartErrorString: String? = null,
 )

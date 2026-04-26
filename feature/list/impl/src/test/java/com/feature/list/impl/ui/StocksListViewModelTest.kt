@@ -2,10 +2,6 @@ package com.feature.list.impl.ui
 
 import androidx.paging.PagingData
 import app.cash.turbine.test
-import com.core.testing.data.TEST_EXCHANGE
-import com.core.testing.data.TEST_LOCALE
-import com.core.testing.data.TEST_MARKET
-import com.core.testing.data.testStockOverviewLists
 import com.core.testing.utils.CoroutineTestRule
 import com.feature.list.impl.domain.model.Ticker
 import com.feature.list.impl.ui.paging.StocksSearchPager
@@ -69,9 +65,9 @@ class StocksListViewModelTest {
             Ticker(
                 ticker = "GOOGL",
                 name = "Alphabet Inc.",
-                market = TEST_MARKET,
-                locale = TEST_LOCALE,
-                primaryExchange = TEST_EXCHANGE,
+                market = "stocks",
+                locale = "us",
+                primaryExchange = "XNAS",
                 type = "CS",
                 active = true,
             ),
@@ -148,7 +144,7 @@ class StocksListViewModelTest {
     @Test
     fun whenEmptyResults_thenStillEmitsPagingData() = runTest {
         every { stocksSearchPager.getPager("xyz") } returns
-            flowOf(PagingData.Companion.from(emptyList()))
+            flowOf(PagingData.from(emptyList()))
 
         underTest.stocksPaging.test {
             advanceTimeBy(1100)
@@ -162,4 +158,22 @@ class StocksListViewModelTest {
             cancelAndIgnoreRemainingEvents()
         }
     }
+
+    val testStockOverviewLists = listOf(
+        Ticker(
+            ticker = "AAPL",
+            name = "Apple Inc.",
+            market = "stocks",
+            locale = "us",
+            primaryExchange = "XNAS",
+            type = "CS",
+            active = true,
+            currencyName = "usd",
+            cik = null,
+            compositeFigi = null,
+            shareClassFigi = null,
+            lastUpdatedUtc = null,
+        ),
+    )
+
 }

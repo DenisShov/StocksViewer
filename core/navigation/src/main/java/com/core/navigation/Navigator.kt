@@ -3,7 +3,7 @@ package com.core.navigation
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavKey
 
-class Navigator(val backStack: NavBackStack<NavKey>) {
+class Navigator(private val backStack: NavBackStack<NavKey>) {
 
     fun navigate(key: NavKey) {
         backStack.add(key)

@@ -3,9 +3,11 @@ package com.feature.details.impl.data.repository
 import arrow.core.Either
 import com.core.common.error.DomainError
 import com.core.network.model.errors.ApiError
+import com.core.network.model.stocksDetails.CandleResponse
+import com.core.network.model.stocksDetails.CompanyResponse
+import com.core.network.model.stocksDetails.StockChartResponse
+import com.core.network.model.stocksDetails.StockOverviewResponse
 import com.core.network.retrofit.StocksApi
-import com.core.testing.data.stockChartResponse
-import com.core.testing.data.stockOverviewResponse
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
@@ -79,5 +81,43 @@ class StocksDetailsRepositoryImplTest {
             Assert.assertEquals(429, (it as DomainError.HttpError).code)
         }
     }
+
+    val companyResponse = CompanyResponse(
+        ticker = "AAPL",
+        name = "Apple Inc.",
+        market = "stocks",
+        locale = "us",
+        primaryExchange = "XNAS",
+        type = "CS",
+        active = true,
+    )
+
+    val stockOverviewResponse = StockOverviewResponse(
+        requestId = "req1",
+        results = companyResponse,
+        status = "OK",
+    )
+
+    val candleResponse = CandleResponse(
+        volume = 1000.0,
+        vwap = 149.5,
+        open = 148.0,
+        close = 150.0,
+        high = 151.0,
+        low = 147.0,
+        timestampMs = 1704067200000,
+        transactions = 500,
+    )
+
+    val stockChartResponse = StockChartResponse(
+        ticker = "AAPL",
+        queryCount = 1,
+        resultsCount = 1,
+        adjusted = true,
+        results = listOf(candleResponse),
+        status = "OK",
+        requestId = "req1",
+        count = 1,
+    )
 
 }

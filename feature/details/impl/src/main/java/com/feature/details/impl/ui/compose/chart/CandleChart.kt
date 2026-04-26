@@ -98,7 +98,7 @@ private fun StockChartContent(
 }
 
 @Composable
-fun StockChart(
+fun CandleChart(
     modifier: Modifier = Modifier,
     data: List<CandleUiModel>,
 ) {

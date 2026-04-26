@@ -3,8 +3,8 @@ package com.feature.details.impl.domain.usecase
 import arrow.core.left
 import arrow.core.right
 import com.core.common.error.DomainError
-import com.core.testing.data.TEST_TICKER
-import com.core.testing.data.testStockChart
+import com.feature.details.impl.domain.model.Candle
+import com.feature.details.impl.domain.model.StockChart
 import com.feature.details.impl.domain.repository.StocksDetailsRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -37,11 +37,11 @@ class GetStockChartDataUseCaseTest {
 
     @Test
     fun launch_thenPassesCorrectTicker() = runTest {
-        underTest.launch(TEST_TICKER, "week")
+        underTest.launch("AAPL", "week")
 
         coVerify {
             repository.getStockChartData(
-                ticker = TEST_TICKER,
+                ticker = "AAPL",
                 startDate = any(),
                 endDate = any(),
                 period = any(),
@@ -56,7 +56,7 @@ class GetStockChartDataUseCaseTest {
             repository.getStockChartData(any(), capture(startDateSlot), any(), any())
         } returns testStockChart.right()
 
-        underTest.launch(TEST_TICKER, "week")
+        underTest.launch("AAPL", "week")
 
         val expectedStartDate = LocalDate.now().minusYears(2).format(formatter)
         assertEquals(expectedStartDate, startDateSlot.captured)
@@ -69,7 +69,7 @@ class GetStockChartDataUseCaseTest {
             repository.getStockChartData(any(), any(), capture(endDateSlot), any())
         } returns testStockChart.right()
 
-        underTest.launch(TEST_TICKER, "week")
+        underTest.launch("AAPL", "week")
 
         val expectedEndDate = LocalDate.now().format(formatter)
         assertEquals(expectedEndDate, endDateSlot.captured)
@@ -77,7 +77,7 @@ class GetStockChartDataUseCaseTest {
 
     @Test
     fun launch_thenPassesCorrectPeriod() = runTest {
-        underTest.launch(TEST_TICKER, "month")
+        underTest.launch("AAPL", "month")
 
         coVerify {
             repository.getStockChartData(
@@ -95,7 +95,7 @@ class GetStockChartDataUseCaseTest {
             repository.getStockChartData(any(), any(), any(), any())
         } returns DomainError.MissingNetworkConnection.left()
 
-        val result = underTest.launch(TEST_TICKER, "week")
+        val result = underTest.launch("AAPL", "week")
 
         assertTrue(result.isLeft())
         result.onLeft { error ->
@@ -110,7 +110,7 @@ class GetStockChartDataUseCaseTest {
             repository.getStockChartData(any(), any(), any(), any())
         } returns DomainError.GeneralError(exception).left()
 
-        val result = underTest.launch(TEST_TICKER, "week")
+        val result = underTest.launch("AAPL", "week")
 
         assertTrue(result.isLeft())
         result.onLeft { error ->
@@ -118,4 +118,39 @@ class GetStockChartDataUseCaseTest {
             assertEquals("Unexpected failure", error.exception.message)
         }
     }
+
+    val testCandles = listOf(
+        Candle(
+            volume = 50_000_000.0,
+            vwap = 185.5,
+            open = 185.82,
+            close = 184.8,
+            high = 186.03,
+            low = 184.21,
+            timestampMs = 1699851600000,
+            transactions = 500000,
+        ),
+        Candle(
+            volume = 45_000_000.0,
+            vwap = 187.0,
+            open = 187.7,
+            close = 187.44,
+            high = 188.11,
+            low = 186.3,
+            timestampMs = 1699938000000,
+            transactions = 450000,
+        ),
+    )
+
+    val testStockChart = StockChart(
+        ticker = "AAPL",
+        queryCount = 2,
+        resultsCount = 2,
+        adjusted = true,
+        results = testCandles,
+        status = "OK",
+        requestId = "test-request-id",
+        count = 2,
+    )
+
 }

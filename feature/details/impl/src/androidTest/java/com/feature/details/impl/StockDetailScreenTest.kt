@@ -2,8 +2,11 @@ package com.feature.details.impl
 
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.filterToOne
+import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -275,6 +278,103 @@ class StockDetailScreenTest {
         assert(selectedPeriod == ChartPeriod.MONTH)
     }
 
+    @Test
+    fun whenChartLoading_thenShowsChartSkeleton() {
+        composeTestRule.setContent {
+            StockDetailScreen(
+                uiState = StockDetailsState(
+                    stockOverview = testOverview,
+                    candles = testCandles,
+                    isChartLoading = true,
+                ),
+                actions = StockDetailsActions(),
+            )
+        }
+
+        composeTestRule
+            .onNodeWithTag("stock_details_content")
+            .performScrollToNode(hasTestTag("chart_section").not())
+
+        composeTestRule.onNodeWithTag("chart_section").assertDoesNotExist()
+        composeTestRule.onNodeWithTag("stock_chart_details_error").assertDoesNotExist()
+    }
+
+    @Test
+    fun whenChartError_thenShowsChartErrorMessage() {
+        composeTestRule.setContent {
+            StockDetailScreen(
+                uiState = StockDetailsState(
+                    stockOverview = testOverview,
+                    candles = testCandles,
+                    chartErrorString = "Chart failed to load",
+                ),
+                actions = StockDetailsActions(),
+            )
+        }
+
+        composeTestRule
+            .onNodeWithTag("stock_details_content")
+            .performScrollToNode(hasTestTag("stock_chart_details_error"))
+
+        composeTestRule
+            .onNodeWithTag("stock_chart_details_error")
+            .assertIsDisplayed()
+
+        composeTestRule
+            .onNodeWithText("Chart failed to load")
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun whenChartError_thenRetryChartButtonCallsRetryChart() {
+        var retryChartCalled = false
+
+        composeTestRule.setContent {
+            StockDetailScreen(
+                uiState = StockDetailsState(
+                    stockOverview = testOverview,
+                    candles = testCandles,
+                    chartErrorString = "Something went wrong",
+                ),
+                actions = StockDetailsActions(retryChart = { retryChartCalled = true }),
+            )
+        }
+
+        val retryText = composeTestRule.activity.getString(com.core.commonresources.R.string.retry)
+        composeTestRule
+            .onNodeWithTag("stock_details_content")
+            .performScrollToNode(hasTestTag("stock_chart_details_error"))
+
+        composeTestRule
+            .onAllNodesWithText(retryText)
+            .filterToOne(hasAnyAncestor(hasTestTag("stock_chart_details_error")))
+            .performClick()
+
+        assert(retryChartCalled)
+    }
+
+    @Test
+    fun whenChartLoaded_thenShowsChartAndPeriodButtons() {
+        composeTestRule.setContent {
+            StockDetailScreen(
+                uiState = StockDetailsState(
+                    stockOverview = testOverview,
+                    candles = testCandles,
+                ),
+                actions = StockDetailsActions(),
+            )
+        }
+
+        composeTestRule
+            .onNodeWithTag("stock_details_content")
+            .performScrollToNode(hasTestTag("chart_section"))
+
+        composeTestRule.onNodeWithTag("chart_section").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("stock_chart").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("period_buttons").assertIsDisplayed()
+    }
+
+
     private val testOverview = StockOverviewUiModel(
         ticker = "AAPL",
         name = "Apple Inc.",
@@ -290,7 +390,19 @@ class StockDetailScreenTest {
     )
 
     private val testCandles = listOf(
-        CandleUiModel(open = 185.82, close = 184.8, high = 186.03, low = 184.21, timestampMs = 1699851600000),
-        CandleUiModel(open = 187.7, close = 187.44, high = 188.11, low = 186.3, timestampMs = 1699938000000),
+        CandleUiModel(
+            open = 185.82,
+            close = 184.8,
+            high = 186.03,
+            low = 184.21,
+            timestampMs = 1699851600000
+        ),
+        CandleUiModel(
+            open = 187.7,
+            close = 187.44,
+            high = 188.11,
+            low = 186.3,
+            timestampMs = 1699938000000
+        ),
     )
 }
