@@ -14,9 +14,6 @@ import androidx.navigation3.runtime.rememberDecoratedNavEntries
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 
-/**
- * Create a navigation state that persists across configuration changes and process death.
- */
 @Composable
 fun rememberNavigationState(
     startRoute: NavKey,
@@ -34,33 +31,23 @@ fun rememberNavigationState(
     }
 }
 
-/**
- * State holder for tab-aware navigation with independent back stacks per tab.
- *
- * @param startRoute the starting navigation key. The user will exit the app through this key.
- * @param topLevelStack the top level back stack holding only top-level keys.
- * @param backStacks a back stack per top-level route.
- */
 class NavigationState(
     val startRoute: NavKey,
     val topLevelStack: NavBackStack<NavKey>,
     val backStacks: Map<NavKey, NavBackStack<NavKey>>,
 ) {
-    /** The currently active top-level route. */
+    // The currently active top-level route
     val topLevelRoute: NavKey by derivedStateOf { topLevelStack.last() }
 
-    /** The current sub-stack for the active top-level route. */
+    // The current sub-stack for the active top-level route
     val currentSubStack: NavBackStack<NavKey>
         get() = backStacks[topLevelRoute]
             ?: error("Sub stack for $topLevelRoute does not exist")
 
-    /** The key at the top of the current sub-stack. */
+    // The key at the top of the current sub-stack
     val currentKey: NavKey by derivedStateOf { currentSubStack.last() }
 }
 
-/**
- * Convert NavigationState into decorated NavEntries suitable for NavDisplay.
- */
 @Composable
 fun NavigationState.toDecoratedEntries(
     entryProvider: (NavKey) -> NavEntry<NavKey>,
