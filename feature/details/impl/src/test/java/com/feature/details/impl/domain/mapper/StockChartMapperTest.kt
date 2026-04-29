@@ -2,6 +2,7 @@ package com.feature.details.impl.domain.mapper
 
 import com.core.network.model.stocksDetails.CandleResponse
 import com.core.network.model.stocksDetails.StockChartResponse
+import com.feature.details.impl.data.mapper.toDomain
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull

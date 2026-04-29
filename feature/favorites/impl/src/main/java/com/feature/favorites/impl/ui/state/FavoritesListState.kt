@@ -1,4 +1,4 @@
-package com.feature.favorites.impl.state
+package com.feature.favorites.impl.ui.state
 
 sealed interface FavoritesListState {
     data object Loading : FavoritesListState

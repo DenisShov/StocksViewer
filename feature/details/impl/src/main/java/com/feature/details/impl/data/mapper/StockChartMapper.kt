@@ -1,4 +1,4 @@
-package com.feature.details.impl.domain.mapper
+package com.feature.details.impl.data.mapper
 
 import com.core.network.model.stocksDetails.CandleResponse
 import com.core.network.model.stocksDetails.StockChartResponse

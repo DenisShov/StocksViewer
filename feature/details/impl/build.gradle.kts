@@ -13,8 +13,8 @@ dependencies {
     implementation(project(":core:network"))
     implementation(project(":core:ui"))
     implementation(project(":core:navigation"))
-    implementation(project(":core:domain"))
     implementation(project(":feature:details:api"))
+    implementation(project(":shared-library:favorites"))
 
     implementation(libs.timber)
     implementation(libs.vico.compose.m3)

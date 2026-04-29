@@ -1,4 +1,4 @@
-package com.shared_library.favorites
+package com.sharedlibrary.favorites
 
 import org.junit.Assert.*
 import org.junit.Test

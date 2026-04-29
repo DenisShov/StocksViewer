@@ -1,4 +1,4 @@
-package com.feature.list.impl.domain.mapper
+package com.feature.list.impl.data.mapper
 
 import com.core.network.model.stocksList.TickerResponse
 import com.core.network.model.stocksList.TickersResponse

@@ -2,6 +2,7 @@ package com.feature.list.impl.domain.mapper
 
 import com.core.network.model.stocksList.TickerResponse
 import com.core.network.model.stocksList.TickersResponse
+import com.feature.list.impl.data.mapper.toDomain
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull

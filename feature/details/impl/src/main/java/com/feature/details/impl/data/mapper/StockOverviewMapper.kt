@@ -1,4 +1,4 @@
-package com.feature.details.impl.domain.mapper
+package com.feature.details.impl.data.mapper
 
 import com.core.network.BuildConfig
 import com.core.network.model.stocksDetails.AddressResponse

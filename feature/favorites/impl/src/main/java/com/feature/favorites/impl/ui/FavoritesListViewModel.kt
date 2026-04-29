@@ -1,11 +1,10 @@
-package com.feature.favorites.impl
+package com.feature.favorites.impl.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.feature.favorites.impl.domain.model.FavoriteStock
-import com.feature.favorites.impl.domain.repository.FavoritesRepository
-import com.feature.favorites.impl.state.FavoriteStockUiModel
-import com.feature.favorites.impl.state.FavoritesListState
+import com.feature.favorites.impl.ui.mapper.toUiModel
+import com.feature.favorites.impl.ui.state.FavoritesListState
+import com.sharedlibrary.favorites.domain.repository.FavoritesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -27,13 +26,9 @@ class FavoritesListViewModel @Inject constructor(
                     FavoritesListState.Content(favorites.map { it.toUiModel() })
                 }
             }
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), FavoritesListState.Loading)
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5_000),
+                FavoritesListState.Loading
+            )
 }
-
-private fun FavoriteStock.toUiModel(): FavoriteStockUiModel =
-    FavoriteStockUiModel(
-        ticker = ticker,
-        name = name,
-        type = type,
-        primaryExchange = primaryExchange,
-    )

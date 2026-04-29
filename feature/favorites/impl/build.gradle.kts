@@ -17,9 +17,9 @@ android {
 dependencies {
     implementation(project(":core:navigation"))
     implementation(project(":core:database"))
-    implementation(project(":core:domain"))
     implementation(project(":feature:favorites:api"))
     implementation(project(":feature:details:api"))
+    implementation(project(":shared-library:favorites"))
 
     implementation(libs.androidx.compose.material3)
 

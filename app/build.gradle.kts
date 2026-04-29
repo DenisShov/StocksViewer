@@ -37,7 +37,6 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:navigation"))
     implementation(project(":core:database"))
-    implementation(project(":core:domain"))
     implementation(project(":feature:list:api"))
     implementation(project(":feature:list:impl"))
     implementation(project(":feature:details:api"))

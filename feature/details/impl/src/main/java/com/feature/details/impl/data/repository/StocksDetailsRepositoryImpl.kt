@@ -4,7 +4,7 @@ import arrow.core.Either
 import com.core.common.error.DomainError
 import com.core.network.model.errors.mapLeftToDomainError
 import com.core.network.retrofit.StocksApi
-import com.feature.details.impl.domain.mapper.toDomain
+import com.feature.details.impl.data.mapper.toDomain
 import com.feature.details.impl.domain.model.StockChart
 import com.feature.details.impl.domain.model.StockOverview
 import com.feature.details.impl.domain.repository.StocksDetailsRepository

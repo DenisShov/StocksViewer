@@ -1,4 +1,4 @@
-package com.shared_library.favorites.domain.model
+package com.sharedlibrary.favorites.domain.model
 
 data class FavoriteStock(
     val ticker: String,

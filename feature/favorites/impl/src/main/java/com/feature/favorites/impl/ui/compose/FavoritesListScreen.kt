@@ -1,4 +1,4 @@
-package com.feature.favorites.impl.ui
+package com.feature.favorites.impl.ui.compose
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -39,9 +39,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.feature.favorites.impl.FavoritesListViewModel
-import com.feature.favorites.impl.state.FavoriteStockUiModel
-import com.feature.favorites.impl.state.FavoritesListState
+import com.feature.favorites.impl.ui.FavoritesListViewModel
+import com.feature.favorites.impl.ui.state.FavoriteStockUiModel
+import com.feature.favorites.impl.ui.state.FavoritesListState
 
 @Composable
 fun FavoritesListRoute(

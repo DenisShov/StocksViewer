@@ -1,35 +1,19 @@
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.stockviewer.android.library)
+    alias(libs.plugins.stockviewer.android.hilt)
 }
 
 android {
-    namespace = "com.shared_library.favorites"
-    compileSdk {
-        version = release(36)
-    }
+    namespace = "com.sharedlibrary.favorites"
 
     defaultConfig {
-        minSdk = 28
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
-
 }
 
 dependencies {
-    implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.material)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(libs.androidx.junit)
+    api(project(":core:common"))
+    implementation(project(":core:database"))
+
+    testImplementation(project(":core:testing"))
 }

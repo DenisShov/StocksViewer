@@ -3,13 +3,13 @@ package com.feature.details.impl.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.core.common.mapper.ErrorMapper
-import com.core.domain.model.FavoriteStock
-import com.core.domain.repository.FavoritesRepository
 import com.feature.details.impl.domain.repository.StocksDetailsRepository
 import com.feature.details.impl.domain.usecase.GetStockChartDataUseCase
 import com.feature.details.impl.ui.actions.ChartPeriod
 import com.feature.details.impl.ui.model.toUiModel
 import com.feature.details.impl.ui.state.StockDetailsState
+import com.sharedlibrary.favorites.domain.model.FavoriteStock
+import com.sharedlibrary.favorites.domain.repository.FavoritesRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -50,19 +50,20 @@ class StockDetailsViewModel @AssistedInject constructor(
     }
 
     fun toggleFavorite() {
-        val overview = _uiState.value.stockOverview ?: return
         viewModelScope.launch {
             if (_uiState.value.isFavorite) {
                 favoritesRepository.removeFavorite(ticker)
             } else {
-                favoritesRepository.addFavorite(
-                    FavoriteStock(
-                        ticker = ticker,
-                        name = overview.name,
-                        type = overview.type,
-                        primaryExchange = overview.exchange,
+                _uiState.value.stockOverview?.let {
+                    favoritesRepository.addFavorite(
+                        FavoriteStock(
+                            ticker = ticker,
+                            name = it.name,
+                            type = it.type,
+                            primaryExchange = it.exchange,
+                        )
                     )
-                )
+                }
             }
         }
     }

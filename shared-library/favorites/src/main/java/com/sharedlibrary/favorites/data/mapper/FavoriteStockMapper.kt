@@ -1,7 +1,7 @@
-package com.shared_library.favorites.data.mapper
+package com.sharedlibrary.favorites.data.mapper
 
 import com.core.database.entity.FavoriteStockEntity
-import com.shared_library.favorites.domain.model.FavoriteStock
+import com.sharedlibrary.favorites.domain.model.FavoriteStock
 
 fun FavoriteStockEntity.toDomain(): FavoriteStock =
     FavoriteStock(

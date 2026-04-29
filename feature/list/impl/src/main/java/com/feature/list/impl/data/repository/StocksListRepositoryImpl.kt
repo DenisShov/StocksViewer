@@ -4,7 +4,7 @@ import arrow.core.Either
 import com.core.common.error.DomainError
 import com.core.network.model.errors.mapLeftToDomainError
 import com.core.network.retrofit.StocksApi
-import com.feature.list.impl.domain.mapper.toDomain
+import com.feature.list.impl.data.mapper.toDomain
 import com.feature.list.impl.domain.model.Tickers
 import com.feature.list.impl.domain.repository.StocksListRepository
 import javax.inject.Inject

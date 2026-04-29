@@ -4,6 +4,7 @@ import com.core.network.model.stocksDetails.AddressResponse
 import com.core.network.model.stocksDetails.BrandingResponse
 import com.core.network.model.stocksDetails.CompanyResponse
 import com.core.network.model.stocksDetails.StockOverviewResponse
+import com.feature.details.impl.data.mapper.toDomain
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull

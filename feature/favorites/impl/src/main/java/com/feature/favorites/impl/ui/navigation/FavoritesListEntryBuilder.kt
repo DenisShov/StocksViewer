@@ -5,7 +5,7 @@ import androidx.navigation3.runtime.NavKey
 import com.core.navigation.Navigator
 import com.feature.details.api.StocksDetailKey
 import com.feature.favorites.api.FavoritesListKey
-import com.feature.favorites.impl.ui.FavoritesListRoute
+import com.feature.favorites.impl.ui.compose.FavoritesListRoute
 
 fun EntryProviderScope<NavKey>.favoritesListEntry(
     navigator: Navigator,
