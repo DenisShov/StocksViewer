@@ -1,7 +1,7 @@
-package com.feature.favorites.impl.di
+package com.shared_library.favorites.di
 
-import com.core.domain.repository.FavoritesRepository
-import com.feature.favorites.impl.data.FavoritesRepositoryImpl
+import com.shared_library.favorites.data.repository.FavoritesRepositoryImpl
+import com.shared_library.favorites.domain.repository.FavoritesRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

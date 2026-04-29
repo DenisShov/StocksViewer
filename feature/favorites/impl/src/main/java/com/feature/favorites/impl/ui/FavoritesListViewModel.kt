@@ -2,8 +2,8 @@ package com.feature.favorites.impl
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.core.domain.model.FavoriteStock
-import com.core.domain.repository.FavoritesRepository
+import com.feature.favorites.impl.domain.model.FavoriteStock
+import com.feature.favorites.impl.domain.repository.FavoritesRepository
 import com.feature.favorites.impl.state.FavoriteStockUiModel
 import com.feature.favorites.impl.state.FavoritesListState
 import dagger.hilt.android.lifecycle.HiltViewModel
