@@ -5,6 +5,7 @@ import arrow.core.left
 import arrow.core.right
 import com.core.common.error.DomainError
 import com.core.common.mapper.ErrorMapper
+import com.core.domain.repository.FavoritesRepository
 import com.core.testing.utils.CoroutineTestRule
 import com.feature.details.impl.domain.model.Candle
 import com.feature.details.impl.domain.model.Company
@@ -17,6 +18,7 @@ import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -35,6 +37,7 @@ class StockDetailsViewModelTest {
 
     private val stocksDetailsRepository: StocksDetailsRepository = mockk()
     private val getStockChartDataUseCase: GetStockChartDataUseCase = mockk()
+    private val favoritesRepository: FavoritesRepository = mockk()
     private val errorMapper: ErrorMapper = mockk()
     private lateinit var sut: StockDetailsViewModel
 
@@ -42,6 +45,7 @@ class StockDetailsViewModelTest {
         ticker = "AAPL",
         stocksDetailsRepository = stocksDetailsRepository,
         getStockChartDataUseCase = getStockChartDataUseCase,
+        favoritesRepository = favoritesRepository,
         errorMapper = errorMapper,
     )
 
@@ -50,6 +54,7 @@ class StockDetailsViewModelTest {
         coEvery { stocksDetailsRepository.getStockOverviewByTicker(any()) } returns testStockDetails.right()
         coEvery { getStockChartDataUseCase.launch(any(), any()) } returns testStockChart.right()
         every { errorMapper.mapToStringError(any()) } returns "Something went wrong"
+        every { favoritesRepository.isFavorite(any()) } returns flowOf(false)
         sut = createSut()
     }
 

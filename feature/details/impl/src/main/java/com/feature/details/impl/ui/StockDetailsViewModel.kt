@@ -3,6 +3,8 @@ package com.feature.details.impl.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.core.common.mapper.ErrorMapper
+import com.core.domain.model.FavoriteStock
+import com.core.domain.repository.FavoritesRepository
 import com.feature.details.impl.domain.repository.StocksDetailsRepository
 import com.feature.details.impl.domain.usecase.GetStockChartDataUseCase
 import com.feature.details.impl.ui.actions.ChartPeriod
@@ -23,6 +25,7 @@ class StockDetailsViewModel @AssistedInject constructor(
     @Assisted private val ticker: String,
     private val stocksDetailsRepository: StocksDetailsRepository,
     private val getStockChartDataUseCase: GetStockChartDataUseCase,
+    private val favoritesRepository: FavoritesRepository,
     private val errorMapper: ErrorMapper,
 ) : ViewModel() {
 
@@ -33,8 +36,35 @@ class StockDetailsViewModel @AssistedInject constructor(
 
     private val _uiState = MutableStateFlow(StockDetailsState())
     val uiState: StateFlow<StockDetailsState> by lazy {
+        collectFavoriteStatus()
         getStockOverviewByTicker()
         _uiState.asStateFlow()
+    }
+
+    private fun collectFavoriteStatus() {
+        viewModelScope.launch {
+            favoritesRepository.isFavorite(ticker).collect { isFav ->
+                _uiState.update { it.copy(isFavorite = isFav) }
+            }
+        }
+    }
+
+    fun toggleFavorite() {
+        val overview = _uiState.value.stockOverview ?: return
+        viewModelScope.launch {
+            if (_uiState.value.isFavorite) {
+                favoritesRepository.removeFavorite(ticker)
+            } else {
+                favoritesRepository.addFavorite(
+                    FavoriteStock(
+                        ticker = ticker,
+                        name = overview.name,
+                        type = overview.type,
+                        primaryExchange = overview.exchange,
+                    )
+                )
+            }
+        }
     }
 
     fun getStockOverviewByTicker() {

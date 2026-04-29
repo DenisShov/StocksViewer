@@ -13,6 +13,7 @@ dependencies {
     implementation(project(":core:network"))
     implementation(project(":core:ui"))
     implementation(project(":core:navigation"))
+    implementation(project(":core:domain"))
     implementation(project(":feature:details:api"))
 
     implementation(libs.timber)

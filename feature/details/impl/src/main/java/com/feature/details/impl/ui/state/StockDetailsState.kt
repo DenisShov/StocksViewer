@@ -12,4 +12,5 @@ data class StockDetailsState(
     val errorString: String? = null,
     val isChartLoading: Boolean = false,
     val chartErrorString: String? = null,
+    val isFavorite: Boolean = false,
 )

@@ -4,4 +4,5 @@ data class StockDetailsActions(
     val onChartPeriodChange: (ChartPeriod) -> Unit = {},
     val retry: () -> Unit = {},
     val retryChart: () -> Unit = {},
+    val onToggleFavorite: () -> Unit = {},
 )

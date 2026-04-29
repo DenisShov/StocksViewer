@@ -10,4 +10,6 @@ object IconResources {
     val Language = R.drawable.ic_language
     val Info = R.drawable.ic_info
     val CalendarToday = R.drawable.ic_calendar_today
+    val StarFilled = R.drawable.ic_star_filled
+    val StarOutline = R.drawable.ic_star_outline
 }

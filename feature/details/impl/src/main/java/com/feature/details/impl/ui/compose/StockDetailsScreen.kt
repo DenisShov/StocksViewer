@@ -81,6 +81,7 @@ fun StockDetailsRoute(
         onChartPeriodChange = viewModel::getStockChartData,
         retry = viewModel::getStockOverviewByTicker,
         retryChart = viewModel::retryGetStockChartData,
+        onToggleFavorite = viewModel::toggleFavorite,
     )
 
     StockDetailScreen(
@@ -116,6 +117,32 @@ fun StockDetailScreen(
                             painter = painterResource(id = IconResources.ArrowBack),
                             contentDescription = stringResource(id = R.string.a11y_return_to_previous_screen),
                             modifier = Modifier.padding(start = 12.dp),
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(
+                        onClick = actions.onToggleFavorite,
+                        modifier = Modifier.testTag("favorite_toggle_button"),
+                    ) {
+                        Icon(
+                            painter = painterResource(
+                                id = if (uiState.isFavorite) {
+                                    IconResources.StarFilled
+                                } else {
+                                    IconResources.StarOutline
+                                },
+                            ),
+                            contentDescription = if (uiState.isFavorite) {
+                                "Remove from favorites"
+                            } else {
+                                "Add to favorites"
+                            },
+                            tint = if (uiState.isFavorite) {
+                                MaterialTheme.colorScheme.primary
+                            } else {
+                                MaterialTheme.colorScheme.onSurfaceVariant
+                            },
                         )
                     }
                 },
