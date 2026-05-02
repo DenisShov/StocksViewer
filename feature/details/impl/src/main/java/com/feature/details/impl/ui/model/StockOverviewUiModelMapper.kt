@@ -11,7 +11,7 @@ fun StockOverview.toUiModel() =
         ticker = results.ticker,
         name = results.name,
         locale = results.locale,
-        type = results.type,
+        type = getType(results.type),
         address = getAddress(results.address),
         exchange = results.primaryExchange,
         currencyName = results.currencyName,
@@ -24,6 +24,13 @@ fun StockOverview.toUiModel() =
         listDate = formatDate(results.listDate),
         iconUrl = results.branding?.iconUrl,
     )
+
+private fun getType(type: String): String = when (type) {
+    "CS" -> "Common Stock"
+    "ETF" -> "Exchange Traded Fund"
+    "ADRC" -> "Depositary Receipt"
+    else -> type
+}
 
 private fun getAddress(address: Address?) = address?.run {
     listOfNotNull(

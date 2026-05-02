@@ -7,6 +7,12 @@ fun FavoriteStock.toUiModel(): FavoriteStockUiModel =
     FavoriteStockUiModel(
         ticker = ticker,
         name = name,
-        type = type,
-        primaryExchange = primaryExchange,
+        type = getType(),
     )
+
+private fun FavoriteStock.getType(): String = when (type) {
+    "CS" -> "Common Stock"
+    "ETF" -> "Exchange Traded Fund"
+    "ADRC" -> "Depositary Receipt"
+    else -> type
+}

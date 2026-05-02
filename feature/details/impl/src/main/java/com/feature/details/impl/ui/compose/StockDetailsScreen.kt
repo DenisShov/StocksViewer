@@ -260,7 +260,7 @@ private fun CompanyHeader(stock: StockOverviewUiModel) {
             Spacer(modifier = Modifier.height(4.dp))
             SuggestionChip(
                 onClick = { },
-                label = { Text(stock.exchange) },
+                label = { Text(stock.type) },
                 modifier = Modifier.height(30.dp),
                 colors = SuggestionChipDefaults.suggestionChipColors(
                     containerColor = MaterialTheme.colorScheme.secondaryContainer
@@ -647,6 +647,7 @@ private fun StockDetailsContentPreview() {
                 exchange = "NASDAQ",
                 marketCap = "110.59B",
                 totalEmployees = 31360,
+                type = "Common Stock",
                 sicDescription = "Technology",
                 description = "Adobe provides content creation, document management, and digital marketing software.",
                 address = "345 Park Ave, San Jose, CA",

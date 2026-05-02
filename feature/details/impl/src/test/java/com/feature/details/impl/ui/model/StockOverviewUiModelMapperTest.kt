@@ -47,7 +47,7 @@ class StockOverviewUiModelMapperTest {
         assertEquals("AAPL", result.ticker)
         assertEquals("Apple Inc.", result.name)
         assertEquals("us", result.locale)
-        assertEquals("CS", result.type)
+        assertEquals("Common Stock", result.type)
         assertEquals("XNAS", result.exchange)
     }
 

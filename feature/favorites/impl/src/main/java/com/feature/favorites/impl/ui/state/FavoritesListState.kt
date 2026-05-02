@@ -10,5 +10,4 @@ data class FavoriteStockUiModel(
     val ticker: String,
     val name: String,
     val type: String,
-    val primaryExchange: String,
 )

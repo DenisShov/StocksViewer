@@ -5,7 +5,6 @@ import arrow.core.left
 import arrow.core.right
 import com.core.common.error.DomainError
 import com.core.common.mapper.ErrorMapper
-import com.core.domain.repository.FavoritesRepository
 import com.core.testing.utils.CoroutineTestRule
 import com.feature.details.impl.domain.model.Candle
 import com.feature.details.impl.domain.model.Company
@@ -14,6 +13,7 @@ import com.feature.details.impl.domain.model.StockOverview
 import com.feature.details.impl.domain.repository.StocksDetailsRepository
 import com.feature.details.impl.domain.usecase.GetStockChartDataUseCase
 import com.feature.details.impl.ui.actions.ChartPeriod
+import com.sharedlibrary.favorites.domain.repository.FavoritesRepository
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
