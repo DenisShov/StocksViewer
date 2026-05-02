@@ -48,6 +48,7 @@ fun FavoritesListScreen(
                     Text(
                         text = "Favorites",
                         fontWeight = FontWeight.Bold,
+                        modifier = Modifier.testTag("favorites_title"),
                     )
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(

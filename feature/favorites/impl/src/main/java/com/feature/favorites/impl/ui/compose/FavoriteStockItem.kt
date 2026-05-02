@@ -73,6 +73,7 @@ fun FavoriteStockItem(
                     color = MaterialTheme.colorScheme.onSecondaryContainer,
                     textAlign = TextAlign.Center,
                     maxLines = 1,
+                    modifier = Modifier.testTag("favorites_stock_item_ticker"),
                 )
             }
 
@@ -85,6 +86,7 @@ fun FavoriteStockItem(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 3,
                     overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.testTag("favorites_stock_item_name"),
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
@@ -101,7 +103,9 @@ fun FavoriteStockItem(
                             text = stock.type,
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                            modifier = Modifier
+                                .padding(horizontal = 6.dp, vertical = 2.dp)
+                                .testTag("favorites_stock_item_type"),
                         )
                     }
                 }
