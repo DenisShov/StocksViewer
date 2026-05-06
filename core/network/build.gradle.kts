@@ -1,6 +1,6 @@
 plugins {
     alias(libs.plugins.stockviewer.android.library)
-    alias(libs.plugins.stockviewer.android.hilt)
+    alias(libs.plugins.stockviewer.android.koin)
     alias(libs.plugins.stockviewer.android.library.jacoco)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }

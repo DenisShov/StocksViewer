@@ -6,9 +6,7 @@ import com.feature.details.impl.domain.model.StockChart
 import com.feature.details.impl.domain.repository.StocksDetailsRepository
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import javax.inject.Inject
-
-class GetStockChartDataUseCase @Inject constructor(
+class GetStockChartDataUseCase(
     private val stocksDetailsRepository: StocksDetailsRepository,
 ) {
     private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")

@@ -21,14 +21,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.feature.favorites.impl.ui.FavoritesListViewModel
 import com.feature.favorites.impl.ui.state.FavoritesListState
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun FavoritesListRoute(
-    viewModel: FavoritesListViewModel = hiltViewModel(),
+    viewModel: FavoritesListViewModel = koinViewModel(),
     onStockClick: (String) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()

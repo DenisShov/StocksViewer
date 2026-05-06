@@ -10,29 +10,19 @@ import com.feature.details.impl.ui.model.toUiModel
 import com.feature.details.impl.ui.state.StockDetailsState
 import com.sharedlibrary.favorites.domain.model.FavoriteStock
 import com.sharedlibrary.favorites.domain.repository.FavoritesRepository
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-@HiltViewModel(assistedFactory = StockDetailsViewModel.Factory::class)
-class StockDetailsViewModel @AssistedInject constructor(
-    @Assisted private val ticker: String,
+class StockDetailsViewModel(
+    private val ticker: String,
     private val stocksDetailsRepository: StocksDetailsRepository,
     private val getStockChartDataUseCase: GetStockChartDataUseCase,
     private val favoritesRepository: FavoritesRepository,
     private val errorMapper: ErrorMapper,
 ) : ViewModel() {
-
-    @AssistedFactory
-    interface Factory {
-        fun create(ticker: String): StockDetailsViewModel
-    }
 
     private val _uiState = MutableStateFlow(StockDetailsState())
     val uiState: StateFlow<StockDetailsState> by lazy {

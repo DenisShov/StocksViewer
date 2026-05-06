@@ -11,7 +11,8 @@ android {
 }
 
 dependencies {
-    implementation(libs.hilt.android)
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.android)
     implementation(libs.androidx.paging.compose)
     implementation(libs.timber)
 

@@ -7,9 +7,7 @@ import com.core.network.retrofit.StocksApi
 import com.feature.list.impl.data.mapper.toDomain
 import com.feature.list.impl.domain.model.Tickers
 import com.feature.list.impl.domain.repository.StocksListRepository
-import javax.inject.Inject
-
-class StocksListRepositoryImpl @Inject constructor(
+class StocksListRepositoryImpl(
     private val stocksApi: StocksApi,
 ) : StocksListRepository {
 

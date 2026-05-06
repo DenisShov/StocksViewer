@@ -6,18 +6,15 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.feature.list.impl.ui.model.toUiModel
 import com.feature.list.impl.ui.paging.StocksSearchPager
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
-@HiltViewModel
-class StocksListViewModel @Inject constructor(
+class StocksListViewModel(
     stocksSearchPager: StocksSearchPager,
 ) : ViewModel() {
 

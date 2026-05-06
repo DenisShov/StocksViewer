@@ -43,7 +43,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
@@ -58,10 +57,11 @@ import com.feature.list.impl.ui.StocksListViewModel
 import com.feature.list.impl.ui.model.TickerUiModel
 import com.feature.list.impl.ui.paging.SearchResultsError
 import kotlinx.coroutines.flow.flowOf
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun StocksListRoute(
-    viewModel: StocksListViewModel = hiltViewModel(),
+    viewModel: StocksListViewModel = koinViewModel(),
     onStockClick: (String) -> Unit,
 ) {
     val stocksPaging = viewModel.stocksPaging.collectAsLazyPagingItems()
