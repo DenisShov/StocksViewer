@@ -2,8 +2,17 @@ package com.sharedlibrary.favorites.di
 
 import com.sharedlibrary.favorites.data.repository.FavoritesRepositoryImpl
 import com.sharedlibrary.favorites.domain.repository.FavoritesRepository
-import org.koin.dsl.module
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
-val favoritesModule = module {
-    single<FavoritesRepository> { FavoritesRepositoryImpl(get()) }
+@Module
+@InstallIn(SingletonComponent::class)
+interface FavoritesModule {
+
+    @Binds
+    fun bindsFavoritesRepository(
+        favoritesRepositoryImpl: FavoritesRepositoryImpl,
+    ): FavoritesRepository
 }

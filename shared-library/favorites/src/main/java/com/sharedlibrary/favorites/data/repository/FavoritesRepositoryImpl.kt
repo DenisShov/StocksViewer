@@ -7,7 +7,9 @@ import com.sharedlibrary.favorites.domain.model.FavoriteStock
 import com.sharedlibrary.favorites.domain.repository.FavoritesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-class FavoritesRepositoryImpl(
+import javax.inject.Inject
+
+class FavoritesRepositoryImpl @Inject constructor(
     private val dao: FavoriteStockDao,
 ) : FavoritesRepository {
 

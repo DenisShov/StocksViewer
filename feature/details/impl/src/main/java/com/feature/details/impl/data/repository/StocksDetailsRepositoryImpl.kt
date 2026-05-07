@@ -8,7 +8,9 @@ import com.feature.details.impl.data.mapper.toDomain
 import com.feature.details.impl.domain.model.StockChart
 import com.feature.details.impl.domain.model.StockOverview
 import com.feature.details.impl.domain.repository.StocksDetailsRepository
-class StocksDetailsRepositoryImpl(
+import javax.inject.Inject
+
+class StocksDetailsRepositoryImpl @Inject constructor(
     private val stocksApi: StocksApi,
 ) : StocksDetailsRepository {
 

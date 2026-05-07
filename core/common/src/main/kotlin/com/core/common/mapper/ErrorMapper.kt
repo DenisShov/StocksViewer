@@ -3,7 +3,9 @@ package com.core.common.mapper
 import com.core.common.error.DomainError
 import com.core.commonresources.R
 import core.commonresources.StringProvider
-class ErrorMapper(private val stringProvider: StringProvider) {
+import javax.inject.Inject
+
+class ErrorMapper @Inject constructor(private val stringProvider: StringProvider) {
 
     fun mapToStringError(error: DomainError): String = when (error) {
         is DomainError.HttpError -> error.message

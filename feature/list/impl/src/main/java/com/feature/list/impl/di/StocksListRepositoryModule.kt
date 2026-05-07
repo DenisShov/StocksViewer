@@ -2,13 +2,17 @@ package com.feature.list.impl.di
 
 import com.feature.list.impl.data.repository.StocksListRepositoryImpl
 import com.feature.list.impl.domain.repository.StocksListRepository
-import com.feature.list.impl.ui.StocksListViewModel
-import com.feature.list.impl.ui.paging.StocksSearchPager
-import org.koin.core.module.dsl.viewModel
-import org.koin.dsl.module
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
-val stocksListModule = module {
-    factory<StocksListRepository> { StocksListRepositoryImpl(get()) }
-    factory { StocksSearchPager(get()) }
-    viewModel { StocksListViewModel(get()) }
+@Module
+@InstallIn(SingletonComponent::class)
+interface StocksListRepositoryModule {
+
+    @Binds
+    fun bindsCodeChallengesRepository(
+        stocksListRepository: StocksListRepositoryImpl,
+    ): StocksListRepository
 }

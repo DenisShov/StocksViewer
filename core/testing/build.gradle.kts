@@ -17,6 +17,7 @@ dependencies {
     api(libs.androidx.test.rules)
     api(libs.androidx.core.ktx)
     api(libs.core.testing)
+    api(libs.hilt.android.testing)
     api(libs.kotlinx.coroutines.test)
     api(libs.mockk)
     api(libs.mockk.android)

@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.stockviewer.android.application)
     alias(libs.plugins.stockviewer.android.application.compose)
-    alias(libs.plugins.stockviewer.android.koin)
+    alias(libs.plugins.stockviewer.android.hilt)
     alias(libs.plugins.stockviewer.android.application.jacoco)
     alias(libs.plugins.kotlin.serialization)
 }
@@ -37,9 +37,6 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:navigation"))
     implementation(project(":core:database"))
-    implementation(project(":core:network"))
-    implementation(project(":core:common"))
-    implementation(project(":shared-library:favorites"))
     implementation(project(":feature:list:api"))
     implementation(project(":feature:list:impl"))
     implementation(project(":feature:details:api"))
@@ -51,8 +48,7 @@ dependencies {
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
     implementation(libs.kotlinx.serialization.core)
-    implementation(platform(libs.koin.bom))
-    implementation(libs.koin.androidx.compose)
+    implementation(libs.androidx.hilt.lifecycle.viewmodel.compose)
 
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)

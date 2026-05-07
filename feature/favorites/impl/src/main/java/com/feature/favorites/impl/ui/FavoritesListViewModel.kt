@@ -5,13 +5,16 @@ import androidx.lifecycle.viewModelScope
 import com.feature.favorites.impl.ui.mapper.toUiModel
 import com.feature.favorites.impl.ui.state.FavoritesListState
 import com.sharedlibrary.favorites.domain.repository.FavoritesRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FavoritesListViewModel(
+@HiltViewModel
+class FavoritesListViewModel @Inject constructor(
     val favoritesRepository: FavoritesRepository,
 ) : ViewModel() {
 

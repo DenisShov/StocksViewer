@@ -5,57 +5,73 @@ import com.core.network.retrofit.EitherCallAdapterFactory
 import com.core.network.retrofit.StocksApi
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
+import javax.inject.Singleton
 
-val networkModule = module {
-    single<Gson> {
-        GsonBuilder()
+@Module
+@InstallIn(SingletonComponent::class)
+object NetworkModule {
+
+    @Provides
+    @Singleton
+    fun provideGson(): Gson {
+        return GsonBuilder()
             .create()
     }
 
-    single<OkHttpClient> {
-        OkHttpClient.Builder()
+    @Provides
+    @Singleton
+    fun provideHttpClient(): OkHttpClient {
+        return OkHttpClient.Builder()
             .addApiKeyInterceptor(BuildConfig.API_KEY)
             .addLoggingInterceptor(BuildConfig.DEBUG)
             .build()
     }
 
-    single<StocksApi> {
-        Retrofit.Builder()
+    private fun OkHttpClient.Builder.addApiKeyInterceptor(apiKey: String) =
+        apply {
+            addInterceptor { chain ->
+                val url = chain.request().url.newBuilder()
+                    .addQueryParameter("apiKey", apiKey)
+                    .build()
+                chain.proceed(chain.request().newBuilder().url(url).build())
+            }
+        }
+
+    private fun OkHttpClient.Builder.addLoggingInterceptor(isLogEnabled: Boolean) =
+        apply {
+            if (!isLogEnabled) {
+                return@apply
+            }
+            val loggingInterceptor =
+                HttpLoggingInterceptor { message -> Timber.Forest.i(message) }
+                    .apply {
+                        level = HttpLoggingInterceptor.Level.BODY
+                    }
+
+            addInterceptor(loggingInterceptor)
+        }
+
+    @Provides
+    @Singleton
+    fun provideStocksApi(
+        okHttpClient: OkHttpClient,
+        gson: Gson,
+    ): StocksApi {
+        return Retrofit.Builder()
             .baseUrl(BuildConfig.BACKEND_URL)
-            .client(get())
+            .client(okHttpClient)
             .addCallAdapterFactory(EitherCallAdapterFactory())
-            .addConverterFactory(GsonConverterFactory.create(get()))
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(StocksApi::class.java)
     }
 }
-
-private fun OkHttpClient.Builder.addApiKeyInterceptor(apiKey: String) =
-    apply {
-        addInterceptor { chain ->
-            val url = chain.request().url.newBuilder()
-                .addQueryParameter("apiKey", apiKey)
-                .build()
-            chain.proceed(chain.request().newBuilder().url(url).build())
-        }
-    }
-
-private fun OkHttpClient.Builder.addLoggingInterceptor(isLogEnabled: Boolean) =
-    apply {
-        if (!isLogEnabled) {
-            return@apply
-        }
-        val loggingInterceptor =
-            HttpLoggingInterceptor { message -> Timber.i(message) }
-                .apply {
-                    level = HttpLoggingInterceptor.Level.BODY
-                }
-
-        addInterceptor(loggingInterceptor)
-    }

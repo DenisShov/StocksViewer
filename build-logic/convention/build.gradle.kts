@@ -66,9 +66,9 @@ gradlePlugin {
             implementationClass = "JvmLibraryConventionPlugin"
         }
 
-        register("androidKoin") {
-            id = "stockviewer.android.koin"
-            implementationClass = "AndroidKoinConventionPlugin"
+        register("androidHilt") {
+            id = "stockviewer.android.hilt"
+            implementationClass = "AndroidHiltConventionPlugin"
         }
 
         register("detekt") {
