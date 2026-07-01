@@ -19,6 +19,7 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.vico.compose.m3)
     implementation(libs.coil)
+    implementation(libs.kotlinx.collections.immutable)
 
     testImplementation(project(":core:testing"))
     androidTestImplementation(project(":core:testing"))

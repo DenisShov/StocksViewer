@@ -14,6 +14,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -114,7 +115,7 @@ class StockDetailsViewModel @AssistedInject constructor(
                 ifRight = { stockChart ->
                     _uiState.update {
                         it.copy(
-                            candles = stockChart.results.map { result -> result.toUiModel() },
+                            candles = stockChart.results.map { result -> result.toUiModel() }.toImmutableList(),
                             chartErrorString = null,
                             isChartLoading = false,
                         )

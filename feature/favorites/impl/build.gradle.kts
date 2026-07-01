@@ -22,6 +22,7 @@ dependencies {
     implementation(project(":shared-library:favorites"))
 
     implementation(libs.androidx.compose.material3)
+    implementation(libs.kotlinx.collections.immutable)
 
     testImplementation(project(":core:testing"))
     androidTestImplementation(project(":core:testing"))

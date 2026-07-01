@@ -36,10 +36,12 @@ fun NavigationRoot() {
         navigator.onBackClick()
     }
 
-    val entryProvider = entryProvider {
-        stocksListEntry(navigator)
-        stockDetailsEntry(navigator)
-        favoritesListEntry(navigator)
+    val entryProvider = remember(navigator) {
+        entryProvider {
+            stocksListEntry(navigator)
+            stockDetailsEntry(navigator)
+            favoritesListEntry(navigator)
+        }
     }
 
     val showBottomBar = navigationState.currentKey is FavoritesListKey ||

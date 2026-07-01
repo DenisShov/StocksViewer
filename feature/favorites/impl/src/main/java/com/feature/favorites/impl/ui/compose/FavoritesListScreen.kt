@@ -107,10 +107,11 @@ fun FavoritesListScreen(
                         items(
                             items = uiState.favorites,
                             key = { it.ticker },
+                            contentType = { "favorite" },
                         ) { stock ->
                             FavoriteStockItem(
                                 stock = stock,
-                                onClick = { onStockClick(stock.ticker) },
+                                onStockClick = onStockClick,
                             )
                         }
                     }

@@ -5,11 +5,11 @@ ksp = "2.3.4"
 coreKtx = "1.17.0"
 kotlinxCoroutines = "1.10.2"
 kotlinxSerialization = "1.9.0"
+kotlinxCollectionsImmutable = "0.5.0"
 
 androidxActivity = "1.12.2"
 androidxLifecycle = "2.10.0"
 androidxComposeBom = "2026.01.00"
-androidxComposeCompiler = "1.5.8"
 androidxComposeUiManifest = "1.6.7"
 androidxComposeMaterial3 = "1.2.1"
 androidxPagingCompose = "3.3.6"
@@ -57,6 +57,9 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 
 # Kotlin Serialization
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
+
+# Kotlin Immutable Collections
+kotlinx-collections-immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
 
 # Compose
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidxActivity" }

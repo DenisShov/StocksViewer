@@ -35,6 +35,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,6 +43,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -66,6 +69,8 @@ import com.feature.details.impl.ui.compose.chart.CandleChart
 import com.feature.details.impl.ui.model.CandleUiModel
 import com.feature.details.impl.ui.model.StockOverviewUiModel
 import com.feature.details.impl.ui.state.StockDetailsState
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -191,7 +196,7 @@ fun StockDetailScreen(
 @Composable
 private fun StockDetailsContent(
     stockOverview: StockOverviewUiModel,
-    candles: List<CandleUiModel>,
+    candles: ImmutableList<CandleUiModel>,
     selectedPeriod: ChartPeriod,
     isChartLoading: Boolean,
     chartErrorString: String?,
@@ -205,19 +210,25 @@ private fun StockDetailsContent(
         verticalArrangement = Arrangement.spacedBy(24.dp),
         contentPadding = PaddingValues(bottom = 24.dp)
     ) {
-        item { CompanyHeader(stock = stockOverview) }
+        item(key = "header", contentType = "header") {
+            CompanyHeader(stock = stockOverview)
+        }
 
-        item { KeyStatsGrid(stock = stockOverview) }
+        item(key = "stats", contentType = "stats") {
+            KeyStatsGrid(stock = stockOverview)
+        }
 
         if (stockOverview.description.isNullOrEmpty().not()) {
-            item {
+            item(key = "about", contentType = "about") {
                 CompanyAbout(description = stockOverview.description)
             }
         }
 
-        item {
+        item(key = "contact", contentType = "contact") {
             ContactInfo(stock = stockOverview)
+        }
 
+        item(key = "chart", contentType = "chart") {
             Chart(
                 candles = candles,
                 selectedPeriod = selectedPeriod,
@@ -429,11 +440,13 @@ private fun ContactRow(icon: Int, text: String) {
 @Composable
 private fun StockDetailsSkeleton() {
     val infiniteTransition = rememberInfiniteTransition(label = "skeleton")
-    val alpha by infiniteTransition.animateFloat(
+    val alpha = infiniteTransition.animateFloat(
         initialValue = 0.3f, targetValue = 0.7f, animationSpec = infiniteRepeatable(
             animation = tween(1000), repeatMode = RepeatMode.Reverse
         ), label = "alpha"
     )
+
+    val shimmerColor = MaterialTheme.colorScheme.surfaceVariant
 
     LazyColumn(
         modifier = Modifier
@@ -443,43 +456,47 @@ private fun StockDetailsSkeleton() {
         verticalArrangement = Arrangement.spacedBy(24.dp),
         contentPadding = PaddingValues(bottom = 24.dp)
     ) {
-        item {
+        item(key = "header", contentType = "header") {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
+                ShimmerBox(
                     modifier = Modifier
                         .size(72.dp)
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+                        .clip(CircleShape),
+                    color = shimmerColor,
+                    alpha = alpha,
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Column {
-                    Box(
+                    ShimmerBox(
                         modifier = Modifier
                             .width(150.dp)
                             .height(24.dp)
-                            .clip(RoundedCornerShape(4.dp))
-                            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+                            .clip(RoundedCornerShape(4.dp)),
+                        color = shimmerColor,
+                        alpha = alpha,
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    Box(
+                    ShimmerBox(
                         modifier = Modifier
                             .width(80.dp)
                             .height(30.dp)
-                            .clip(RoundedCornerShape(15.dp))
-                            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+                            .clip(RoundedCornerShape(15.dp)),
+                        color = shimmerColor,
+                        alpha = alpha,
                     )
                 }
             }
         }
 
-        item {
+        item(key = "stats", contentType = "stats") {
             Column {
-                Box(
+                ShimmerBox(
                     modifier = Modifier
                         .width(120.dp)
                         .height(20.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+                        .clip(RoundedCornerShape(4.dp)),
+                    color = shimmerColor,
+                    alpha = alpha,
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Row(
@@ -487,76 +504,83 @@ private fun StockDetailsSkeleton() {
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     repeat(2) {
-                        Box(
+                        ShimmerBox(
                             modifier = Modifier
                                 .weight(1f)
                                 .height(74.dp)
-                                .clip(RoundedCornerShape(12.dp))
-                                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+                                .clip(RoundedCornerShape(12.dp)),
+                            color = shimmerColor,
+                            alpha = alpha,
                         )
                     }
 
                 }
                 Spacer(modifier = Modifier.height(12.dp))
-                Box(
+                ShimmerBox(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(74.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+                        .clip(RoundedCornerShape(12.dp)),
+                    color = shimmerColor,
+                    alpha = alpha,
                 )
             }
         }
 
-        item {
-            Box(
+        item(key = "about", contentType = "about") {
+            ShimmerBox(
                 modifier = Modifier
                     .width(60.dp)
                     .height(20.dp)
-                    .clip(RoundedCornerShape(4.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+                    .clip(RoundedCornerShape(4.dp)),
+                color = shimmerColor,
+                alpha = alpha,
             )
             Spacer(modifier = Modifier.height(12.dp))
-            Box(
+            ShimmerBox(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(80.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+                    .clip(RoundedCornerShape(12.dp)),
+                color = shimmerColor,
+                alpha = alpha,
             )
         }
 
-        item {
+        item(key = "contact", contentType = "contact") {
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 repeat(4) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Box(
+                        ShimmerBox(
                             modifier = Modifier
                                 .size(24.dp)
-                                .clip(CircleShape)
-                                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+                                .clip(CircleShape),
+                            color = shimmerColor,
+                            alpha = alpha,
                         )
                         Spacer(modifier = Modifier.width(16.dp))
-                        Box(
+                        ShimmerBox(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(16.dp)
-                                .clip(RoundedCornerShape(4.dp))
-                                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+                                .clip(RoundedCornerShape(4.dp)),
+                            color = shimmerColor,
+                            alpha = alpha,
                         )
                     }
                 }
             }
         }
 
-        item {
+        item(key = "chart", contentType = "chart") {
             Column {
-                Box(
+                ShimmerBox(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(250.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+                        .clip(RoundedCornerShape(12.dp)),
+                    color = shimmerColor,
+                    alpha = alpha,
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Row(
@@ -564,12 +588,13 @@ private fun StockDetailsSkeleton() {
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     repeat(4) {
-                        Box(
+                        ShimmerBox(
                             modifier = Modifier
                                 .weight(1f)
                                 .height(40.dp)
-                                .clip(RoundedCornerShape(20.dp))
-                                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+                                .clip(RoundedCornerShape(20.dp)),
+                            color = shimmerColor,
+                            alpha = alpha,
                         )
                     }
                 }
@@ -579,8 +604,21 @@ private fun StockDetailsSkeleton() {
 }
 
 @Composable
+private fun ShimmerBox(
+    modifier: Modifier,
+    color: Color,
+    alpha: State<Float>,
+) {
+    Box(
+        modifier = modifier
+            .graphicsLayer { this.alpha = alpha.value }
+            .background(color)
+    )
+}
+
+@Composable
 private fun Chart(
-    candles: List<CandleUiModel>,
+    candles: ImmutableList<CandleUiModel>,
     selectedPeriod: ChartPeriod,
     isChartLoading: Boolean,
     chartErrorString: String?,
@@ -622,17 +660,18 @@ private fun Chart(
 @Composable
 private fun ChartLoading() {
     val infiniteTransition = rememberInfiniteTransition(label = "skeleton")
-    val alpha by infiniteTransition.animateFloat(
+    val alpha = infiniteTransition.animateFloat(
         initialValue = 0.3f, targetValue = 0.7f, animationSpec = infiniteRepeatable(
             animation = tween(1000), repeatMode = RepeatMode.Reverse
         ), label = "alpha"
     )
-    Box(
+    ShimmerBox(
         modifier = Modifier
             .fillMaxWidth()
             .height(500.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+            .clip(RoundedCornerShape(12.dp)),
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        alpha = alpha,
     )
 }
 
@@ -655,7 +694,7 @@ private fun StockDetailsContentPreview() {
                 listDate = "20 August 1986",
                 cik = "0000796343"
             ),
-            candles = listOf(
+            candles = persistentListOf(
                 CandleUiModel(
                     open = 185.82,
                     close = 184.8,

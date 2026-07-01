@@ -17,6 +17,7 @@ import com.feature.details.impl.ui.compose.StockDetailScreen
 import com.feature.details.impl.ui.model.CandleUiModel
 import com.feature.details.impl.ui.model.StockOverviewUiModel
 import com.feature.details.impl.ui.state.StockDetailsState
+import kotlinx.collections.immutable.persistentListOf
 import org.junit.Rule
 import org.junit.Test
 
@@ -389,7 +390,7 @@ class StockDetailScreenTest {
         cik = "0000320193",
     )
 
-    private val testCandles = listOf(
+    private val testCandles = persistentListOf(
         CandleUiModel(
             open = 185.82,
             close = 184.8,

@@ -6,6 +6,7 @@ import com.feature.favorites.impl.ui.mapper.toUiModel
 import com.feature.favorites.impl.ui.state.FavoritesListState
 import com.sharedlibrary.favorites.domain.repository.FavoritesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,7 +32,9 @@ class FavoritesListViewModel @Inject constructor(
                     if (favorites.isEmpty()) {
                         FavoritesListState.Empty
                     } else {
-                        FavoritesListState.Content(favorites.map { it.toUiModel() })
+                        FavoritesListState.Content(
+                            favorites.map { it.toUiModel() }.toImmutableList()
+                        )
                     }
                 }
                 .collect { state ->

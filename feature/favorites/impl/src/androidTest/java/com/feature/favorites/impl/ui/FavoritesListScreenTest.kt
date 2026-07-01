@@ -9,6 +9,7 @@ import androidx.compose.ui.test.performClick
 import com.feature.favorites.impl.ui.compose.FavoritesListScreen
 import com.feature.favorites.impl.ui.state.FavoriteStockUiModel
 import com.feature.favorites.impl.ui.state.FavoritesListState
+import kotlinx.collections.immutable.persistentListOf
 import org.junit.Rule
 import org.junit.Test
 
@@ -17,7 +18,7 @@ class FavoritesListScreenTest {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
 
-    private val testFavorites = listOf(
+    private val testFavorites = persistentListOf(
         FavoriteStockUiModel(ticker = "AAPL", name = "Apple Inc.", type = "Common Stock"),
         FavoriteStockUiModel(ticker = "GOOGL", name = "Alphabet Inc.", type = "Common Stock"),
         FavoriteStockUiModel(ticker = "MSFT", name = "Microsoft Corporation", type = "Common Stock"),

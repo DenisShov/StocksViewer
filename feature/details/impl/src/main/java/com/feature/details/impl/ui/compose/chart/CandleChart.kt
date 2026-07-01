@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -27,6 +28,7 @@ import com.patrykandpatrick.vico.core.cartesian.data.CartesianValueFormatter
 import com.patrykandpatrick.vico.core.cartesian.data.candlestickSeries
 import com.patrykandpatrick.vico.core.cartesian.marker.DefaultCartesianMarker
 import com.patrykandpatrick.vico.core.common.data.ExtraStore
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.runBlocking
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -100,13 +102,10 @@ private fun StockChartContent(
 @Composable
 fun CandleChart(
     modifier: Modifier = Modifier,
-    data: List<CandleUiModel>,
+    data: ImmutableList<CandleUiModel>,
 ) {
-    val time = data.map { it.timestampMs }
-    val open = data.map { it.open }
-    val close = data.map { it.close }
-    val low = data.map { it.low }
-    val high = data.map { it.high }
+
+    val series = remember(data) { ChartSeries.from(data) }
 
     val axisLabelKey = ExtraStore.Key<Map<Int, String>>()
     val axisLabels = remember(data) { getAxisLabels(data) }
@@ -115,23 +114,42 @@ fun CandleChart(
     LaunchedEffect(data) {
         modelProducer.runTransaction {
             candlestickSeries(
-                opening = open,
-                closing = close,
-                low = low,
-                high = high
+                opening = series.open,
+                closing = series.close,
+                low = series.low,
+                high = series.high,
             )
             extras { it[axisLabelKey] = axisLabels }
         }
     }
     StockChartContent(
         modelProducer = modelProducer,
-        time = time,
+        time = series.time,
         modifier = modifier,
         axisLabelKey = axisLabelKey,
     )
 }
 
-private fun getAxisLabels(data: List<CandleUiModel>): MutableMap<Int, String> {
+@Immutable
+private data class ChartSeries(
+    val time: List<Long>,
+    val open: List<Double>,
+    val close: List<Double>,
+    val low: List<Double>,
+    val high: List<Double>,
+) {
+    companion object {
+        fun from(data: ImmutableList<CandleUiModel>): ChartSeries = ChartSeries(
+            time = data.map { it.timestampMs },
+            open = data.map { it.open },
+            close = data.map { it.close },
+            low = data.map { it.low },
+            high = data.map { it.high },
+        )
+    }
+}
+
+private fun getAxisLabels(data: ImmutableList<CandleUiModel>): MutableMap<Int, String> {
     val axisLabels = mutableMapOf<Int, String>()
     data.forEachIndexed { idx, data ->
         val dateStr = formateDate(data.timestampMs)

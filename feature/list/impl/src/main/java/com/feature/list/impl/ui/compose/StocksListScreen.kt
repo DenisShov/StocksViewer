@@ -32,6 +32,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshState
 import androidx.compose.material3.pulltorefresh.pullToRefresh
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,6 +41,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -48,6 +50,8 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemContentType
+import androidx.paging.compose.itemKey
 import com.core.commonresources.R
 import com.core.designsystem.component.BackgroundPreview
 import com.core.designsystem.component.HandleError
@@ -67,7 +71,10 @@ fun StocksListRoute(
     val stocksPaging = viewModel.stocksPaging.collectAsLazyPagingItems()
 
     val pullToRefreshState = rememberPullToRefreshState()
-    var isRefreshing by remember { mutableStateOf(false) }
+
+    val isRefreshing by remember(stocksPaging) {
+        derivedStateOf { stocksPaging.loadState.refresh is LoadState.Loading }
+    }
 
     StocksListScreen(
         stocksPaging = stocksPaging,
@@ -160,7 +167,12 @@ private fun StocksListContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 contentPadding = PaddingValues(top = 16.dp),
             ) {
-                items(count = stocksPaging.itemCount) { index ->
+                // Stable key (ticker symbol) + contentType for lazy layout optimization
+                items(
+                    count = stocksPaging.itemCount,
+                    key = stocksPaging.itemKey { it.ticker },
+                    contentType = stocksPaging.itemContentType { "ticker" },
+                ) { index ->
                     stocksPaging[index]?.let {
                         StockListItem(
                             stockItem = it,
@@ -171,7 +183,7 @@ private fun StocksListContent(
 
                 when {
                     stocksPaging.loadState.append is LoadState.Loading -> {
-                        item {
+                        item(key = "append_loading", contentType = "footer_loading") {
                             CircularProgressIndicator(
                                 modifier = Modifier
                                     .padding(vertical = 6.dp)
@@ -181,15 +193,13 @@ private fun StocksListContent(
                     }
 
                     stocksPaging.loadState.append is LoadState.Error -> {
-                        item {
-                            Box {
-                                ErrorRetryItem(
-                                    error = (stocksPaging.loadState.append as LoadState.Error).error.message,
-                                    onTryClicked = {
-                                        stocksPaging.retry()
-                                    }
-                                )
-                            }
+                        item(key = "append_error", contentType = "footer_error") {
+                            ErrorRetryItem(
+                                error = (stocksPaging.loadState.append as LoadState.Error).error.message,
+                                onTryClicked = {
+                                    stocksPaging.retry()
+                                }
+                            )
                         }
                     }
                 }
@@ -247,6 +257,9 @@ private fun StocksListSkeleton() {
         label = "alpha"
     )
 
+    val shimmerColor = MaterialTheme.colorScheme.surfaceVariant
+    val cardColor = MaterialTheme.colorScheme.surfaceContainerLow
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -254,15 +267,13 @@ private fun StocksListSkeleton() {
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(top = 16.dp),
     ) {
-        items(10) {
+        items(count = 10, key = { it }, contentType = { "skeleton_row" }) {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-                )
+                colors = CardDefaults.cardColors(containerColor = cardColor)
             ) {
                 Row(
                     modifier = Modifier
@@ -274,7 +285,8 @@ private fun StocksListSkeleton() {
                         modifier = Modifier
                             .size(56.dp)
                             .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+                            .graphicsLayer { this.alpha = alpha }
+                            .background(shimmerColor)
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     Column(modifier = Modifier.weight(1f)) {
@@ -283,7 +295,8 @@ private fun StocksListSkeleton() {
                                 .fillMaxWidth(0.7f)
                                 .height(20.dp)
                                 .clip(RoundedCornerShape(4.dp))
-                                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+                                .graphicsLayer { this.alpha = alpha }
+                                .background(shimmerColor)
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Box(
@@ -291,7 +304,8 @@ private fun StocksListSkeleton() {
                                 .width(80.dp)
                                 .height(16.dp)
                                 .clip(RoundedCornerShape(6.dp))
-                                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = alpha))
+                                .graphicsLayer { this.alpha = alpha }
+                                .background(shimmerColor)
                         )
                     }
                 }
@@ -319,7 +333,11 @@ private fun StocksListPreview() {
             verticalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = PaddingValues(top = 16.dp),
         ) {
-            items(count = mockStocks.itemCount) { index ->
+            items(
+                count = mockStocks.itemCount,
+                key = mockStocks.itemKey { it.ticker },
+                contentType = mockStocks.itemContentType { "ticker" },
+            ) { index ->
                 mockStocks[index]?.let {
                     StockListItem(stockItem = it)
                 }

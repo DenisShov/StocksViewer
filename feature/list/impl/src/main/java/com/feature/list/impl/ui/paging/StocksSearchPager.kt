@@ -11,9 +11,18 @@ import javax.inject.Inject
 class StocksSearchPager @Inject constructor(val repository: StocksListRepository) {
 
     fun getPager(query: String): Flow<PagingData<Ticker>> = Pager(
-        config = PagingConfig(pageSize = 2),
+
+        config = PagingConfig(
+            pageSize = PAGE_SIZE,
+            initialLoadSize = PAGE_SIZE,
+            prefetchDistance = 10,
+            enablePlaceholders = false,
+        ),
         pagingSourceFactory = {
             StocksPagingSource(repository, query)
         }).flow
 
+    companion object {
+        private const val PAGE_SIZE = 50
+    }
 }

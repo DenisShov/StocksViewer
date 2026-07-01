@@ -1,5 +1,8 @@
 package com.feature.details.impl.ui.model
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 data class StockOverviewUiModel(
     val ticker: String = "",
     val name: String = "",

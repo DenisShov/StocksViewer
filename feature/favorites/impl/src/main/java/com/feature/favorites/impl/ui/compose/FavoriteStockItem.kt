@@ -34,11 +34,11 @@ import com.feature.favorites.impl.ui.state.FavoriteStockUiModel
 @Composable
 fun FavoriteStockItem(
     stock: FavoriteStockUiModel,
-    onClick: () -> Unit,
+    onStockClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     ElevatedCard(
-        onClick = onClick,
+        onClick = { onStockClick(stock.ticker) },
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.elevatedCardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
@@ -124,7 +124,7 @@ fun FavoriteStockItemPreview() {
                 name = "Agilent Technologies Inc.",
                 type = "Exchange Traded Fund",
             ),
-            onClick = {}
+            onStockClick = {}
         )
     }
 }
