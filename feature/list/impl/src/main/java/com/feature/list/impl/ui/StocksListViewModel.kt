@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 @OptIn(FlowPreview::class)
 @HiltViewModel
@@ -24,11 +25,10 @@ class StocksListViewModel @Inject constructor(
     private val searchQuery = MutableStateFlow("")
 
     val stocksPaging = searchQuery
-        .debounce(1000) // avoid firing on every keystroke
+        .debounce(1000.milliseconds) // avoid firing on every keystroke
         .distinctUntilChanged()
         .flatMapLatest { query ->
             stocksSearchPager.getPager(query)
-                .distinctUntilChanged()
                 .map { pagingData -> pagingData.map { it.toUiModel() } }
         }
         .cachedIn(viewModelScope)
