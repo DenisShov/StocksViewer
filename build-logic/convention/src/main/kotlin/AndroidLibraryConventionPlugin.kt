@@ -1,4 +1,4 @@
-import com.android.build.gradle.LibraryExtension
+import com.android.build.api.dsl.LibraryExtension
 import com.test.app.stockviewer.configureKotlinAndroid
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -12,13 +12,11 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
 
             with(pluginManager) {
                 apply("com.android.library")
-                apply("org.jetbrains.kotlin.android")
                 apply("stockviewer.detekt")
             }
 
             extensions.configure<LibraryExtension> {
                 configureKotlinAndroid(this)
-                defaultConfig.targetSdk = 36
                 packaging {
                     resources {
                         excludes.addAll(
