@@ -48,6 +48,6 @@ fun rememberMarker(valueFormatter: ValueFormatter): CartesianMarker {
         label = label,
         valueFormatter = valueFormatter,
         guideline = guideline,
-        labelPosition = DefaultCartesianMarker.LabelPosition.AbovePoint,
+        labelPosition = DefaultCartesianMarker.LabelPosition.AroundPoint,
     )
 }
