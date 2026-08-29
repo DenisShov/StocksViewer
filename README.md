@@ -4,7 +4,7 @@ StocksViewer is a native Android application for browsing, searching, and saving
 
 The application is built with Kotlin and Jetpack Compose. It uses a modular, feature-first architecture with Clean Architecture boundaries inside each feature, Hilt dependency injection, unidirectional state flow, and independent Navigation 3 back stacks.
 
-## Other StockViewer apps:
+## Other StocksViewer apps:
 Compose Multiplatform Mobile(CMM) - Android and iOS share the same UI written in Compose:
 
 https://github.com/DenisShov/StocksViewerCMP
