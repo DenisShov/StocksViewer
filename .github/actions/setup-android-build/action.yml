@@ -1,0 +1,43 @@
+name: Setup Android build
+description: >
+  Shared setup for every CI job: JDK 17, Gradle (with caching),
+  executable wrapper and the secrets file required by :core:network.
+
+inputs:
+  api-key:
+    description: Polygon API key written into secrets.defaults.properties
+    required: true
+  backend-url:
+    description: Backend base URL written into secrets.defaults.properties
+    required: false
+    default: https://api.polygon.io/
+
+runs:
+  using: composite
+  steps:
+    - name: Setup JDK 17
+      uses: actions/setup-java@v5
+      with:
+        distribution: temurin
+        java-version: 17
+
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v5
+
+    - name: Set execute permissions for Gradle
+      shell: bash
+      run: chmod +x gradlew
+
+    # secrets.defaults.properties is gitignored, but :core:network needs
+    # BACKEND_URL and API_KEY to generate its BuildConfig fields.
+    - name: Create secrets.defaults.properties
+      shell: bash
+      env:
+        API_KEY: ${{ inputs.api-key }}
+        BACKEND_URL: ${{ inputs.backend-url }}
+      run: |
+        if [ -z "$API_KEY" ]; then
+          echo "::warning::API_KEY secret is not set; using a placeholder value."
+          API_KEY="DEFAULT_API_KEY"
+        fi
+        printf 'BACKEND_URL="%s"\nAPI_KEY="%s"\n' "$BACKEND_URL" "$API_KEY" > secrets.defaults.properties

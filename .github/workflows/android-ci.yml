@@ -1,0 +1,148 @@
+name: Android CI
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+    branches:
+      - master
+      - develop
+
+# Cancel superseded runs for the same branch / PR.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Detekt Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup Android build
+        uses: ./.github/actions/setup-android-build
+        with:
+          api-key: ${{ secrets.API_KEY }}
+
+      # Detekt is applied to every module via the stockviewer.* convention plugins.
+      # --continue reports findings from all modules instead of stopping at the first.
+      - name: Run detekt
+        run: ./gradlew detekt --continue
+
+      - name: Upload detekt reports
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: detekt-reports
+          path: '**/build/reports/detekt/'
+          if-no-files-found: ignore
+
+  build:
+    name: Gradle build
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup Android build
+        uses: ./.github/actions/setup-android-build
+        with:
+          api-key: ${{ secrets.API_KEY }}
+
+      # Assembles :app plus every core, feature and shared-library module.
+      - name: Build with Gradle
+        run: ./gradlew assembleDebug
+
+  unit-tests:
+    name: Run unit tests
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup Android build
+        uses: ./.github/actions/setup-android-build
+        with:
+          api-key: ${{ secrets.API_KEY }}
+
+      # Runs testDebugUnitTest in every module; --continue so one failing
+      # module does not hide failures in the others.
+      - name: Run unit tests
+        run: ./gradlew testDebugUnitTest --continue
+
+      - name: Upload unit test results
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: unit-test-results
+          path: |
+            **/build/test-results/testDebugUnitTest/**/*.xml
+            **/build/reports/tests/testDebugUnitTest/
+          if-no-files-found: ignore
+
+  instrumentation-tests:
+    name: Instrumentation Tests
+    needs: unit-tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup Android build
+        uses: ./.github/actions/setup-android-build
+        with:
+          api-key: ${{ secrets.API_KEY }}
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: AVD cache
+        uses: actions/cache@v5
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-34-x86_64
+
+      - name: Create AVD snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD snapshot for caching."
+
+      # Runs connectedDebugAndroidTest in every module that has androidTest sources
+      # (currently :feature:list:impl, :feature:details:impl, :feature:favorites:impl).
+      - name: Run instrumentation tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: ./gradlew connectedDebugAndroidTest --continue
+
+      - name: Upload instrumentation test results
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: instrumentation-test-results
+          path: |
+            **/build/outputs/androidTest-results/connected/**/*.xml
+            **/build/reports/androidTests/connected/
+          if-no-files-found: ignore
