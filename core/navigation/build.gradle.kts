@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.stockviewer.android.library)
     alias(libs.plugins.stockviewer.android.library.compose)
+    alias(libs.plugins.stockviewer.android.library.jacoco)
 }
 
 android {

@@ -35,9 +35,3 @@ secrets.defaults.properties
 
 # Gradle cache
 .gradle
-
-# compose-performance-skills
-/.compose-performance-skills-source/
-
-# kiro
-/.kiro/
