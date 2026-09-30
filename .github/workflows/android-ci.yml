@@ -125,8 +125,16 @@ jobs:
           disable-animations: false
           script: echo "Generated AVD snapshot for caching."
 
-      # Runs connectedDebugAndroidTest in every module that has androidTest sources
-      # (currently :feature:list:impl, :feature:details:impl, :feature:favorites:impl).
+      # Only these three modules have androidTest sources. Running the bare
+      # connectedDebugAndroidTest task builds/runs it for every Android module
+      # (app, all core:*, shared-library:favorites, feature:*), which:
+      #  - produces empty/unparsable result XML for modules with no tests
+      #    when their (non-existent) runs race against real ones on the
+      #    single emulator, and
+      #  - can OOM the dex merger when many modules' androidTest APKs are
+      #    dexed/merged in parallel on the runner's limited CPU/memory.
+      # --no-parallel serializes module execution so dexing and adb access to
+      # the one emulator don't contend with each other.
       - name: Run instrumentation tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -135,7 +143,11 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: ./gradlew connectedDebugAndroidTest --continue
+          script: >
+            ./gradlew --no-parallel --continue
+            :feature:list:impl:connectedDebugAndroidTest
+            :feature:details:impl:connectedDebugAndroidTest
+            :feature:favorites:impl:connectedDebugAndroidTest
 
       - name: Upload instrumentation test results
         if: always()
