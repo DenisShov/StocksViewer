@@ -15,6 +15,10 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   lint:
     name: Detekt Check
@@ -135,7 +139,19 @@ jobs:
       #    dexed/merged in parallel on the runner's limited CPU/memory.
       # --no-parallel serializes module execution so dexing and adb access to
       # the one emulator don't contend with each other.
-      - name: Run instrumentation tests
+      #
+      # createDebugCombinedCoverageReport is scoped to the five modules that
+      # actually have test sources: the three feature:*:impl modules (unit +
+      # androidTest) plus core:navigation and shared-library:favorites (unit
+      # tests only). Running it unscoped would also hit app and every
+      # untested API/core module, producing empty reports that skew the
+      # combined coverage numbers.
+      # It depends on testDebugUnitTest and, where androidTest sources
+      # exist, on connectedDebugAndroidTest, so it needs the emulator that's
+      # already running in this job (each GitHub Actions job is a fresh
+      # runner, so testDebugUnitTest reruns here rather than reusing the
+      # unit-tests job's output).
+      - name: Run instrumentation tests and coverage
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 34
@@ -148,6 +164,11 @@ jobs:
             :feature:list:impl:connectedDebugAndroidTest
             :feature:details:impl:connectedDebugAndroidTest
             :feature:favorites:impl:connectedDebugAndroidTest
+            :feature:list:impl:createDebugCombinedCoverageReport
+            :feature:details:impl:createDebugCombinedCoverageReport
+            :feature:favorites:impl:createDebugCombinedCoverageReport
+            :core:navigation:createDebugCombinedCoverageReport
+            :shared-library:favorites:createDebugCombinedCoverageReport
 
       - name: Upload instrumentation test results
         if: always()
@@ -158,3 +179,40 @@ jobs:
             **/build/outputs/androidTest-results/connected/**/*.xml
             **/build/reports/androidTests/connected/
           if-no-files-found: ignore
+
+      - name: Upload coverage reports
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: coverage-reports
+          path: |
+            **/build/reports/jacoco/createDebugCombinedCoverageReport/
+          if-no-files-found: ignore
+
+  coverage-comment:
+    name: Post coverage comment
+    needs: instrumentation-tests
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    # Coverage data comes from :feature:list:impl, :feature:details:impl,
+    # :feature:favorites:impl, :core:navigation and :shared-library:favorites
+    # only, matching the modules exercised above.
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Download coverage reports
+        uses: actions/download-artifact@v6
+        with:
+          name: coverage-reports
+          path: coverage-reports
+
+      - name: Add coverage to PR
+        uses: madrapps/jacoco-report@v1.8.0
+        with:
+          paths: coverage-reports/**/createDebugCombinedCoverageReport.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          title: Code Coverage Report
+          update-comment: true
+          min-coverage-overall: 60
+          min-coverage-changed-lines: 60

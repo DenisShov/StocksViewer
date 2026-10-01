@@ -51,6 +51,23 @@ internal fun Project.configureJacoco(
                 "create${variant.name.capitalize()}CombinedCoverageReport",
                 JacocoReport::class
             ) {
+                // executionData below reads the *.exec/*.ec files these tasks produce via
+                // ad-hoc fileTree()s, which Gradle's task validation can't infer as inputs.
+                // Without an explicit dependency, Gradle flags this as an implicit
+                // dependency (and fails the build on newer Gradle versions) and the
+                // report can run before the coverage data exists.
+                dependsOn(tasks.named("test${variant.name.capitalize()}UnitTest"))
+                // AGP registers connectedAndroidTest for every module, but running it for
+                // modules with no androidTest sources produces unparsable/empty result
+                // files and fails the build. Only depend on it when the module actually
+                // has androidTest sources.
+                val hasAndroidTestSources = layout.projectDirectory
+                    .dir("src/androidTest")
+                    .asFile
+                    .let { it.exists() && it.walkTopDown().any(java.io.File::isFile) }
+                if (hasAndroidTestSources) {
+                    dependsOn(tasks.named("connected${variant.name.capitalize()}AndroidTest"))
+                }
 
                 classDirectories.setFrom(
                     allJars,
